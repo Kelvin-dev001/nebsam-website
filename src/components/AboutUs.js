@@ -224,7 +224,7 @@ const AboutUs = () => {
           <div className="virtual-tour-container">
             <iframe 
               className="tour-iframe rounded-2xl"
-              src="https://www.google.com/maps/embed?pb=!4v1623947356789!6m8!1m7!1sCAoSLEFGMVFpcE5fV3Z1bVJxN2VlR1RfM19oY0l3TjFqVU5wYkZ0VU1KcWJz!2m2!1d-1.2920659!2d36.8219462!3f349.7!4f0!5f0.7820865974627469" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.8989471994046!2d39.654743973132156!3d-4.041040495932689!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x184012b6a695c773%3A0x3c53f3de1a4fa1d0!2sMakupa%20Roundabout!5e0!3m2!1sen!2ske!4v1747141043784!5m2!1sen!2ske" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" 
               allowFullScreen
               title="Nebsam Head Office Virtual Tour"
             ></iframe>
