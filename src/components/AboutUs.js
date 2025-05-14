@@ -218,27 +218,32 @@ const AboutUs = () => {
       </section>
 
       {/* Virtual Tour */}
-      <section className="section bg-blue-900 text-white">
-        <div className="section-card">
-          <h2 className="section-title">Virtual Tour</h2>
-          <div className="virtual-tour-container">
-            <iframe 
-              className="tour-iframe rounded-2xl"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.8989471994046!2d39.654743973132156!3d-4.041040495932689!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x184012b6a695c773%3A0x3c53f3de1a4fa1d0!2sMakupa%20Roundabout!5e0!3m2!1sen!2ske!4v1747141043784!5m2!1sen!2ske" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" 
-              allowFullScreen
-              title="Nebsam Head Office Virtual Tour"
-            ></iframe>
-            <a 
-              href="https://wa.me/254759000111" 
-              className="whatsapp-button pulse"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Schedule Physical Visit
-            </a>
-          </div>
-        </div>
-      </section>
+    <section className="section bg-blue-900 text-white">
+  <div className="section-card">
+    <h2 className="section-title">Virtual Tour</h2>
+    <div className="virtual-tour-container">
+      <iframe 
+        className="tour-iframe rounded-2xl"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.8989471994046!2d39.654743973132156!3d-4.041040495932689!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x184012b6a695c773%3A0x3c53f3de1a4fa1d0!2sMakupa%20Roundabout!5e0!3m2!1sen!2ske!4v1747141043784!5m2!1sen!2ske" 
+        width="800" 
+        height="600" 
+        style={{ border: 0 }}
+        allowFullScreen
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        title="Nebsam Head Office Virtual Tour"
+      />
+      <a 
+        href="https://wa.me/254759000111" 
+        className="whatsapp-button pulse"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Schedule Physical Visit
+      </a>
+    </div>
+  </div>
+</section>
 
       {/* Clients Section */}
       <section className="section">
