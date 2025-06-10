@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
-import '../App.css'; 
-import { Link } from 'react-router-dom';
+import '../App.css';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = (item) => {
     setActiveDropdown(activeDropdown === item ? null : item);
   };
 
+  // Service dropdown links with their direct paths
+  const serviceDropdownLinks = [
+    { label: 'GPS Tracking', path: '/services/car-tracking' },
+    { label: 'Smart Car Alarms', path: '/services/car-alarms' },
+    { label: 'Fuel Monitoring', path: '/services/fuel-monitoring' },
+    { label: 'Video Telematics', path: '/services/vehicle-video-telematics' },
+    { label: 'Speed Governors', path: '/services/speed-governors' },
+    { label: 'Radio Calls', path: '/services/radio-calls' }
+  ];
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
           <span className="logo-text">Nebsam</span>
-          
         </Link>
 
         <div className="menu-icon" onClick={toggleMenu}>
@@ -31,7 +41,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="nav-item dropdown">
-            <div 
+            <div
               className="nav-link dropdown-toggle"
               onClick={() => toggleDropdown('about')}
             >
@@ -58,7 +68,7 @@ const Navbar = () => {
             )}
           </li>
           <li className="nav-item dropdown">
-            <div 
+            <div
               className="nav-link dropdown-toggle"
               onClick={() => toggleDropdown('services')}
             >
@@ -66,36 +76,20 @@ const Navbar = () => {
             </div>
             {activeDropdown === 'services' && (
               <ul className="dropdown-menu">
-                <li>
-                  <Link to="/services" className="dropdown-link" onClick={() => setIsOpen(false)}>
-                    GPS Tracking
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services" className="dropdown-link" onClick={() => setIsOpen(false)}>
-                    Smart Car Alarms
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services" className="dropdown-link" onClick={() => setIsOpen(false)}>
-                    Fuel Monitoring
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services" className="dropdown-link" onClick={() => setIsOpen(false)}>
-                    Video Telematics
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services" className="dropdown-link" onClick={() => setIsOpen(false)}>
-                    Speed Governors
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services" className="dropdown-link" onClick={() => setIsOpen(false)}>
-                    Radio calls
-                  </Link>
-                </li>
+                {serviceDropdownLinks.map((item, idx) => (
+                  <li key={idx}>
+                    <Link
+                      to={item.path}
+                      className="dropdown-link"
+                      onClick={() => {
+                        setIsOpen(false);
+                        setActiveDropdown(null);
+                      }}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             )}
           </li>

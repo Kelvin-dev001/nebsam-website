@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaTruck, FaWhatsapp, FaShoppingCart, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { TypeAnimation } from 'react-type-animation';
 import '../App.css';
@@ -6,58 +7,53 @@ import '../App.css';
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [hoveredTruck, setHoveredTruck] = useState(null);
-  
+  const navigate = useNavigate();
+
+  // Service cards and their corresponding paths
   const services = [
     {
       title: 'Advanced Car Tracking',
       description: 'Real-time GPS tracking with theft prevention features',
       image: '/images/car-tracking-hero1.jpg',
-      cta: 'Explore Trackers'
+      cta: 'Explore Trackers',
+      path: '/services/car-tracking'
     },
     {
       title: 'Smart Car Alarms',
       description: '3-in-1 security system with remote control',
       image: '/images/car-alarms-hero1.jpg',
-      cta: 'Secure Your Vehicle'
+      cta: 'Secure Your Vehicle',
+      path: '/services/car-alarms'
     },
     {
       title: 'Video Telematics',
       description: 'AI-powered driver monitoring and safety',
       image: '/images/video-telematics-hero1.jpg',
-      cta: 'View Events'
+      cta: 'View Events',
+      path: '/services/vehicle-video-telematics'
     },
     {
       title: 'Speed Governors',
       description: 'Compliance and fuel efficiency solutions',
       image: '/images/speed-governor-hero1.jpg',
-      cta: 'Install/Renew'
+      cta: 'Install/Renew',
+      path: '/services/speed-governors'
     },
     {
       title: 'Fuel Monitoring',
       description: 'Prevent theft and reduce fuel costs',
       image: '/images/fuel-hero-bg1.jpg',
-      cta: 'Monitor Fuel'
+      cta: 'Monitor Fuel',
+      path: '/services/fuel-monitoring'
     },
     {
       title: 'Radio Calls',
       description: 'Reliable communication for your team',
       image: '/images/radio-hero-bg1.jpg',
-      cta: 'Stay Connected'
+      cta: 'Stay Connected',
+      path: '/services/radio-calls'
     }
   ];
-
-  const getRandomAlert = () => {
-    const alerts = [
-      "is speeding (92km/h in 80km/h zone)",
-      "has been idling for 18 minutes",
-      "fuel level dropped suddenly (possible theft)",
-      "is off-route by 5.2km",
-      "needs maintenance soon",
-      "entered restricted area",
-      "hard braking detected"
-    ];
-    return alerts[Math.floor(Math.random() * alerts.length)];
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,10 +73,10 @@ const Home = () => {
   return (
     <div className="home-container">
       {/* Floating WhatsApp Button */}
-      <a 
-        href="https://wa.me/254759000111" 
-        className="whatsapp-float" 
-        target="_blank" 
+      <a
+        href="https://wa.me/254759000111"
+        className="whatsapp-float"
+        target="_blank"
         rel="noopener noreferrer"
       >
         <FaWhatsapp className="whatsapp-icon" />
@@ -89,16 +85,30 @@ const Home = () => {
       {/* Hero Carousel */}
       <div className="hero-carousel">
         {services.map((service, index) => (
-          <div 
+          <div
             key={index}
             className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
             style={{ backgroundImage: `url(${service.image})` }}
+            onClick={() => navigate(service.path)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && navigate(service.path)}
+            style={{
+              backgroundImage: `url(${service.image})`,
+              cursor: 'pointer'
+            }}
           >
             <div className="slide-overlay"></div>
             <div className="slide-content">
               <h2 className="slide-title">{service.title}</h2>
               <p className="slide-description">{service.description}</p>
-              <button className="glow-button">
+              <button
+                className="glow-button"
+                onClick={e => {
+                  e.stopPropagation();
+                  navigate(service.path);
+                }}
+              >
                 {service.cta} <FaShoppingCart className="button-icon" />
               </button>
             </div>
@@ -112,7 +122,7 @@ const Home = () => {
         </button>
         <div className="carousel-dots">
           {services.map((_, index) => (
-            <span 
+            <span
               key={index}
               className={`dot ${index === currentSlide ? 'active' : ''}`}
               onClick={() => setCurrentSlide(index)}
@@ -124,9 +134,17 @@ const Home = () => {
       {/* Services Quick Links */}
       <div className="services-grid">
         {services.map((service, index) => (
-          <div key={index} className="service-card" onClick={() => setCurrentSlide(index)}>
-            <div 
-              className="service-image" 
+          <div
+            key={index}
+            className="service-card"
+            onClick={() => navigate(service.path)}
+            style={{ cursor: 'pointer' }}
+            tabIndex={0}
+            role="button"
+            onKeyDown={e => e.key === 'Enter' && navigate(service.path)}
+          >
+            <div
+              className="service-image"
               style={{ backgroundImage: `url(${service.image})` }}
             ></div>
             <h3>{service.title}</h3>
@@ -134,20 +152,20 @@ const Home = () => {
         ))}
       </div>
 
-    {/* Live Fleet Simulation - Compact Version */}
-<div className="fleet-simulation">
-  <h2>Have Your Whole Fleet At The Palms of Your Hands</h2>
-  <div className="terminal-container">
-    <div className="terminal-header">
-      <div className="terminal-controls">
-        <span className="terminal-close"></span>
-        <span className="terminal-minimize"></span>
-        <span className="terminal-expand"></span>
-      </div>
-      <span className="terminal-title">FLEET ALERTS MONITOR</span>
-    </div>
-    <div className="terminal-content">
-    <TypeAnimation
+      {/* Live Fleet Simulation - Compact Version */}
+      <div className="fleet-simulation">
+        <h2>Have Your Whole Fleet At The Palms of Your Hands</h2>
+        <div className="terminal-container">
+          <div className="terminal-header">
+            <div className="terminal-controls">
+              <span className="terminal-close"></span>
+              <span className="terminal-minimize"></span>
+              <span className="terminal-expand"></span>
+            </div>
+            <span className="terminal-title">FLEET ALERTS MONITOR</span>
+          </div>
+          <div className="terminal-content">
+            <TypeAnimation
               sequence={[
                 'Initializing Nebsam fleet monitoring system...\n',
                 500,
@@ -178,25 +196,25 @@ const Home = () => {
                 'All other vehicles operating within normal parameters\n',
                 2000
               ]}
-        wrapper="pre"
-        speed={100}
-        style={{ 
-          fontFamily: "'IBM Plex Mono', monospace",
-          color: '#e0e0e0',
-          whiteSpace: 'pre-wrap',
-          fontSize: '0.9rem',
-          lineHeight: '1.4'
-        }}
-        repeat={Infinity}
-      />
-    </div>
-    <div className="terminal-footer">
-      <span className="status-indicator active"></span>
-      <span>LIVE FEED</span>
-      <span className="timestamp">{new Date().toLocaleTimeString()}</span>
-    </div>
-  </div>
-</div>
+              wrapper="pre"
+              speed={50}
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                color: '#e0e0e0',
+                whiteSpace: 'pre-wrap',
+                fontSize: '0.9rem',
+                lineHeight: '1.4'
+              }}
+              repeat={Infinity}
+            />
+          </div>
+          <div className="terminal-footer">
+            <span className="status-indicator active"></span>
+            <span>LIVE FEED</span>
+            <span className="timestamp">{new Date().toLocaleTimeString()}</span>
+          </div>
+        </div>
+      </div>
 
       {/* CTA Section */}
       <div className="cta-section">
