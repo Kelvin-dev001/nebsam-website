@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaTruck, FaWhatsapp, FaShoppingCart, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { TypeAnimation } from 'react-type-animation';
+import BannerModal from './BannerModal';
 import '../App.css';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [hoveredTruck, setHoveredTruck] = useState(null);
+  const [modalOpen, setModalOpen] = useState(true);
   const navigate = useNavigate();
 
   // Service cards and their corresponding paths
@@ -72,6 +74,14 @@ const Home = () => {
 
   return (
     <div className="home-container">
+       {/* Pop-up Banner Modal */}
+       <BannerModal
+        show={modalOpen}
+        onClose={() => setModalOpen(false)}
+        imageSrc="/images/new-product-banner.png" // <-- update path as needed
+        message="🚀 Introducing our Hybrid Tracker! Click for details."
+        link="/services/car-tracking"
+      />
       {/* Floating WhatsApp Button */}
       <a
         href="https://wa.me/254759000111"
@@ -196,8 +206,9 @@ const Home = () => {
                 'All other vehicles operating within normal parameters\n',
                 2000
               ]}
+
               wrapper="pre"
-              speed={50}
+              speed={150}
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
                 color: '#e0e0e0',
