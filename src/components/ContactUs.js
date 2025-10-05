@@ -234,7 +234,7 @@ const ContactPage = () => {
                 <div>
                   <h4>Customer Support</h4>
                   <p>24/7 Emergency Support Available</p>
-                  <p>For tracking emergencies: +254 722 000000</p>
+                  <p>For tracking emergencies: +254 759000111</p>
                 </div>
               </div>
               
@@ -242,7 +242,7 @@ const ContactPage = () => {
                 <MdOutlineSupportAgent />
                 <div>
                   <h4>Technical Support</h4>
-                  <p>support@nebsam.com</p>
+                  <p>support@nebsamdigital.com</p>
                   <p>+254 759000111</p>
                 </div>
               </div>
