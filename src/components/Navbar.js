@@ -100,6 +100,9 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
+      <div className="navbar-marquee">
+      <span className="marquee-text">We Are The Solution</span>
+    </div>
     </nav>
   );
 };
