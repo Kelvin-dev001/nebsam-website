@@ -12,16 +12,22 @@ import Footer from './components/Footer';
 const App = () => {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/services/:serviceName" element={<ServiceDetail />} />
-      </Routes>
+      <header>
+        <Navbar />
+      </header>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/:serviceName" element={<ServiceDetail />} />
+        </Routes>
+      </main>
       <FloatingWhatsApp />
-      <Footer />
+      <footer>
+        <Footer />
+      </footer>
     </Router>
   );
 };

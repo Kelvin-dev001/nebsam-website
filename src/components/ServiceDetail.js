@@ -18,9 +18,195 @@ import {
   faChartLine
 } from '@fortawesome/free-solid-svg-icons';
 
+const serviceMeta = {
+  'car-tracking': {
+    title: 'Car Tracking Services | Nebsam Digital Solutions',
+    description: 'Explore advanced car tracking devices for real-time GPS, theft prevention, and fleet management at Nebsam Digital Solutions.',
+    canonical: 'https://nebsamdigital.com/services/car-tracking',
+    ogImage: 'https://nebsamdigital.com/images/tracking-hero-bg.jpg',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Car Tracking",
+      "description": "Explore advanced car tracking devices for real-time GPS, theft prevention, and fleet management at Nebsam Digital Solutions.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Nebsam Digital Solutions",
+        "url": "https://nebsamdigital.com",
+        "logo": "https://nebsamdigital.com/images/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+254759000111",
+          "contactType": "customer service"
+        }
+      },
+      "areaServed": ["Kenya", "East Africa"],
+      "serviceType": "Vehicle Tracking",
+      "url": "https://nebsamdigital.com/services/car-tracking"
+    }
+  },
+  'fuel-monitoring': {
+    title: 'Fuel Monitoring Services | Nebsam Digital Solutions',
+    description: 'Advanced fuel monitoring solutions to reduce costs and prevent theft for fleets, trucks, and vehicles.',
+    canonical: 'https://nebsamdigital.com/services/fuel-monitoring',
+    ogImage: 'https://nebsamdigital.com/images/fuel-hero-bg.jpg',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Fuel Monitoring",
+      "description": "Advanced fuel monitoring solutions to reduce costs and prevent theft for fleets, trucks, and vehicles.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Nebsam Digital Solutions",
+        "url": "https://nebsamdigital.com",
+        "logo": "https://nebsamdigital.com/images/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+254759000111",
+          "contactType": "customer service"
+        }
+      },
+      "areaServed": ["Kenya", "East Africa"],
+      "serviceType": "Fuel Monitoring",
+      "url": "https://nebsamdigital.com/services/fuel-monitoring"
+    }
+  },
+  'radio-calls': {
+    title: 'Radio Call Services | Nebsam Digital Solutions',
+    description: 'Stay connected with our reliable radio communication systems: long-range and short-range radio calls for teams and fleets.',
+    canonical: 'https://nebsamdigital.com/services/radio-calls',
+    ogImage: 'https://nebsamdigital.com/images/radio-hero-bg.jpg',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Radio Call",
+      "description": "Stay connected with our reliable radio communication systems: long-range and short-range radio calls for teams and fleets.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Nebsam Digital Solutions",
+        "url": "https://nebsamdigital.com",
+        "logo": "https://nebsamdigital.com/images/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+254759000111",
+          "contactType": "customer service"
+        }
+      },
+      "areaServed": ["Kenya", "East Africa"],
+      "serviceType": "Radio Communication",
+      "url": "https://nebsamdigital.com/services/radio-calls"
+    }
+  },
+  'vehicle-video-telematics': {
+    title: 'Vehicle Video Telematics | Nebsam Digital Solutions',
+    description: 'AI-powered vehicle video telematics solutions for fleet safety, driver monitoring, and accident prevention.',
+    canonical: 'https://nebsamdigital.com/services/vehicle-video-telematics',
+    ogImage: 'https://nebsamdigital.com/images/video-telematics-hero.jpg',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Vehicle Video Telematics",
+      "description": "AI-powered vehicle video telematics solutions for fleet safety, driver monitoring, and accident prevention.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Nebsam Digital Solutions",
+        "url": "https://nebsamdigital.com",
+        "logo": "https://nebsamdigital.com/images/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+254759000111",
+          "contactType": "customer service"
+        }
+      },
+      "areaServed": ["Kenya", "East Africa"],
+      "serviceType": "Video Telematics",
+      "url": "https://nebsamdigital.com/services/vehicle-video-telematics"
+    }
+  },
+  'speed-governors': {
+    title: 'Speed Governors Services | Nebsam Digital Solutions',
+    description: 'Speed limiting solutions for fleet safety, compliance and GPS tracking. Approved by NTSA.',
+    canonical: 'https://nebsamdigital.com/services/speed-governors',
+    ogImage: 'https://nebsamdigital.com/images/speed-governor-hero.jpg',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Speed Governors",
+      "description": "Speed limiting solutions for fleet safety, compliance and GPS tracking. Approved by NTSA.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Nebsam Digital Solutions",
+        "url": "https://nebsamdigital.com",
+        "logo": "https://nebsamdigital.com/images/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+254759000111",
+          "contactType": "customer service"
+        }
+      },
+      "areaServed": ["Kenya", "East Africa"],
+      "serviceType": "Speed Governors",
+      "url": "https://nebsamdigital.com/services/speed-governors"
+    }
+  },
+  'car-alarms': {
+    title: 'Nebsmart Car Alarms | Nebsam Digital Solutions',
+    description: '3 in 1 Car Alarm + Tracker + Cut. Advanced security, remote lock/unlock, instant alerts and monitoring.',
+    canonical: 'https://nebsamdigital.com/services/car-alarms',
+    ogImage: 'https://nebsamdigital.com/images/car-alarms-hero.jpg',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Nebsmart Car Alarms",
+      "description": "3 in 1 Car Alarm + Tracker + Cut. Advanced security, remote lock/unlock, instant alerts and monitoring.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Nebsam Digital Solutions",
+        "url": "https://nebsamdigital.com",
+        "logo": "https://nebsamdigital.com/images/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+254759000111",
+          "contactType": "customer service"
+        }
+      },
+      "areaServed": ["Kenya", "East Africa"],
+      "serviceType": "Car Alarms",
+      "url": "https://nebsamdigital.com/services/car-alarms"
+    }
+  }
+  // Add more meta for additional services if needed
+};
+
 
 const ServiceDetail = () => {
   const { serviceName } = useParams();
+  const meta = serviceMeta[serviceName] || {
+    title: 'Nebsam Digital Solutions GPS Tracking Services in Kenya',
+    description: 'Explore our Vehicle Video Telematics, GPS Vehicle Tracking, Smart Car Alarms, Speed Governors, Fuel monitoring and Radio call solutions.',
+    canonical: 'https://nebsamdigital.com/services',
+    ogImage: 'https://nebsamdigital.com/images/logo.png',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Fleet & Vehicle Services",
+      "description": "Explore our Vehicle Video Telematics, GPS Vehicle Tracking, Smart Car Alarms, Speed Governors, Fuel monitoring and Radio call solutions.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Nebsam Digital Solutions",
+        "url": "https://nebsamdigital.com",
+        "logo": "https://nebsamdigital.com/images/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+254759000111",
+          "contactType": "customer service"
+        }
+      },
+      "areaServed": ["Kenya", "East Africa"],
+      "serviceType": "Fleet & Vehicle Services",
+      "url": "https://nebsamdigital.com/services"
+    }
+  };
   
   // Reusable Hero Section Component (Mobile-first)
   const renderHeroSection = (heroData) => {
@@ -41,6 +227,8 @@ const ServiceDetail = () => {
     'chart-line': faChartLine
 
   };
+ 
+  
   return (
     <section className="hero-section" style={{ backgroundImage: `url(${heroData.backgroundImage})` }}>
       <div className="hero-content">
@@ -1101,6 +1289,26 @@ const ServiceDetail = () => {
 
     return (
       <div className="service-container">
+        <Helmet>
+          <title>{meta.title}</title>
+          <meta name="description" content={meta.description} />
+          <link rel="canonical" href={meta.canonical} />
+          {/* Open Graph */}
+          <meta property="og:title" content={meta.title} />
+          <meta property="og:description" content={meta.description} />
+          <meta property="og:url" content={meta.canonical} />
+          <meta property="og:image" content={meta.ogImage} />
+          <meta property="og:type" content="website" />
+          {/* Twitter Card */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={meta.title} />
+          <meta name="twitter:description" content={meta.description} />
+          <meta name="twitter:image" content={meta.ogImage} />
+          {/* Schema.org Structured Data for Service */}
+          <script type="application/ld+json">
+            {JSON.stringify(meta.schema)}
+          </script>
+        </Helmet>
         {service.hero && renderHeroSection(service.hero)}
         {(() => {
           switch (serviceName) {
