@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaTruck, FaWhatsapp, FaShoppingCart, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+import { FaTruck, FaShoppingCart, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { TypeAnimation } from 'react-type-animation';
 import BannerModal from './BannerModal';
 import '../App.css';
@@ -74,39 +74,28 @@ const Home = () => {
 
   return (
     <div className="home-container">
-       {/* Pop-up Banner Modal */}
-       <BannerModal
+      {/* Pop-up Banner Modal */}
+      <BannerModal
         show={modalOpen}
         onClose={() => setModalOpen(false)}
         imageSrc="/images/new-product-banner.png" // <-- update path as needed
         message="🚀 Introducing our Hybrid Tracker! Click for details."
         link="/services/car-tracking"
       />
-      {/* Floating WhatsApp Button */}
-      <a
-        href="https://wa.me/254759000111"
-        className="whatsapp-float"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <FaWhatsapp className="whatsapp-icon" />
-      </a>
-
       {/* Hero Carousel */}
       <div className="hero-carousel">
         {services.map((service, index) => (
           <div
             key={index}
             className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
-            style={{ backgroundImage: `url(${service.image})` }}
-            onClick={() => navigate(service.path)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={e => e.key === 'Enter' && navigate(service.path)}
             style={{
               backgroundImage: `url(${service.image})`,
               cursor: 'pointer'
             }}
+            onClick={() => navigate(service.path)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && navigate(service.path)}
           >
             <div className="slide-overlay"></div>
             <div className="slide-content">

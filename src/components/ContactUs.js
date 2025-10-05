@@ -45,15 +45,7 @@ const ContactPage = () => {
     <>
 
       <div className="contact-page">
-        {/* Floating WhatsApp Button */}
-        <a 
-          href="https://wa.me/254759000111" 
-          className="whatsapp-float" 
-          target="_blank" 
-          rel="noopener noreferrer"
-        >
-          <FaWhatsapp className="whatsapp-icon" />
-        </a>
+        {/* Removed Floating WhatsApp Button */}
 
         {/* Hero Section */}
         <section className="contact-hero">
@@ -184,9 +176,9 @@ const ContactPage = () => {
                   <FaPhone />
                 </div>
                 <h3>Call Us</h3>
-                <p>+254 700 000000</p>
-                <p>+254 711 000000</p>
-                <a href="tel:+254700000000" className="action-link">
+                <p>+254 759000111</p>
+                <p>+254 711895555</p>
+                <a href="tel:+254759000111" className="action-link">
                   Call Now
                 </a>
               </motion.div>
@@ -201,7 +193,7 @@ const ContactPage = () => {
                 <h3>Email Us</h3>
                 <p>info@nebsam.com</p>
                 <p>support@nebsam.com</p>
-                <a href="mailto:info@nebsam.com" className="action-link">
+                <a href="mailto:info@nebsamdigital.com" className="action-link">
                   Send Email
                 </a>
               </motion.div>

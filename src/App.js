@@ -6,6 +6,7 @@ import AboutUs from './components/AboutUs';
 import Services from './components/Services';
 import ServiceDetail from './components/ServiceDetail';
 import ContactPage from './components/ContactUs';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 import Footer from './components/Footer';
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/services" element={<Services />} />
         <Route path="/services/:serviceName" element={<ServiceDetail />} />
       </Routes>
+      <FloatingWhatsApp />
       <Footer />
     </Router>
   );
