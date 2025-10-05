@@ -453,7 +453,7 @@
 /* App.css */
 /* About Us Specific Styles */
 /* Hero Section */
-.hero-section {
+.about-hero-section {
   background: url('/src/images/office-hero.jpeg') center/cover no-repeat;
   height: 80vh;
   display: flex;

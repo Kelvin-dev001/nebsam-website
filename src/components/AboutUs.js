@@ -65,7 +65,7 @@ const AboutUs = () => {
   return (
     <div className="about-us-container">
       {/* Hero Section with Sliding Background */}
-      <section className="hero-section">
+      <section className="hero-section about-hero-section">
         <div className="hero-content">
           <h1 className="hero-title">Driving Innovation in Vehicle Telematics</h1>
           <p className="hero-subtitle">Trusted by 50,000+ clients across Africa</p>
