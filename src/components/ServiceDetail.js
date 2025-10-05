@@ -43,7 +43,6 @@ const ServiceDetail = () => {
   };
   return (
     <section className="hero-section" style={{ backgroundImage: `url(${heroData.backgroundImage})` }}>
-      <div className="cobalt-overlay"></div>
       <div className="hero-content">
         <h1 className="hero-title">{heroData.title}</h1>
         <p className="hero-subtitle">{heroData.subtitle}</p>
