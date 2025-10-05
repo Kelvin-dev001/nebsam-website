@@ -46,16 +46,7 @@ const ServiceDetail = () => {
       <div className="hero-content">
         <h1 className="hero-title">{heroData.title}</h1>
         <p className="hero-subtitle">{heroData.subtitle}</p>
-        {heroData.features && (
-          <div className="hero-features">
-            {heroData.features.map((feature, index) => (
-              <div key={index} className="feature-item">
-                <FontAwesomeIcon icon={iconMap[feature.icon]} className="feature-icon" />
-                <span>{feature.text}</span>
-              </div>
-            ))}
-          </div>
-        )}
+        
       </div>
     </section>
   );
