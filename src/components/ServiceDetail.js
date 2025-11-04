@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import '../App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
