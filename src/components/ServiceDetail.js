@@ -46,6 +46,34 @@ const serviceMeta = {
       "url": "https://nebsamdigital.com/services/car-tracking"
     }
   },
+
+ 'electronic-cargo-tracking-system': {
+  title: 'Electronic Cargo Tracking System (ECTS) Providers in Kenya | Nebsam Digital Solutions',
+  description: 'Nebsam Digital Solutions provides Electronic Cargo Tracking System (ECTS) solutions in Kenya: real-time cargo monitoring, GPS e-locks, tamper alerts, geofencing, and compliance-ready reporting for secure transit.',
+  canonical: 'https://nebsamdigital.com/services/electronic-cargo-tracking-system',
+  ogImage: 'https://nebsamdigital.com/images/ects/ects-og.jpg',
+  schema: {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Electronic Cargo Tracking System (ECTS)",
+    "description": "Electronic Cargo Tracking System (ECTS) solutions in Kenya with GPS electronic locks, real-time monitoring, tamper alerts, geofencing, and compliance-ready tracking for secure cargo transit.",
+    "provider": {
+      "@type": "Organization",
+      "name": "Nebsam Digital Solutions",
+      "url": "https://nebsamdigital.com",
+      "logo": "https://nebsamdigital.com/images/logo.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+254759000111",
+        "contactType": "customer service"
+      }
+    },
+    "areaServed": ["Kenya", "East Africa"],
+    "serviceType": "Electronic Cargo Tracking System",
+    "url": "https://nebsamdigital.com/services/electronic-cargo-tracking-system"
+  }
+},
+  
   'fuel-monitoring': {
     title: 'Fuel Monitoring Services | Nebsam Digital Solutions',
     description: 'Advanced fuel monitoring solutions to reduce costs and prevent theft for fleets, trucks, and vehicles.',
@@ -183,8 +211,8 @@ const serviceMeta = {
 const ServiceDetail = () => {
   const { serviceName } = useParams();
   const meta = serviceMeta[serviceName] || {
-    title: 'Nebsam Digital Solutions GPS Tracking Services in Kenya',
-    description: 'Explore our Vehicle Video Telematics, GPS Vehicle Tracking, Smart Car Alarms, Speed Governors, Fuel monitoring and Radio call solutions.',
+    title: 'Nebsam Digital Solutions Vehicle Tracking Services in Kenya',
+    description: 'Explore our Vehicle Video Telematics, Electronic Cargo Tracking System, GPS Vehicle Tracking, Smart Car Alarms, Speed Governors, Fuel monitoring and Radio call solutions.',
     canonical: 'https://nebsamdigital.com/services',
     ogImage: 'https://nebsamdigital.com/images/logo.png',
     schema: {
@@ -434,6 +462,191 @@ const ServiceDetail = () => {
         },
       ],
     },
+
+        //: ECTS Service
+        'electronic-cargo-tracking-system': {
+          title: 'Electronic Cargo Tracking System (ECTS)',
+          subtitle: 'Secure cargo transit with real-time tracking, alerts, and compliance-ready visibility.',
+          hero: {
+            title: 'Electronic Cargo Tracking System (ECTS) in Kenya',
+            subtitle: 'Real-time cargo monitoring + GPS electronic locks + tamper alerts + geofencing',
+            backgroundImage: '/images/ects/ects-hero-bg.jpg',
+            features: [
+              { icon: 'map-marker-alt', text: 'Real-time Monitoring' },
+              { icon: 'shield-alt', text: 'Tamper & Theft Prevention' },
+              { icon: 'bell', text: 'Instant Alerts & Events' }
+            ]
+          },
+          sections: [
+            {
+              type: 'ects-problem',
+              id: 1,
+              title: 'Problem To Solve',
+              intro:
+                'Cargo in transit is vulnerable to theft, tampering, route deviation and costly manual security checks. For cross-border or high-value logistics, organizations also face tax revenue losses, long wait times, and high escort costs.',
+              bullets: [
+                'Electronic Cargo Tracking System (ECTS): minimize tax losses and reduce high escort costs.',
+                'Cross-border transit monitoring: prevent illegal activities and reduce delays at checkpoints.',
+                'Airport sensitive baggage & cargo: improve security and ensure timely delivery (beverages, medications, blankets).',
+                'High-value goods escort: real-time tracking and secure transportation of sensitive goods (cash, documents, jewelry, firearms, oil & gas).',
+                'Cold chain transportation: maintain strict temperature requirements and prevent contamination for medicines/fresh food.'
+              ],
+              images: [
+                { src: '/images/ects/problem-1.jpg', alt: 'ECTS cargo risk monitoring in Kenya - photo 1' },
+                { src: '/images/ects/problem-2.jpg', alt: 'Cross-border cargo transit risk - photo 2' },
+                { src: '/images/ects/problem-3.jpg', alt: 'Airport sensitive baggage tracking - photo 3' },
+                { src: '/images/ects/problem-4.jpg', alt: 'High-value goods escort tracking - photo 4' }
+              ]
+            },
+            {
+              type: 'ects-solution',
+              id: 2,
+              title: 'Our Solution',
+              intro:
+                'Nebsam provides an ECTS-ready cargo visibility stack built around GPS electronic locks, sensors and a monitoring platform—designed to improve security, compliance and operational efficiency across Kenya and East Africa.',
+              cards: [
+                {
+                  title: 'Enhanced Security',
+                  text: 'Protect goods from theft, tampering and unauthorized access with real-time tracking and instant alerts.'
+                },
+                {
+                  title: 'Operational Efficiency',
+                  text: 'Reduce manual inspections and delays with remote monitoring and faster clearance workflows.'
+                },
+                {
+                  title: 'Cost-Effective',
+                  text: 'Lower losses from theft/damage while minimizing labor-intensive manual security checks.'
+                },
+                {
+                  title: 'Compliance & Transparency',
+                  text: 'Track and record shipments with event logs, alerts, and auditable reporting for regulated operations.'
+                }
+              ],
+              images: [
+                { src: '/images/ects/solution-1.jpg', alt: 'GPS electronic lock solution - photo 1' },
+                { src: '/images/ects/solution-2.jpg', alt: 'Remote cargo monitoring dashboard - photo 2' },
+                { src: '/images/ects/solution-3.jpg', alt: 'Tamper alert and geofence events - photo 3' },
+                { src: '/images/ects/solution-4.jpg', alt: 'Customizable scalable cargo security - photo 4' }
+              ]
+            },
+            {
+              type: 'ects-products',
+              id: 3,
+              title: 'Our Products Information',
+              intro:
+                'Our ECTS product family is built around a GPS Electronic Lock with keyless access, long battery life, real-time monitoring and event-based alarms—ready for containers, oil tankers, dump trucks/topless trucks with tarpaulin and delivery vans.',
+              models: [
+                {
+                  name: 'Model A (Standard GPS E-Lock)',
+                  description: 'Reliable electronic lock with real-time monitoring, geofencing and core tamper detection.',
+                  image: '/images/ects/models/model-a.jpg'
+                },
+                {
+                  name: 'Model B (Extended Battery + Solar Option)',
+                  description: 'Longer deployments with optional solar charging and deep-sleep wake automation.',
+                  image: '/images/ects/models/model-b.jpg'
+                },
+                {
+                  name: 'Model C (Multi-Container / Sub-locks + Sensors)',
+                  description: 'Supports sub-locks (up to 7 via Bluetooth) and scalable LoRa modules for more locks/sensors.',
+                  image: '/images/ects/models/model-c.jpg'
+                }
+              ],
+              highlights: [
+                {
+                  title: 'Keyless design',
+                  points: [
+                    'RFID/remote unlocking (Bluetooth/Platform/SMS)'
+                  ]
+                },
+                {
+                  title: 'Large capacity battery',
+                  points: [
+                    'Long working time (15200/8000mAh)',
+                    'Solar panel optional'
+                  ]
+                },
+                {
+                  title: 'Connectivity',
+                  points: [
+                    'Real-time online monitoring',
+                    'Real-time alarms (unlock/lock events, anti-tampering, geofence)',
+                    'Bluetooth 4.0 with sub-locks (up to 7)',
+                    'LoRa modules for sub-locks/sensors (> 7 units)',
+                    'Temperature/Humidity/Light sensor support'
+                  ]
+                },
+                {
+                  title: 'Reliability',
+                  points: [
+                    'Explosion-proof & waterproof (ATEX / IP67 / CE)',
+                    'Flame retardant material; oil corrosion resistant option (oil & gas)',
+                    'Abnormal battery temperature alarm'
+                  ]
+                },
+                {
+                  title: 'Real-time alarms (examples)',
+                  points: [
+                    'Rope-cutting alarm',
+                    'Unlocking alarm',
+                    'Geofence (enter/exit/route deviation)',
+                    'Low battery alarm',
+                    'SIM cover alarm',
+                    'Abnormal motor alarm',
+                    'Unauthorized RFID card alarm',
+                    'Connection timeout alarm (master/sub-locks/sensors)'
+                  ]
+                }
+              ],
+              productImages: [
+                { src: '/images/ects/products/product-1.jpg', alt: 'ECTS product image 1' },
+                { src: '/images/ects/products/product-2.jpg', alt: 'ECTS product image 2' },
+                { src: '/images/ects/products/product-3.jpg', alt: 'ECTS product image 3' },
+                { src: '/images/ects/products/product-4.jpg', alt: 'ECTS product image 4' },
+                { src: '/images/ects/products/product-5.jpg', alt: 'ECTS product image 5' },
+                { src: '/images/ects/products/product-6.jpg', alt: 'ECTS product image 6' },
+                { src: '/images/ects/products/product-7.jpg', alt: 'ECTS product image 7' },
+                { src: '/images/ects/products/product-8.jpg', alt: 'ECTS product image 8' }
+              ]
+            },
+            {
+              type: 'ects-usecases',
+              id: 4,
+              title: 'Real Use Cases',
+              intro:
+                'ECTS is ideal for regulated and security-sensitive logistics where real-time visibility, alerts and audit trails matter.',
+              cases: [
+                {
+                  title: 'Cross-Border Transit Monitoring',
+                  description:
+                    'Track cargo movement in real-time, detect route deviations, and reduce delays and revenue leakage with automated event logs and alerts.',
+                  image: '/images/ects/usecases/usecase-1.jpg'
+                },
+                {
+                  title: 'Airport Sensitive Baggage & Cargo',
+                  description:
+                    'Improve security and operational efficiency for sensitive baggage, beverages, medications, and blankets with monitored handling and delivery.',
+                  image: '/images/ects/usecases/usecase-2.jpg'
+                },
+                {
+                  title: 'High-Value Goods Escort (Cash / Jewelry / Firearms / Documents)',
+                  description:
+                    'Reduce escort cost and risk using electronic locks, tamper detection and real-time monitoring with instant incident alerts.',
+                  image: '/images/ects/usecases/usecase-3.jpg'
+                },
+                {
+                  title: 'Cold Chain Transportation (Medicines / Fresh Food)',
+                  description:
+                    'Support temperature/humidity sensing and event visibility to protect compliance and prevent contamination during transit.',
+                  image: '/images/ects/usecases/usecase-4.jpg'
+                }
+              ]
+            }
+          ]
+        },
+
+
+
     'radio-calls': {
       title: 'Radio Call Services',
       subtitle: 'Stay connected with our reliable radio communication systems',
@@ -1038,7 +1251,7 @@ const ServiceDetail = () => {
     );
   };
 
-  // Add new render function for speed governors
+  // render function for speed governors
   const renderSpeedGovernors = (sections) => {
     return (
       <div className="speed-governors-container">
@@ -1084,6 +1297,156 @@ const ServiceDetail = () => {
           }
         })}
       </div>
+    );
+  };
+
+// render function for ECTS
+  const renderECTS = (sections) => {
+    const ImageGrid = ({ images = [], columnsClass = '' }) => {
+      return (
+        <div className={`ects-image-grid ${columnsClass}`}>
+          {images.map((img, idx) => (
+            <figure key={idx} className="ects-image-slot">
+              <img src={img.src} alt={img.alt || 'ECTS image'} loading="lazy" />
+              {img.caption && <figcaption>{img.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      );
+    };
+
+    return (
+      <article className="ects-container">
+        {sections.map((section) => {
+          switch (section.type) {
+            case 'ects-problem':
+              return (
+                <section key={section.id} className="ects-section">
+                  <header className="ects-section-header">
+                    <h2>{section.title}</h2>
+                    <p className="ects-lead">{section.intro}</p>
+                  </header>
+
+                  <div className="ects-content-grid">
+                    <div className="ects-text">
+                      <ul className="ects-bullets">
+                        {section.bullets.map((b, i) => (
+                          <li key={i}>{b}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="ects-media">
+                      <h3 className="ects-subtitle">Gallery</h3>
+                      <ImageGrid images={section.images} columnsClass="cols-2" />
+                      <p className="ects-hint">Replace the placeholder images with your real project photos.</p>
+                    </div>
+                  </div>
+                </section>
+              );
+
+            case 'ects-solution':
+              return (
+                <section key={section.id} className="ects-section">
+                  <header className="ects-section-header">
+                    <h2>{section.title}</h2>
+                    <p className="ects-lead">{section.intro}</p>
+                  </header>
+
+                  <div className="ects-card-grid">
+                    {section.cards.map((card, idx) => (
+                      <div key={idx} className="ects-card">
+                        <h3>{card.title}</h3>
+                        <p>{card.text}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="ects-media-block">
+                    <h3 className="ects-subtitle">Solution Photos</h3>
+                    <ImageGrid images={section.images} columnsClass="cols-2" />
+                  </div>
+                </section>
+              );
+
+            case 'ects-products':
+              return (
+                <section key={section.id} className="ects-section">
+                  <header className="ects-section-header">
+                    <h2>{section.title}</h2>
+                    <p className="ects-lead">{section.intro}</p>
+                  </header>
+
+                  <div className="ects-models">
+                    <h3 className="ects-subtitle">Models</h3>
+                    <div className="ects-model-grid">
+                      {section.models.map((m, idx) => (
+                        <div key={idx} className="ects-model-card">
+                          <div className="ects-model-image">
+                            <img src={m.image} alt={m.name} loading="lazy" />
+                          </div>
+                          <div className="ects-model-body">
+                            <h4>{m.name}</h4>
+                            <p>{m.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="ects-highlights">
+                    <h3 className="ects-subtitle">Product Capabilities</h3>
+                    <div className="ects-highlight-grid">
+                      {section.highlights.map((h, idx) => (
+                        <div key={idx} className="ects-highlight-card">
+                          <h4>{h.title}</h4>
+                          <ul>
+                            {h.points.map((p, i) => (
+                              <li key={i}>{p}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="ects-media-block">
+                    <h3 className="ects-subtitle">Product Gallery</h3>
+                    <ImageGrid images={section.productImages} columnsClass="cols-4" />
+                    <p className="ects-hint">You requested 8 product images — all slots are provided.</p>
+                  </div>
+                </section>
+              );
+
+            case 'electronic-cargo-tracking-system-usecases':
+              return (
+                <section key={section.id} className="ects-section">
+                  <header className="ects-section-header">
+                    <h2>{section.title}</h2>
+                    <p className="ects-lead">{section.intro}</p>
+                  </header>
+
+                  <div className="ects-usecase-grid">
+                    {section.cases.map((c, idx) => (
+                      <div key={idx} className="ects-usecase-card">
+                        <div className="ects-usecase-image">
+                          <img src={c.image} alt={c.title} loading="lazy" />
+                        </div>
+                        <div className="ects-usecase-body">
+                          <h3>{c.title}</h3>
+                          <p>{c.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              );
+
+            default:
+              return null;
+          }
+        })}
+      </article>
     );
   };
 
@@ -1319,6 +1682,8 @@ const ServiceDetail = () => {
               return renderCarAlarms(service.sections);
             case 'speed-governors':
               return renderSpeedGovernors(service.sections);
+            case 'electronic-cargo-tracking-system':
+              return renderECTS(service.sections);
             default:
               return renderDefaultService(service);
           }
@@ -1326,8 +1691,6 @@ const ServiceDetail = () => {
       </div>
     );
   };
-
   return renderServiceContent();
 };
-
 export default ServiceDetail;

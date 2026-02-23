@@ -20,7 +20,8 @@ const Navbar = () => {
     { label: 'Fuel Monitoring', path: '/services/fuel-monitoring' },
     { label: 'Video Telematics', path: '/services/vehicle-video-telematics' },
     { label: 'Speed Governors', path: '/services/speed-governors' },
-    { label: 'Radio Calls', path: '/services/radio-calls' }
+    { label: 'Radio Calls', path: '/services/radio-calls' },
+    { label: 'Electronic Cargo Tracking (ECTS)', path: '/services/ects' }
   ];
 
   return (

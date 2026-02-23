@@ -2859,6 +2859,257 @@ p {
     color: #00ccff;
   }
 }
+/* =========================
+   ECTS (Electronic Cargo Tracking System)
+   ========================= */
+   .ects-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+  
+  .ects-section {
+    margin: 26px 0;
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(8px);
+  }
+  
+  .ects-section-header h2 {
+    margin: 0 0 8px;
+    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  }
+  
+  .ects-lead {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+  
+  .ects-content-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 18px;
+    margin-top: 14px;
+  }
+  
+  .ects-text .ects-bullets {
+    margin: 0;
+    padding-left: 18px;
+    line-height: 1.75;
+  }
+  
+  .ects-subtitle {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    letter-spacing: 0.2px;
+  }
+  
+  .ects-hint {
+    margin: 10px 0 0;
+    font-size: 0.95rem;
+    opacity: 0.8;
+  }
+  
+  .ects-image-grid {
+    display: grid;
+    gap: 10px;
+  }
+  
+  .ects-image-grid.cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .ects-image-grid.cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  
+  .ects-image-slot {
+    margin: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+  
+  .ects-image-slot img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .ects-card-grid {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+  
+  .ects-card {
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(0,0,0,0.20);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+  
+  .ects-card h3 {
+    margin: 0 0 6px;
+    font-size: 1.05rem;
+  }
+  
+  .ects-card p {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.55;
+  }
+  
+  .ects-media-block {
+    margin-top: 16px;
+  }
+  
+  .ects-models {
+    margin-top: 8px;
+  }
+  
+  .ects-model-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  
+  .ects-model-card {
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.20);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+  
+  .ects-model-image img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .ects-model-body {
+    padding: 12px 12px 14px;
+  }
+  
+  .ects-model-body h4 {
+    margin: 0 0 6px;
+  }
+  
+  .ects-model-body p {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.55;
+  }
+  
+  .ects-highlight-grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  
+  .ects-highlight-card {
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(0,0,0,0.20);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+  
+  .ects-highlight-card h4 {
+    margin: 0 0 8px;
+  }
+  
+  .ects-highlight-card ul {
+    margin: 0;
+    padding-left: 18px;
+    line-height: 1.7;
+  }
+  
+  .ects-usecase-grid {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  
+  .ects-usecase-card {
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.20);
+    border: 1px solid rgba(255,255,255,0.10);
+    display: grid;
+    grid-template-columns: 170px 1fr;
+  }
+  
+  .ects-usecase-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 160px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .ects-usecase-body {
+    padding: 12px 14px;
+  }
+  
+  .ects-usecase-body h3 {
+    margin: 0 0 6px;
+  }
+  
+  .ects-usecase-body p {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.55;
+  }
+  
+  /* Responsive */
+  @media (max-width: 980px) {
+    .ects-card-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .ects-highlight-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .ects-image-grid.cols-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .ects-model-grid {
+      grid-template-columns: 1fr;
+    }
+    .ects-model-image img {
+      height: 220px;
+    }
+  }
+  
+  @media (max-width: 780px) {
+    .ects-content-grid {
+      grid-template-columns: 1fr;
+    }
+    .ects-usecase-card {
+      grid-template-columns: 1fr;
+    }
+    .ects-usecase-image img {
+      height: 220px;
+    }
+  }
+  
+  @media (max-width: 520px) {
+    .ects-card-grid {
+      grid-template-columns: 1fr;
+    }
+    .ects-image-slot img {
+      height: 150px;
+    }
+  }
 
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { FaTruck, FaShoppingCart, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+import { FaShoppingCart, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { TypeAnimation } from 'react-type-animation';
 import BannerModal from './BannerModal';
 import '../App.css';
@@ -61,6 +61,15 @@ const Home = () => {
       image: '/images/radio-hero-bg1.jpg',
       cta: 'Stay Connected',
       path: '/services/radio-calls'
+    },
+
+    // NEW: Electronic Cargo Tracking System (ECTS)
+    {
+      title: 'Electronic Cargo Tracking System (ECTS)',
+      description: 'Secure cross-border cargo transit with real-time tracking, GPS e-locks, tamper alerts and geofencing.',
+      image: '/images/ects/ects-hero1.jpg', // placeholder
+      cta: 'Explore ECTS',
+      path: '/services/electronic-cargo-tracking-system'
     }
   ];
 
@@ -132,7 +141,6 @@ const Home = () => {
         </script>
       </Helmet>
 
-      {/* Pop-up Banner Modal */}
       <BannerModal
         show={modalOpen}
         onClose={() => setModalOpen(false)}
@@ -141,7 +149,6 @@ const Home = () => {
         link="/services/car-tracking"
       />
 
-      {/* Hero Carousel Section */}
       <section className="hero-carousel-section" aria-label="Featured Services Carousel">
         <div className="hero-carousel">
           {services.map((service, index) => (
@@ -197,7 +204,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Services Quick Links Section */}
       <section className="services-quicklinks-section" aria-label="Services Quick Links">
         <div className="services-grid">
           {services.map((service, index) => (
@@ -221,7 +227,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Fleet Simulation Section */}
       <section className="fleet-simulation-section" aria-label="Live Fleet Simulation">
         <div className="fleet-simulation">
           <h2>Have Your Whole Fleet At The Palms of Your Hands</h2>
@@ -287,7 +292,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="cta-section" aria-label="Call To Action">
         <h2>Ready to Secure Your Fleet?</h2>
         <p>Get a free consultation with our telematics experts once you buy from us</p>
