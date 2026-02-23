@@ -435,7 +435,7 @@ const ServiceDetail = () => {
           hero: {
             title: 'Electronic Cargo Tracking System (ECTS) in Kenya',
             subtitle: 'Real-time cargo monitoring + GPS electronic locks + tamper alerts + geofencing',
-            backgroundImage: '/images/ects/ects-hero-bg.jpg',
+            backgroundImage: '/images/ects-hero-bg.jpg',
             features: [
               { icon: 'map-marker-alt', text: 'Real-time Monitoring' },
               { icon: 'shield-alt', text: 'Tamper & Theft Prevention' },
