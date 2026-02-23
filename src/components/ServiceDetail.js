@@ -1383,7 +1383,7 @@ const ServiceDetail = () => {
                 </section>
               );
 
-            case 'electronic-cargo-tracking-system-usecases':
+              case 'ects-usecases':
               return (
                 <section key={section.id} className="ects-section">
                   <header className="ects-section-header">
