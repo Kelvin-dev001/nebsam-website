@@ -1302,9 +1302,9 @@ const ServiceDetail = () => {
                     </div>
 
                     <div className="ects-media">
-                      <h3 className="ects-subtitle">Gallery</h3>
+                      <h3 className="ects-subtitle"></h3>
                       <ImageGrid images={section.images} columnsClass="cols-2" />
-                      <p className="ects-hint">Replace the placeholder images with your real project photos.</p>
+                      <p className="ects-hint"></p>
                     </div>
                   </div>
                 </section>
@@ -1328,7 +1328,7 @@ const ServiceDetail = () => {
                   </div>
 
                   <div className="ects-media-block">
-                    <h3 className="ects-subtitle">Solution Photos</h3>
+                    <h3 className="ects-subtitle">Solutions In Photos</h3>
                     <ImageGrid images={section.images} columnsClass="cols-2" />
                   </div>
                 </section>
