@@ -502,18 +502,18 @@ const ServiceDetail = () => {
                 'Our ECTS product family is built around a GPS Electronic Lock with keyless access, long battery life, real-time monitoring and event-based alarms—ready for containers, oil tankers, dump trucks/topless trucks with tarpaulin and delivery vans.',
               models: [
                 {
-                  name: 'Model A (Standard GPS E-Lock)',
-                  description: 'Reliable electronic lock with real-time monitoring, geofencing and core tamper detection.',
+                  name: 'GPS E-lock HB-A1SP',
+                  description: 'HB-A1SP is a new generation of electronic tracking locks with Dual SIM and a solar panel for cross-border transportation and customs supervision. It can provie rel-time positions of the cargo and prevent containers from unlocking illegally.',
                   image: '/images/ects/models/model-a.jpg'
                 },
                 {
-                  name: 'Model B (Extended Battery + Solar Option)',
-                  description: 'Longer deployments with optional solar charging and deep-sleep wake automation.',
+                  name: 'GPS E-lock HB-A1Lm',
+                  description: 'The HB-A1Lm is an Intelligent PadLock integrated with GNSS and cellular network technology, offering real-time monitoring to nhancetransportation safety and productivity',
                   image: '/images/ects/models/model-b.jpg'
                 },
                 {
                   name: 'Model C (Multi-Container / Sub-locks + Sensors)',
-                  description: 'Supports sub-locks (up to 7 via Bluetooth) and scalable LoRa modules for more locks/sensors.',
+                  description: 'BLE-LOCK HB-A1Ms works as a supplement to assets and cargo tracking solutions since it doesn’t have GPS and GPRS features. HB-A1L is with the built-in BLE (LoRa for option) module, which is used to connect with the master lock. It significantly reduces the use of SIM cards. All data from the HB-A1L will be transferred to the master lock first. Each master lock can work with 7 pcs HB-A1L max. via Bluetooth.',
                   image: '/images/ects/models/model-c.jpg'
                 }
               ],
