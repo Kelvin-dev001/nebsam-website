@@ -1,21 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import {
-  Globe, Shield, BarChart, Award,
-  Target, Rocket, Handshake, Medal, Download
+  Globe,
+  Shield,
+  BarChart,
+  Award,
+  Target,
+  Rocket,
+  Handshake,
+  Medal,
+  Download
 } from 'lucide-react';
 import '../App.css';
 
 const AboutUs = () => {
+  // Used for hover UI in Certifications + Why Choose Us (so ESLint is happy)
   const [hoveredCert, setHoveredCert] = useState(null);
   const [flippedClient, setFlippedClient] = useState(null);
 
-  // Hero background images
-  const heroImages = [
-    '/src/images/showroom.jpeg',
-    '/src/images/service-bay.jpeg',
-    '/src/images/office-hero.jpeg'
-  ];
+  // Hero background images (used in an auto-rotating hero background)
+  const heroImages = useMemo(
+    () => [
+      '/images/showroom.jpeg',
+      '/images/service-bay.jpeg',
+      '/images/office-hero.jpeg'
+    ],
+    []
+  );
+
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  useEffect(() => {
+    if (!heroImages.length) return;
+    const id = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [heroImages]);
 
   // Certificates data
   const certificates = [
@@ -47,12 +68,28 @@ const AboutUs = () => {
     { id: 6, src: '/images/customer-parking.jpeg', alt: 'Customer Parking' }
   ];
 
-  // Core values with Lucide icons
+  // Core values (now rendered, so ESLint won't complain)
   const coreValues = [
-    { icon: <Shield size={32} />, title: 'Integrity', desc: 'we deliver on our promises with honesty, transparency, and accountability.' },
-    { icon: <Rocket size={32} />, title: 'Innovation', desc: 'Continuous improvement drives our solutions' },
-    { icon: <Handshake size={32} />, title: 'Partnership', desc: 'Your success is our success' },
-    { icon: <Medal size={32} />, title: 'Excellence', desc: 'We deliver nothing but the best service' }
+    {
+      icon: <Shield size={32} />,
+      title: 'Integrity',
+      desc: 'We deliver on our promises with honesty, transparency, and accountability.'
+    },
+    {
+      icon: <Rocket size={32} />,
+      title: 'Innovation',
+      desc: 'Continuous improvement drives our solutions.'
+    },
+    {
+      icon: <Handshake size={32} />,
+      title: 'Partnership',
+      desc: 'Your success is our success.'
+    },
+    {
+      icon: <Medal size={32} />,
+      title: 'Excellence',
+      desc: 'We deliver nothing but the best service.'
+    }
   ];
 
   // Why Choose Us features
@@ -67,18 +104,27 @@ const AboutUs = () => {
     <main className="about-us-container">
       <Helmet>
         <title>About Us | Nebsam Digital Solutions</title>
-        <meta name="description" content="Learn about Nebsam Digital Solutions, Kenya’s trusted leader in vehicle telematics, fleet tracking, car alarms, fuel monitoring, radio communication, and video telematics." />
+        <meta
+          name="description"
+          content="Learn about Nebsam Digital Solutions, Kenya’s trusted leader in vehicle telematics, fleet tracking, car alarms, fuel monitoring, radio communication, and video telematics."
+        />
         <link rel="canonical" href="https://nebsamdigital.com/about" />
         {/* Open Graph tags */}
         <meta property="og:title" content="About Us | Nebsam Digital Solutions" />
-        <meta property="og:description" content="Kenya’s trusted leader in vehicle telematics, fleet tracking, car alarms, fuel monitoring, radio communication, and video telematics." />
+        <meta
+          property="og:description"
+          content="Kenya’s trusted leader in vehicle telematics, fleet tracking, car alarms, fuel monitoring, radio communication, and video telematics."
+        />
         <meta property="og:url" content="https://nebsamdigital.com/about" />
         <meta property="og:image" content="https://nebsamdigital.com/images/site-og-image.jpg" />
         <meta property="og:type" content="website" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="About Us | Nebsam Digital Solutions" />
-        <meta name="twitter:description" content="Kenya’s trusted leader in vehicle telematics, fleet tracking, car alarms, fuel monitoring, radio communication, and video telematics." />
+        <meta
+          name="twitter:description"
+          content="Kenya’s trusted leader in vehicle telematics, fleet tracking, car alarms, fuel monitoring, radio communication, and video telematics."
+        />
         <meta name="twitter:image" content="https://nebsamdigital.com/images/site-og-image.jpg" />
         {/* Schema.org Structured Data for Organization */}
         <script type="application/ld+json">
@@ -110,9 +156,18 @@ const AboutUs = () => {
           `}
         </script>
       </Helmet>
+
       {/* Hero Section with Sliding Background */}
       <header>
-        <section className="hero-section about-hero-section">
+        <section
+          className="hero-section about-hero-section"
+          style={{
+            backgroundImage: `url(${heroImages[heroIndex]})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+          aria-label="About Nebsam hero section"
+        >
           <div className="hero-content">
             <h1 className="hero-title">Driving Innovation in Vehicle Telematics</h1>
             <p className="hero-subtitle">Trusted by 50,000+ clients across Africa</p>
@@ -126,9 +181,10 @@ const AboutUs = () => {
           <div className="two-column-layout">
             <figure className="image-container">
               <img
-                src="images/about-team.jpg"
+                src="/images/about-team.jpg"
                 alt="Nebsam Team"
                 className="rounded-2xl hover-3d"
+                loading="lazy"
               />
             </figure>
             <article className="content">
@@ -139,8 +195,12 @@ const AboutUs = () => {
               <p>
                 What started as a small venture has evolved into a powerhouse serving over 50,000 satisfied clients across the continent. From fleet managers in Mombasa, Nairobi, Thika, Nakuru and Kisumu to individual car owners in remote towns, our clients rely on us for safety, efficiency, and peace of mind on the road.
               </p>
-              <p>  Our success is rooted in a customer-centered approach, driven by a deep understanding of the unique needs of African drivers and fleet operators. We believe that technology should not just be advanced — it should be accessible, practical, and built around the people who use it.  </p>
-              <p> Innovation is at the heart of what we do. Whether it's installing GPS car trackers, integrating real-time fuel monitoring systems, or deploying high-performance vehicle video telematics cameras, we continuously adapt and improve to stay ahead of evolving security and logistics challenges.  </p>
+              <p>
+                Our success is rooted in a customer-centered approach, driven by a deep understanding of the unique needs of African drivers and fleet operators. We believe that technology should not just be advanced — it should be accessible, practical, and built around the people who use it.
+              </p>
+              <p>
+                Innovation is at the heart of what we do. Whether it's installing GPS car trackers, integrating real-time fuel monitoring systems, or deploying high-performance vehicle video telematics cameras, we continuously adapt and improve to stay ahead of evolving security and logistics challenges.
+              </p>
               <p>
                 Trust and resilience have carried us through every challenge — and we’ve emerged stronger, more experienced, and more committed to excellence than ever before. At Nebsam, we don’t just offer products — we deliver customized telematics solutions that enhance safety, reduce costs, and give our clients complete control over their vehicles and fleets.
               </p>
@@ -153,10 +213,27 @@ const AboutUs = () => {
                 <li><span className="text-primary">✓</span> 50+ certified technicians</li>
                 <li><span className="text-primary">✓</span> 24/7 monitoring center</li>
               </ul>
-              <button className="download-profile-btn">
+
+              <button className="download-profile-btn" type="button">
                 Download Company Profile <Download size={18} className="ml-2" />
               </button>
             </article>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Values (NEW: renders coreValues so it is used) */}
+      <section className="section" aria-label="Our Core Values">
+        <div className="section-card">
+          <h2 className="section-title">Our Core Values</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {coreValues.map((value, index) => (
+              <article key={index} className="feature-card hover-rotate">
+                <div className="feature-icon">{value.icon}</div>
+                <h3 className="text-xl font-semibold mt-4">{value.title}</h3>
+                <p className="mt-2">{value.desc}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -189,9 +266,10 @@ const AboutUs = () => {
           <h2 className="section-title">Our Team Structure</h2>
           <figure className="organogram-container">
             <img
-              src="images/organogram.jpg"
+              src="/images/organogram.jpg"
               alt="Nebsam Organogram"
               className="rounded-2xl shadow-xl"
+              loading="lazy"
             />
           </figure>
         </div>
@@ -208,12 +286,18 @@ const AboutUs = () => {
                 className="feature-card hover-rotate"
                 onMouseEnter={() => setHoveredCert(index)}
                 onMouseLeave={() => setHoveredCert(null)}
+                aria-label={feature.title}
               >
                 <div className="feature-icon">
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-semibold mt-4">{feature.title}</h3>
                 <p className="mt-2">{feature.desc}</p>
+
+                {/* Optional: subtle hover helper (uses hoveredCert state) */}
+                {hoveredCert === index && (
+                  <p className="mt-3 text-sm opacity-80">Learn more about {feature.title.toLowerCase()}.</p>
+                )}
               </article>
             ))}
           </div>
@@ -232,18 +316,21 @@ const AboutUs = () => {
               Our Certifications
             </a>
           </h2>
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {certificates.map(cert => (
               <figure
                 key={cert.id}
-                className="certificate-card"
+                className={`certificate-card ${hoveredCert === cert.id ? 'is-hovered' : ''}`}
                 onMouseEnter={() => setHoveredCert(cert.id)}
                 onMouseLeave={() => setHoveredCert(null)}
+                aria-label={cert.alt}
               >
                 <img
                   src={cert.src}
                   alt={cert.alt}
                   className="certificate-image"
+                  loading="lazy"
                 />
                 <figcaption className="certificate-overlay">
                   <p>{cert.alt}</p>
@@ -265,6 +352,7 @@ const AboutUs = () => {
                   src={item.src}
                   alt={item.alt}
                   className="headquarters-image"
+                  loading="lazy"
                 />
                 <figcaption className="headquarters-label">{item.alt}</figcaption>
               </figure>
@@ -315,7 +403,7 @@ const AboutUs = () => {
               >
                 <div className={`client-card-inner ${flippedClient === client.id ? 'flipped' : ''}`}>
                   <div className="client-card-front">
-                    <img src={client.logo} alt={client.name} />
+                    <img src={client.logo} alt={client.name} loading="lazy" />
                   </div>
                   <div className="client-card-back">
                     <p>{client.name}</p>

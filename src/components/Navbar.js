@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = (item) => {
     setActiveDropdown(activeDropdown === item ? null : item);
   };
 
-  // Service dropdown links with their direct paths
   const serviceDropdownLinks = [
     { label: 'GPS Tracking', path: '/services/car-tracking' },
     { label: 'Smart Car Alarms', path: '/services/car-alarms' },
@@ -21,7 +19,7 @@ const Navbar = () => {
     { label: 'Video Telematics', path: '/services/vehicle-video-telematics' },
     { label: 'Speed Governors', path: '/services/speed-governors' },
     { label: 'Radio Calls', path: '/services/radio-calls' },
-    { label: 'Electronic Cargo Tracking (ECTS)', path: '/services/ects' }
+    { label: 'Electronic Cargo Tracking (ECTS)', path: '/services/electronic-cargo-tracking-system' }
   ];
 
   return (
@@ -41,6 +39,7 @@ const Navbar = () => {
               Home
             </Link>
           </li>
+
           <li className="nav-item dropdown">
             <div
               className="nav-link dropdown-toggle"
@@ -68,6 +67,7 @@ const Navbar = () => {
               </ul>
             )}
           </li>
+
           <li className="nav-item dropdown">
             <div
               className="nav-link dropdown-toggle"
@@ -94,6 +94,7 @@ const Navbar = () => {
               </ul>
             )}
           </li>
+
           <li className="nav-item">
             <Link to="/contact" className="nav-link contact-btn" onClick={() => setIsOpen(false)}>
               Contact Us
@@ -101,9 +102,10 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
+
       <div className="navbar-marquee">
-      <span className="marquee-text">We Are The Solution</span>
-    </div>
+        <span className="marquee-text">We Are The Solution</span>
+      </div>
     </nav>
   );
 };

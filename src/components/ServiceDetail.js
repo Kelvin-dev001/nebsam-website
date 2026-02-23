@@ -2,7 +2,6 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import '../App.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faLock, 
   faMapMarkerAlt, 
@@ -240,24 +239,6 @@ const ServiceDetail = () => {
   // Reusable Hero Section Component (Mobile-first)
   const renderHeroSection = (heroData) => {
      // Icon mapping
-  const iconMap = {
-    'lock': faLock,
-    'map-marker-alt': faMapMarkerAlt,
-    'bell': faBell,
-    'shield-alt': faShieldAlt,
-    'gas-pump': faGasPump,
-    'broadcast-tower': faBroadcastTower,
-    'microphone':faMicrophone,
-    'mobile-alt':faMobileAlt,
-    'video':faVideo,
-    'brain': faBrain,
-    'message': faMessage,
-    'tachometer-alt':faTachometerAlt,
-    'chart-line': faChartLine
-
-  };
- 
-  
   return (
     <section className="hero-section" style={{ backgroundImage: `url(${heroData.backgroundImage})` }}>
       <div className="hero-content">
