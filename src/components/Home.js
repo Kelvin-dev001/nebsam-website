@@ -67,7 +67,7 @@ const Home = () => {
     {
       title: 'Electronic Cargo Tracking System (ECTS)',
       description: 'Secure cross-border cargo transit with real-time tracking, GPS e-locks, tamper alerts and geofencing.',
-      image: '/images/ects/ects-hero1.jpg', // placeholder
+      image: '/images/ects-hero1.jpg', // placeholder
       cta: 'Explore ECTS',
       path: '/services/electronic-cargo-tracking-system'
     }
