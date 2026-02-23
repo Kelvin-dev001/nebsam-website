@@ -34,7 +34,7 @@ const serviceMeta = {
   title: 'Electronic Cargo Tracking System (ECTS) Providers in Kenya | Nebsam Digital Solutions',
   description: 'Nebsam Digital Solutions provides Electronic Cargo Tracking System (ECTS) solutions in Kenya: real-time cargo monitoring, GPS e-locks, tamper alerts, geofencing, and compliance-ready reporting for secure transit.',
   canonical: 'https://nebsamdigital.com/services/electronic-cargo-tracking-system',
-  ogImage: 'https://nebsamdigital.com/images/ects-og.jpg',
+  ogImage: 'https://nebsamdigital.com/ects-og.jpg',
   schema: {
     "@context": "https://schema.org",
     "@type": "Service",
