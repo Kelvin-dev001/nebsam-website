@@ -2,22 +2,6 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import '../App.css';
-import { 
-  faLock, 
-  faMapMarkerAlt, 
-  faBell,
-  faShieldAlt,
-  faBroadcastTower,
-  faGasPump,
-  faMicrophone,
-  faVideo,
-  faMobileAlt,
-  faBrain,
-  faMessage,
-  faTachometerAlt,
-  faChartLine
-} from '@fortawesome/free-solid-svg-icons';
-
 const serviceMeta = {
   'car-tracking': {
     title: 'Car Tracking Services | Nebsam Digital Solutions',
