@@ -1302,9 +1302,9 @@ const ServiceDetail = () => {
                     </div>
 
                     <div className="ects-media">
-                      <h3 className="ects-subtitle"></h3>
+                    
                       <ImageGrid images={section.images} columnsClass="cols-2" />
-                      <p className="ects-hint"></p>
+                      
                     </div>
                   </div>
                 </section>
@@ -1328,7 +1328,7 @@ const ServiceDetail = () => {
                   </div>
 
                   <div className="ects-media-block">
-                    <h3 className="ects-subtitle">Solutions In Photos</h3>
+                    <h3 className="ects-subtitle">Solution in Pictures</h3>
                     <ImageGrid images={section.images} columnsClass="cols-2" />
                   </div>
                 </section>
@@ -1360,7 +1360,7 @@ const ServiceDetail = () => {
                   </div>
 
                   <div className="ects-highlights">
-                    <h3 className="ects-subtitle">Features</h3>
+                    <h3 className="ects-subtitle">Product Capabilities</h3>
                     <div className="ects-highlight-grid">
                       {section.highlights.map((h, idx) => (
                         <div key={idx} className="ects-highlight-card">
@@ -1376,7 +1376,7 @@ const ServiceDetail = () => {
                   </div>
 
                   <div className="ects-media-block">
-                    <h3 className="ects-subtitle">Product Gallery</h3>
+                   
                     <ImageGrid images={section.productImages} columnsClass="cols-4" />
                   </div>
                 </section>
