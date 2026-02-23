@@ -499,7 +499,7 @@ const ServiceDetail = () => {
               id: 3,
               title: 'Our Products Information',
               intro:
-                'Our ECTS product family is built around a GPS Electronic Lock with keyless access, long battery life, real-time monitoring and event-based alarms—ready for containers, oil tankers, dump trucks/topless trucks with tarpaulin and delivery vans.',
+                'Our ECTS product family is built around a GPS Electronic Lock with keyless access, long battery life, real-time monitoring and event-based alarms—enabled for containers, oil tankers, dump trucks/topless trucks with tarpaulin and delivery vans.',
               models: [
                 {
                   name: 'GPS E-lock HB-A1SP',
@@ -1360,7 +1360,7 @@ const ServiceDetail = () => {
                   </div>
 
                   <div className="ects-highlights">
-                    <h3 className="ects-subtitle">Product Capabilities</h3>
+                    <h3 className="ects-subtitle">Features</h3>
                     <div className="ects-highlight-grid">
                       {section.highlights.map((h, idx) => (
                         <div key={idx} className="ects-highlight-card">
@@ -1378,7 +1378,6 @@ const ServiceDetail = () => {
                   <div className="ects-media-block">
                     <h3 className="ects-subtitle">Product Gallery</h3>
                     <ImageGrid images={section.productImages} columnsClass="cols-4" />
-                    <p className="ects-hint">You requested 8 product images — all slots are provided.</p>
                   </div>
                 </section>
               );
