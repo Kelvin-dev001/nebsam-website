@@ -133,6 +133,74 @@ Register item **V02**. Blocks the speed governor page and this certifications pa
 
 ---
 
+## 4A. INSPECTION RESULTS — ALL SIX SCANS EXAMINED
+
+Every scan in `public/certificates/` was opened, viewed and OCR-scanned. **The headline finding is
+not a privacy one: three of the six certificates have already expired.**
+
+| File | Instrument | Unpublished phone | Admin email | Status at 18 Aug 2026 |
+|---|---|---|---|---|
+| `kebs.jpg` | Permit SM#84618 | **PRESENT** `0727727461` | **PRESENT** | Valid to 26 Feb 2027 |
+| `cak.jpg` | CAK Compliance Certificate, serial 04-00274-00-09-0372 | no | no | **EXPIRED 30 Jun 2025** |
+| `data-controller.jpg` | ODPC registration, serial 05634, ID 693-059B-EEB9 | no | no | **EXPIRED 27 May 2026** |
+| `data-processor.jpg` | ODPC registration, serial 05626, same ID | no | no | **EXPIRED 27 May 2026** |
+| `private-security-provider.jpg` | PSRA reg. PSRA/NDSKL/19/00, issued 28 Jun 2024 | no | no | 5-year term to 2029, **subject to annual renewal — status unknown** |
+| `installation.jpg` | Blank specimen installation certificate | no (field blank) | no | n/a |
+
+**Brief section 3.5 requires that the site never displays a lapsed permit. Three already are.**
+Renewal is an operations task that blocks the certifications page.
+
+### `installation.jpg` — cleared of the feared exposure
+
+`docs/ASSET_MAP.md` warned this might be a real certificate exposing a customer name, plate and
+phone number. **It is not.** Every field is a blank dotted line — vehicle registration, make, body
+type, chassis, IMEI, phone, issued-to, ID number, telephone and both dates. No customer data.
+
+It carries three lesser problems instead: the technician's first name **"DENNIS"** is printed on
+it; the header and stamp carry third-party **"GPS Vehicle tracker — Suppliers of GPRS Trackers, Car
+Stereo"** branding rather than Nebsam's; and it lists legacy device models (TK 103, 303, TR07,
+YB02, OCTO800, OCTO600) that predate the confirmed product names.
+
+Its serial number format is **P051510924U/2007**, and it states the installation is "valid for
+1 year" — both directly relevant to register item **V04** and to the certificate-verification
+threat model in brief PART 9.2.
+
+### `kebs.jpg` — five exposures, not the two anticipated
+
+Beyond the phone number and email, the permit image also shows the postal address (P.O. Box 82436),
+the physical address (Ronald Ngala Street, Plot No. 810/XVI/MI, Mombasa), a **handwritten signature**
+of the Managing Director/Authorized Officer, and a **QR code** whose encoded contents have not been
+read. A published signature image is a forgery risk that should be weighed on its own.
+
+### Recommendations — no image has been altered
+
+| File | Recommendation |
+|---|---|
+| `kebs.jpg` | **CROP** to the right-hand column (mark number, effective, expiry, issue date) plus rows 1–4 (mark, commodity, brand, standard). Drop the entire contact block and the signature |
+| `cak.jpg` | **EXCLUDE** until renewed |
+| `data-controller.jpg` | **EXCLUDE** until renewed, then **REPLACE** with the current certificate |
+| `data-processor.jpg` | **EXCLUDE** until renewed, then **REPLACE** |
+| `private-security-provider.jpg` | **CROP** to remove the named official and signature; publish only once the annual renewal is confirmed |
+| `installation.jpg` | **REDACT** "DENNIS" and resolve the third-party branding — or better, **REPLACE**. The design is dated clip-art and carries another company's logo |
+
+### Two by-products of the inspection
+
+**The PSRA issuing body is now known** — Private Security Regulatory Authority, Ministry of Interior
+and National Administration, Office of the President, under Section 28 of the Private Security
+Regulation Act No. 13 of 2016. This closes the open question in section 3 above.
+
+**Four of the five government registrations spell the company singular** — "NEBSAM DIGITAL SOLUTION
+(K) LIMITED" appears on the KEBS permit, both ODPC registrations and the PSRA certificate. Only the
+CAK certificate uses the plural. That is strong evidence for register item **V26** that the
+registered legal name is singular, and that legal pages need the singular form even though
+marketing uses "Solutions".
+
+**The CAK document is not a licence.** It states on its face: *"Please note that this is not a
+licence but proof of compliance."* Brief section 3.5 describes it as an "Application Service
+Provider (AS) licence". Correct the description before publication.
+
+---
+
 ## 5. CERTIFICATE SCANS — PRIVACY SWEEP REQUIRED
 
 Six scans exist in the repository at `public/certificates/`. **Every one must be inspected before

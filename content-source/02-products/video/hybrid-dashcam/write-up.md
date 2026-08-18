@@ -88,7 +88,7 @@ The supplied brochure is a marketing two-pager and states **no technical specifi
 
 | Specification | Value |
 |---|---|
-| Connectivity | Classified as a 4G unit in the project brief (PART 4.3); **not stated in the brochure** — `[[NEEDS_VERIFICATION: Hybrid Dashcam cellular connectivity]]` |
+| Connectivity | **4G** — the brochure's product photograph shows "4G Dual Lens Car Camera" printed on the device itself. Corroborates brief PART 4.3 |
 | Video resolution | Not stated in source — `[[NEEDS_VERIFICATION: Hybrid Dashcam recording resolution per lens]]` |
 | Viewing angles | Not stated in source — `[[NEEDS_VERIFICATION: Hybrid Dashcam field of view per lens]]` |
 | Lens orientation | Not stated in source — `[[NEEDS_VERIFICATION: which two directions the dual lenses cover]]` |
@@ -156,7 +156,7 @@ This page should not be published until a datasheet is obtained. It is complete 
 ## Items requiring verification before publication
 
 1. `[[NEEDS_VERIFICATION: Hybrid Dashcam full specification]]` — resolution, viewing angles, lens orientation, storage, retention, power, voltage, IP rating, night recording, dimensions. All eleven fields are open.
-2. `[[NEEDS_VERIFICATION: Hybrid Dashcam cellular connectivity]]` — **note the provenance carefully.** Brief PART 4.3 describes the Hybrid Dashcam as "the 4G dual-lens unit". The word "4G" appears **nowhere in this brochure**. The brief's classification has been recorded as the brief's, not as a brochure specification. Confirm from a datasheet before publishing "4G".
+2. **4G — provenance resolved.** An earlier revision of this file recorded that "4G" appeared nowhere in the brochure. That was true of the *extracted text* but wrong about the document: the brochure's product photograph shows **"4G Dual Lens Car Camera"** and **"Built-in Radar"** printed on the device casing. The brochure therefore does evidence 4G, and independently corroborates the "Radar/touch/motion detection" feature bullet. Lesson for anyone extracting from these Canva PDFs: **`pdftotext` does not read text baked into product photography — render the pages and look at them.**
 3. `[[NEEDS_VERIFICATION: Hybrid Dashcam price and recurring cost]]` — no price in any supplied document, and cloud storage plus live tracking imply an ongoing cost that must be disclosed on the page, not at checkout (brief PART 10.2).
 4. `[[NEEDS_VERIFICATION: Hybrid Dashcam cabin recording and privacy]]` — if either lens faces the cabin, the product records occupants. Under the Data Protection Act 2019 that has consequences for commercial and PSV use, and the page should say plainly what is recorded and who can view it.
 5. `[[NEEDS_VERIFICATION: parking mode battery protection]]` — a unit drawing from the vehicle battery with the engine off risks a flat battery. Whether there is a low-voltage cut-off is a real buying question.

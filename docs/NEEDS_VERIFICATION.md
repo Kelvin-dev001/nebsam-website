@@ -33,7 +33,15 @@ Status: `OPEN` · `ANSWERED` · `CLOSED` (answered and applied in the app)
 | V23 | **School bus: reference schools** for a testimonial or case study | Strongest possible proof for this product | Client | Sprint 5 | OPEN |
 | V24 | **School bus: pricing model** — per bus, per student, per term, per module? Is the parent app free? | Determines whether this appears in the shop or as an enquiry-only solution | Client | Sprint 5 | OPEN |
 | V25 | **Search Console URL cross-check** — indexed URLs absent from the current sitemap | Missing one from the 301 map loses its ranking permanently | Client | Sprint 2 | OPEN |
-| V26 | **Registered legal name** — the KEBS permit reads "SOLUTION" singular; marketing uses "Solutions" | Client has confirmed "Solutions" for site use; legal pages may still need the registered form | Client | Sprint 11 | ANSWERED (use "Solutions"; legal pages pending) |
+| V26 | **Registered legal name** — **four of five government registrations read "SOLUTION" singular** (KEBS permit, both ODPC registrations, PSRA certificate); only the CAK certificate uses "Solutions" | Client has confirmed "Solutions" for site use; legal pages may still need the registered form | Client | Sprint 11 | ANSWERED (use "Solutions"; legal pages pending) |
+| V27 | **CAK Compliance Certificate has EXPIRED** — valid to 30 June 2025, lapsed 414 days as at 18 Aug 2026 | Brief 3.5 requires the site never displays a lapsed permit. Renew before the certifications page is built | Nebsam ops | Sprint 11 | OPEN |
+| V28 | **ODPC Data Controller registration has EXPIRED** — valid 27/05/2024 to 27/05/2026 | Nebsam's registered data controller status underpins the privacy policy and the whole DPA 2019 posture. A lapsed registration is a compliance problem, not just a display one | Nebsam ops | Sprint 11 | OPEN |
+| V29 | **ODPC Data Processor registration has EXPIRED** — valid 27/05/2024 to 27/05/2026 | As V28 | Nebsam ops | Sprint 11 | OPEN |
+| V30 | **PSRA registration — is the annual renewal current?** Issued 28/06/2024 for a five-year term "subject to annual license renewal" | The five-year term is conditional. Confirm the annual renewal is paid before publishing the registration | Nebsam ops | Sprint 11 | OPEN |
+| V31 | **CAK document is described wrongly in the brief** — it states on its face "this is not a licence but proof of compliance", but brief 3.5 calls it an "Application Service Provider (AS) licence" | Publishing an inaccurate description of a regulatory instrument is exactly the credibility error brief 3.5 exists to prevent | Client | Sprint 11 | OPEN |
+| V32 | **Technician name "DENNIS" printed on `public/certificates/installation.jpg`** | A staff member's name on a public-folder asset. Redact or replace before the specimen is displayed | Client | Sprint 11 | OPEN |
+| V33 | **Third-party "GPS Vehicle tracker" branding on `installation.jpg`** | Another company's logo on a Nebsam certificate specimen — trademark and accuracy risk | Client | Sprint 11 | OPEN |
+| V34 | **KEBS permit image carries a Managing Director signature and an unread QR code** | A published signature image is a forgery risk; the QR contents are unknown. Crop both out | Client | Sprint 11 | OPEN |
 
 ## Unpublishable claims — closed, do not reopen
 | Claim | Status |
