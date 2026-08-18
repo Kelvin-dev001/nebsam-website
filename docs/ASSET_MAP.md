@@ -3,6 +3,32 @@
 Inventory of image assets in the existing repository, plus the shot list of what is still missing.
 Generated during setup. Re-run and update at each sprint that touches media.
 
+> **Sprint 0 update (18 Aug 2026).** Certificate inspection is **complete** — see the privacy sweep
+> below; the headline finding is three expired registrations, not a data exposure. The brand logo has
+> been decoded and analysed (§ Brand asset). Two asset sets not previously inventoried are recorded
+> below: the ECTS image set, and the fact that several product images do not map to any confirmed
+> product name.
+
+## Brand asset — analysed Sprint 0
+
+`brand/logo/nebsam_transparent_logo.png` — 1254×1254, 625 KB. Decoded and pixel-sampled directly.
+
+| Colour | Coverage | Role |
+|---|---|---|
+| `#85A4D2` | **33%** of opaque pixels | the rounded-rectangle **plaque background** |
+| `#020189` | 71,574 px | the **NEBSAM** wordmark |
+| `#D08833` (approx.) | 5,244 px | the **satellite signal arcs** — the only warm accent in the mark |
+| `#FFFFFF` | — | the "Digital Solutions (K) Ltd" lockup |
+
+**Despite the filename, this is not a free-standing transparent mark.** Only the corners are
+transparent; the plaque fill is part of the artwork. Placed on a dark navy header it renders a pale
+blue rectangle, which constrains the header design until variants exist.
+
+**Needed — register V37:** an SVG master, plus horizontal, stacked, mono-white, mono-dark and a
+favicon source. Until then the logo can only be placed on light surfaces.
+
+Derived token system and the full computed contrast table: `docs/DESIGN_SYSTEM.md`.
+
 ## Summary
 - **Existing:** 120 files, **26.9 MB** in `public/`
 - **Verdict:** a meaningful amount of usable real photography already exists — certificates, six
@@ -27,23 +53,38 @@ Generated during setup. Re-run and update at each sprint that touches media.
 | `Video_Telematics_Proposal_2025.pdf` — "Sample Footages" pages | Customer vehicle registrations **KCK 283C** and **KCK 289C**, fleet group name, device IDs, GPS coordinates, and **two clearly identifiable faces** in a vehicle cab | **Do not publish.** Blur plates and faces, or replace with consented footage, or exclude entirely. Blocked by V14. |
 | `FUEL_MONITORING_SOLUTION_PROPOSAL.pdf` — dashboard screenshots | Interfaces branded to **third-party telematics platforms**, not Nebsam | **Not usable as "the Nebsam platform".** Blocked by V13. |
 
-### Requires inspection — certificates in the repo
-The six certificate scans must be checked for the **unpublished** phone number `+254 727 727 461`
-and the administrative email `nebsam3kenya@gmail.com` before display. The KEBS permit is known to
-carry both. Either redact those fields or display a cropped extract showing only the substantive terms.
+### Certificates in the repo — INSPECTION COMPLETE
 
-| File | Size | Action |
-|---|---|---|
-| `public/certificates/kebs.jpg` | 249 KB | **Inspect and redact** — known to carry the unpublished number and email |
-| `public/certificates/cak.jpg` | 861 KB | Inspect for contact details; compress |
-| `public/certificates/data-controller.jpg` | 1,389 KB | Inspect; compress heavily |
-| `public/certificates/data-processor.jpg` | 1,390 KB | Inspect; compress heavily |
-| `public/certificates/private-security-provider.jpg` | 1,115 KB | Inspect; compress |
-| `public/certificates/installation.jpg` | — | Inspect — a specimen installation certificate may show real customer details |
+All six scans have been opened, viewed and OCR-scanned. Full record:
+`content-source/05-certifications/README.md` §4A.
 
-**`installation.jpg` deserves particular attention.** If it is a real certificate rather than a
-blank specimen, it may show a customer name, plate and phone number — and it is currently in a
-public folder on a live site.
+**The headline finding was not a privacy one: three of the six certificates have already expired.**
+
+| File | Size | Unpublished contact details | Status at 18 Aug 2026 | Action |
+|---|---|---|---|---|
+| `public/certificates/kebs.jpg` | 725 KB | **PRESENT** — phone, admin email, postal address, physical address, **plus a handwritten MD signature and an unread QR code** | Valid to 26 Feb 2027 | **CROP** to the mark number, dates and rows 1–4. Drop the entire contact block and the signature |
+| `public/certificates/cak.jpg` | 861 KB | none | **EXPIRED 30 Jun 2025** | **EXCLUDE** until renewed |
+| `public/certificates/data-controller.jpg` | 1,389 KB | none | **EXPIRED 27 May 2026** | **EXCLUDE**, then **REPLACE** with the current certificate |
+| `public/certificates/data-processor.jpg` | 1,390 KB | none | **EXPIRED 27 May 2026** | **EXCLUDE**, then **REPLACE** |
+| `public/certificates/private-security-provider.jpg` | 1,115 KB | none | 5-year term to 2029, **annual renewal status unknown** | **CROP** to remove the named official and signature; publish only once renewal is confirmed |
+| `public/certificates/installation.jpg` | 264 KB | none — every field is a blank dotted line | n/a | **REDACT** the technician name, resolve the third-party branding — or better, **REPLACE** |
+
+**`installation.jpg` is cleared of the feared exposure.** This file was flagged above as possibly a
+real certificate exposing a customer name, plate and phone number. **It is not.** Every field is
+blank — vehicle registration, make, body type, chassis, IMEI, phone, issued-to, ID number, telephone
+and both dates. No customer data.
+
+It carries three lesser problems instead: the technician's first name **"DENNIS"** is printed on it
+(**V32**); the header and stamp carry third-party **"GPS Vehicle tracker"** branding rather than
+Nebsam's (**V33**); and it lists legacy device models that predate the confirmed product names. Its
+serial format is `P051510924U/2007` and it states validity of one year — both relevant to **V04** and
+to the verification threat model.
+
+**A published signature image is a forgery risk in its own right** and should be weighed separately
+from the contact-detail redaction (**V34**).
+
+Brief 3.5 requires that the site never displays a lapsed permit. **Three already are.** Renewal is an
+operations task that blocks the certifications page — **V27–V30**.
 
 ### Client logos in the repo
 `armytex.png` · `buscar.jpg` · `ismax-security.png` · `kensalt.jpeg` · `muthukinjo.jpeg` ·
@@ -62,10 +103,20 @@ these six do **not** appear on the fuel proposal's client list; confirm those re
 **Hero:** `hero-image.webp` · `tracking-hero-bg` · `car-alarms-hero` · `radio-hero-bg1` ·
 `speed-governor-heroo` · `ects-hero1` · `site-og-image.png`
 
+**ECTS set (added Sprint 0)** — roughly 20 images under `public/images/ects/`: `problem-1…4`,
+`solution-1…4`, `products/product-1…8`, `usecases/usecase-1…4`, `models/model-a…c`, plus
+`ects-hero1`, `ects-hero-bg` and `ects-og`. These support `/services/electronic-cargo-tracking-system`,
+the live route that was missing from every URL inventory, and they carry over to
+`/solutions/container-e-seal`, which receives its 301. Several exceed 300 KB and need conversion.
+
 Match each against the shot list below before requesting anything new. Several existing product
-images may not correspond to the **confirmed** product names — map `sr-100`…`sr-600` and `xlr-3000`
-to real product names or retire them. `[[NEEDS_VERIFICATION: which physical device each existing
-product image shows]]`
+images may not correspond to the **confirmed** product names — map `sr-100`…`sr-600` and
+`xlr-1000`…`xlr-4000` to real product names or retire them. `[[NEEDS_VERIFICATION: which physical
+device each existing product image shows]]`
+
+**Missing file referenced by live code:** `public/images/logo.png` does not exist, but
+`src/components/ServiceDetail.js` emits it as `Organization.logo` on every service page. Audit item
+**E04**.
 
 ## SHOT LIST — still needed
 | Page | Asset | Spec | Priority |
