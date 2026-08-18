@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npm install)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(npx next *)",
+      "Bash(npx eslint *)",
+      "Bash(npx prettier *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout -b *)",
+      "Read(//content-source/**)",
+      "Read(//media-source/**)",
+      "Read(//brand/**)"
+    ],
+    "deny": [
+      "Write(//content-source/**)",
+      "Edit(//content-source/**)",
+      "Read(//.env)",
+      "Read(//.env.local)",
+      "Read(//.env.*.local)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf *)"
+    ]
+  }
+}

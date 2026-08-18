@@ -21,3 +21,26 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# ---- Append these to the existing .gitignore. Do not replace the file. ----
+
+# Raw media originals — too heavy for git. Optimised derivatives go to public/ or Supabase Storage.
+media-source/
+
+# Drop zone for new material
+_inbox/
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Personal Claude Code overrides
+.claude/settings.local.json
+
+# Build output
+.next/
+out/
+
+# Cleaned download-centre PDFs — derived artefacts, regenerable from _inbox/
+content-source/06-downloads/*.pdf

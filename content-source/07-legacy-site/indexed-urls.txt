@@ -1,0 +1,13 @@
+# Live URLs from the current site's public/sitemap.xml (captured 2026-08-18)
+# 301 map is in docs/brief/00-MASTER-BRIEF.md PART 7.0
+# TODO: cross-check Search Console -> Pages for indexed URLs not listed here
+https://nebsamdigital.com/
+https://nebsamdigital.com/about
+https://nebsamdigital.com/services
+https://nebsamdigital.com/services/car-tracking
+https://nebsamdigital.com/services/fuel-monitoring
+https://nebsamdigital.com/services/radio-calls
+https://nebsamdigital.com/services/vehicle-video-telematics
+https://nebsamdigital.com/services/speed-governors
+https://nebsamdigital.com/services/car-alarms
+https://nebsamdigital.com/contact
