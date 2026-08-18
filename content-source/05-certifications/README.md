@@ -140,7 +140,7 @@ not a privacy one: three of the six certificates have already expired.**
 
 | File | Instrument | Unpublished phone | Admin email | Status at 18 Aug 2026 |
 |---|---|---|---|---|
-| `kebs.jpg` | Permit SM#84618 | **PRESENT** `0727727461` | **PRESENT** | Valid to 26 Feb 2027 |
+| `kebs.jpg` | Permit SM#84618 | **PRESENT** (local form) | **PRESENT** | Valid to 26 Feb 2027 |
 | `cak.jpg` | CAK Compliance Certificate, serial 04-00274-00-09-0372 | no | no | **EXPIRED 30 Jun 2025** |
 | `data-controller.jpg` | ODPC registration, serial 05634, ID 693-059B-EEB9 | no | no | **EXPIRED 27 May 2026** |
 | `data-processor.jpg` | ODPC registration, serial 05626, same ID | no | no | **EXPIRED 27 May 2026** |

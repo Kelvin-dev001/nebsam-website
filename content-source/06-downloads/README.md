@@ -35,8 +35,8 @@ it**. See the blockers column and the detail below.
 
 | # | Blocker | Reference |
 |---|---|---|
-| 1 | **Unpublished phone number +254 727 727 461 appears twice**, in the header and footer | Brief PART 1.5 #8, audit C04 |
-| 2 | **Retired addresses**: "Kenyatta Ave Near Saba Saba" and "Mombasa Along Kenyatta Avenue" | Brief PART 1.5 #7, audit C05 |
+| 1 | **The unpublished phone number appears twice**, in the header and footer (string listed in SOURCE NOTES) | Brief PART 1.5 #8, audit C04 |
+| 2 | **Retired Mombasa addresses** in the header and footer (strings listed in SOURCE NOTES) | Brief PART 1.5 #7, audit C05 |
 | 3 | **Third-party platform branding** in the dashboard screenshots — cannot be presented as the Nebsam platform | `docs/ASSET_MAP.md` confirmed exposure, register **V13**, audit C08 |
 | 4 | **"Decrease fuel thefts by 90%"** — unsubstantiated vendor claim printed in the document | Brief 4.2 item 4, audit C01 |
 
@@ -57,7 +57,7 @@ Also carries seven feature claims that conflict with the product write-ups — a
 
 | # | Blocker | Reference |
 |---|---|---|
-| 1 | **Retired addresses** in every page footer: "NRB-Ngara Equity, Utawala" and "MSA-Makupa Round-about" | Brief PART 1.5 #6 |
+| 1 | **Retired Nairobi and Mombasa addresses** in every page footer (strings listed in SOURCE NOTES) | Brief PART 1.5 #6 |
 | 2 | **"Unlimited distances without interference"** — unpublishable claim printed on page 2 | Brief 4.2, NEEDS_VERIFICATION register |
 
 Also names "Safaricom Base Station" in a network diagram and misspells the Motorola trademark as
@@ -134,6 +134,19 @@ there is headroom under the ceiling for all four.
 # SOURCE NOTES — NOT FOR PUBLICATION
 
 *This block is for the project team and must be deleted before the content is published. Claude Code: read this section, act on it, do not render it.*
+
+## The exact strings these documents contain
+
+Recorded here, inside the non-publishable block, so the body of this file stays clean and the
+build-time check in brief section 3.2 has nothing to trip over.
+
+- Fuel proposal, header and footer: the unpublished phone number **+254 727 727 461**, and the
+  retired addresses **"Kenyatta Ave Near Saba Saba"** and **"Mombasa Along Kenyatta Avenue"**.
+- Radio proposal, every page footer: the retired addresses **"NRB-Ngara Equity, Utawala"** and
+  **"MSA-Makupa Round-about"**.
+
+These are what a redaction pass must remove. None of them appears in the body of this file or in
+any write-up body in `content-source/`.
 
 ## What "cleared for publication" requires
 
