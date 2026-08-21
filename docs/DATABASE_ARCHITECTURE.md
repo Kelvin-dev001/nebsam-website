@@ -5,7 +5,20 @@ Tables, relations, RLS policies and the migration plan.
 Supabase Postgres. **RLS on every table, no exceptions.** Every migration is a reviewed file in
 `supabase/migrations/`; schema is never mutated outside a migration.
 
-Built in **Sprint 3**. This document is the design it is built to.
+> **STATUS — Sprint 3.** All 10 migrations are written in `supabase/migrations/`, along with the
+> RLS policies (0008) and the public read-only views (0009). **None has been applied**: there is no
+> Supabase project and no Docker on this machine (register **V46**), so type generation, seeding and
+> Supabase Auth are all blocked.
+>
+> What IS verified: `npm run check:migrations` confirms **RLS on all 30 tables**, 17 public views all
+> granted to `anon`, and **no base table exposed to `anon`**. That check is wired into `npm run build`
+> and was proven to fail on a table missing RLS, not merely to run.
+>
+> One design point changed during implementation: a **separate restricted table**,
+> `installation_plates_restricted`, now holds plaintext plates for operations. Without it, rotating
+> `CERT_PLATE_HMAC_SECRET` would be unrecoverable — there would be nothing left to re-hash from.
+
+This document is the design the migrations are built to.
 
 ---
 
