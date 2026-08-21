@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   NEBSAM DESIGN TOKENS
+   Token names are fixed by brief PART 6.2. Values are sampled from
+   brand/logo/nebsam_transparent_logo.png or computed from a sampled value.
+   Every ratio is recorded in docs/DESIGN_SYSTEM.md. Do not add a colour here
+   without adding its contrast row there.
+   ========================================================================= */
+
+@layer base {
+  :root {
+    /* --- Brand ------------------------------------------------------------
+       #020189 is the sampled NEBSAM wordmark.
+       #0A0E36 is that indigo darkened for use as a ground — deliberately
+       chromatic, not a desaturated corporate navy.
+       #E8A33D is the logo's satellite signal arcs (#D08833) lifted to clear
+       AA on the ground.                                                     */
+    --brand-navy: #0a0e36;
+    --brand-navy-raised: #121741;
+    --brand-blue: #020189;
+    --brand-blue-light: #85a4d2; /* sampled plaque fill — surfaces only, 2.55:1 on white */
+
+    /* Signal splits in two: no single blue passes as text on both grounds. */
+    --brand-signal: #3d8bff; /* dark sections only  — 5.61 on navy */
+    --brand-signal-ink: #1857c4; /* light sections + every primary fill — 6.56 with white */
+
+    /* --- Surfaces --------------------------------------------------------- */
+    --ink: #0f1620;
+    --surface: #ffffff;
+    --surface-raised: #f1f4fa; /* "blueprint paper" — cool, not cream */
+    --surface-inverse: #0a0e36;
+
+    /* --- Borders: decorative vs functional are different obligations ------ */
+    --border-hairline: #dfe5f0; /* decorative rules on light — no ratio required */
+    --border-strong: #7e879b; /* functional on light  — 3.27 vs paper */
+    --border-hairline-inverse: #1e2450; /* decorative rules on dark */
+    --border-strong-inverse: #5a6b94; /* functional on dark  — 3.51 vs navy */
+
+    /* --- Text ------------------------------------------------------------- */
+    --text-primary: #0f1620;
+    --text-secondary: #4c5a75;
+    --text-inverse: #ffffff;
+    --text-secondary-inverse: #c3ceea;
+
+    /* --- State: telemetry only. A control is never these colours. --------- */
+    --state-ok: #3fd79b; /* on dark  — 10.10 */
+    --state-ok-ink: #0a7350; /* on light —  5.32 */
+    --state-warn: #e8a33d; /* on dark  —  8.62 */
+    --state-warn-ink: #8a5406; /* on light —  5.69 */
+    --state-alert: #ff7a66; /* on dark  —  7.29 */
+    --state-alert-ink: #b62d1b; /* on light —  5.64 */
+
+    /* --- Radius: instruments are not rounded ------------------------------ */
+    --radius-data: 2px; /* telemetry surfaces, spec tables */
+    --radius-control: 6px; /* buttons, inputs */
+    --radius-panel: 10px; /* large panels */
+
+    /* --- Motion (PART 17) ------------------------------------------------- */
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out-quad: cubic-bezier(0.45, 0, 0.55, 1);
+    --dur-micro: 160ms;
+    --dur-reveal: 420ms;
+    --dur-data: 900ms;
+  }
+
+  * {
+    border-color: var(--border-hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    font-feature-settings: 'kern' 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Focus ring follows the SECTION, never the component fill.
+     #3D8BFF sitting on a #1857C4 button is 1.98:1 — the offset is what makes
+     the ring legal, because it renders on the section background instead. */
+  :focus-visible {
+    outline: 2px solid var(--brand-signal-ink);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  [data-section='dark'] :focus-visible,
+  [data-section='dark']:focus-visible {
+    outline-color: var(--brand-signal);
+  }
+
+  ::selection {
+    background-color: var(--brand-signal);
+    color: #ffffff;
+  }
+}
+
+@layer utilities {
+  /* Display cut = Archivo at expanded width. The display/body distinction on
+     this site is carried by OPTICAL WIDTH within one superfamily, not by a
+     second family. See docs/DESIGN_SYSTEM.md §2. */
+  .font-display {
+    font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    font-stretch: 118%;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .font-display-tight {
+    font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    font-stretch: 112%;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ============================================================================
+   REDUCED MOTION
+   Built in at the token layer, not bolted on per component. This is the
+   backstop: a component that forgets to check the hook still behaves.
+   Meaning must survive — see docs/ANIMATION_SYSTEM.md §4.
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
