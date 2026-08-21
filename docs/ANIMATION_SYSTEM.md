@@ -1,101 +1,127 @@
 # ANIMATION SYSTEM
 
-Levels, durations, easings and reduced-motion behaviour.
+The five levels, with the durations and easings **as implemented**, and the reduced-motion behaviour
+for each.
 
 **Intensity: 7/10 — alive and engineered, never restless.**
 
+Values live in `lib/motion.ts` and `app/globals.css`, so this document describes what the code does
+rather than what it was meant to do.
+
 The governing test: does this animation communicate hierarchy, state, continuity, or "this is
-instrumentation"? If it communicates none of those, it is decoration and it is cut. Brief PART 25
-names "animation everywhere, meaning nowhere" as a project-failure mode.
+instrumentation"? If it communicates none of those, it is decoration and it is cut.
 
 ---
 
-## 1. Easings
+## 1. Easings — implemented
 
-```
-ease-out-quart    cubic-bezier(0.25, 1, 0.5, 1)      entrances, reveals — decisive arrival
-ease-out-expo     cubic-bezier(0.16, 1, 0.3, 1)      cinematic, large travel
-ease-in-out-quad  cubic-bezier(0.45, 0, 0.55, 1)     state changes both ways
-ease-linear       linear                              telemetry ticks, progress, signal pulses
-ease-spring       spring(stiffness 260, damping 30)   press and drag response only
+```ts
+// lib/motion.ts
+outQuart  cubic-bezier(0.25, 1, 0.5, 1)   entrances, reveals — decisive arrival
+outExpo   cubic-bezier(0.16, 1, 0.3, 1)   cinematic, large travel
+inOutQuad cubic-bezier(0.45, 0, 0.55, 1)  state changes both ways
+linear    linear                          telemetry ticks, signal pulses, counters
 ```
 
-`ease-linear` is deliberate for data motion. A counter or a signal tick that eases looks
-*performed*; instrumentation is uniform. That contrast is the point.
+`linear` for data motion is deliberate. A counter or signal tick that eases looks *performed*;
+instrumentation is uniform. That contrast is the point, and it is why the readout's colour and bar
+transitions are linear while the button hover is `inOutQuad`.
 
 ---
 
-## 2. The five levels
+## 2. The five levels — as built
 
-### Level 1 — Micro · 120–200 ms · `ease-in-out-quad`
+| Level | Duration | Easing | Where it is used today |
+|---|---|---|---|
+| 1 — Micro | **160ms** | `inOutQuad` | Button hover and press, link colour, field border, signal bar opacity |
+| 2 — Reveal | **420ms**, stagger **70ms**, cap **6**, travel **20px** | `outQuart` | `Reveal` on hero and "Complies." blocks |
+| 3 — Data | **900ms** | `linear` | Readout status colour, GSM/GPS bar state |
+| 4 — Cinematic | not used in Sprint 1 | `outExpo` | reserved — one per page maximum |
+| 5 — Transition | not used in Sprint 1 | `outQuart` | reserved — must never delay content paint |
 
-Hover, press, focus, icon response, input state.
-
-Properties: `opacity`, `transform`, `border-color`, `background-color`. Never `width`, `height`,
+### Level 1 — Micro, 160ms
+`transform`, `opacity`, `color`, `border-color`, `background-color` only. Never `width`, `height`,
 `top` or `left`.
 
-Press uses `ease-spring` and scales to 0.98 — no lower, or a button feels broken rather than
-responsive. Focus rings **appear instantly**, never animated in: a delayed focus ring is a keyboard
-user watching the interface catch up.
+Press scales via `active:translate-y-px`, disabled under reduced motion. **Focus rings appear
+instantly and are never animated in** — a delayed focus ring is a keyboard user watching the
+interface catch up.
 
-### Level 2 — Reveal · 300–500 ms · `ease-out-quart`
+### Level 2 — Reveal, 420ms
+Fires **once**, never on re-scroll. `IntersectionObserver` at 0.15 threshold, disconnected on first
+intersection.
 
-Scroll-triggered entrance. Fires **once**, never on re-scroll.
+**Content is never gated behind it.** This was got wrong first and fixed:
 
-- Travel: 16–24 px. More than that reads as a slide show.
-- Stagger: 60–80 ms between siblings, capped at **6 items** — beyond that the last item arrives late
-  enough to feel broken.
-- Threshold: 15% of the element visible.
-- **Content is never gated behind a reveal.** It is present in the DOM and server-rendered; the
-  animation adjusts opacity and transform only. A crawler, a reader with JS disabled, and a reader
-  with reduced motion all see everything. This is the same discipline as §7 of the SEO strategy — if
-  an animation can hide content from a crawler, it is the crawlability bug wearing a different hat.
+> The obvious implementation starts at `opacity: 0` and fades in on intersection. With SSR that
+> produces a visible flash, then the element **hides** after hydration, then fades back. A screenshot
+> taken ~300ms after load showed an empty hero. The reader watches content disappear.
 
-### Level 3 — Data · 400–1200 ms · `ease-linear`
+The implementation now decides once, in `useLayoutEffect` (before paint):
 
-**The brand's signature motion.** Counters, telemetry ticks, signal pulses, route lines, map node
-resolution.
+- **Already in the viewport at load** → never animate. No inline style at all. The element is left
+  exactly as the server rendered it.
+- **Below the fold** → hide, observe, reveal on intersection. The reader has not seen it yet, so
+  nothing disappears.
 
-- Counters count to a **real** number, never a fabricated one. If the figure is unverified, there is
-  no counter.
-- Signal pulses: 2 s period, opacity 0.4 → 1 → 0.4, maximum **three** concurrent on screen.
-- Route lines draw via `stroke-dashoffset`, 800–1200 ms.
-- Telemetry values update on a fixed interval, never randomly — random jitter reads as fake, and
-  under 6.5 anything mistakable for live data must be labelled an illustration anyway.
+That keeps the rule literally true for every visitor at every connection speed.
 
-**Constraint from 6.5:** demonstration telemetry uses obviously illustrative plates, is labelled as
-illustration where it could be mistaken for live data, and is never described as real-time fleet
-status.
+### Level 3 — Data, 900ms
+The brand's signature motion. Colour and bar-state transitions in the readout, `linear`.
 
-### Level 4 — Cinematic · 800–1600 ms · `ease-out-expo`
+Counters, when they arrive, count to a **real** number. If a figure is unverified there is no
+counter.
 
-Hero sequence, parallax layers, map resolution. **One per page, maximum.**
-
-Parallax is capped at 12% travel and disabled below 768 px — on a mid-range Android it costs frames
-and buys nothing. It never affects the LCP element: the hero image paints immediately at full
-opacity, and only the layers behind it move.
-
-### Level 5 — Transition · 200–350 ms · `ease-out-quart`
-
-Page and product transitions. **Must never delay content paint.** A transition that holds the next
-page back to look smooth has traded the LCP budget for a flourish; the budget wins.
+### Levels 4 and 5
+Reserved, not used in the prototype. Level 4 is capped at one per page and must never affect the LCP
+element. Level 5 must never delay content paint — a transition that holds the next page back to look
+smooth has traded the LCP budget for a flourish.
 
 ---
 
-## 3. Hard rules
+## 3. The signature sequence — 4s, chosen on evidence
 
-- Nothing animates purely because it can.
-- **Content is never gated behind an animation.**
-- **No infinite ambient motion in the reader's peripheral vision.** The signal pulse is the single
-  exception, rationed to three concurrent.
-- **No scroll-jacking.** The scrollbar always means what it says.
-- **Animation never causes layout shift.** CLS budget is 0.05 and animation is the usual way it goes.
-- **GPU-friendly properties only** — `transform` and `opacity`. `will-change` applied surgically to
-  the element about to animate and removed after, never blanket.
-- No layout-thrashing scroll handlers. Scroll-driven work uses `IntersectionObserver` or CSS
-  scroll-linked animations, never a `scroll` listener that reads layout.
-- One animation library. Motion/Framer Motion is the default; GSAP only where a specific timeline
-  genuinely needs it, and **never both on the same page**.
+`JAM_SEQUENCE` in `lib/motion.ts`:
+
+```
+hold      700ms   healthy — "Link OK"
+degrade   900ms   bars collapse — "Signal degrading"
+jammed   1100ms   the peak — "Signal jammed"
+resolve   700ms   → "Anti-jammer armed · Alert sent"
+settle    600ms
+```
+
+Both a 4s and a 6s variant were built and sampled in the browser at 400–500ms intervals. Observed:
+
+| Elapsed | 4s variant | 6s variant |
+|---|---|---|
+| 0.0s | resolved *(SSR state, pre-hydration)* | resolved |
+| 0.8–1.1s | Link OK | Link OK |
+| 1.8–2.1s | Signal degrading | Signal degrading |
+| 2.8s | **Signal jammed** | Signal degrading |
+| 3.8s | **Anti-jammer armed** | Signal jammed |
+| 4.1–5.1s | (settled) | Signal jammed |
+| 6.1s | (settled) | Anti-jammer armed |
+
+**4s wins.** The complete argument — healthy, attacked, defended — lands at **3.8s**. The 6s variant
+needs **6.1s** for the same story, and a visitor who gives the hero four seconds sees only two-thirds
+of it. At second two both are mid-degradation, so 6s buys nothing at the moment that was the concern.
+
+### 3.1 The progressive-enhancement contract
+
+**The resolved state is the default rendered DOM.** The sequence is layered over it and returns to
+it. It is not what produces it.
+
+| Condition | What the visitor gets |
+|---|---|
+| JS disabled | Resolved state, complete. Verified by `curl` against the production build |
+| Slow connection | Resolved state immediately; the sequence plays whenever hydration lands |
+| `prefers-reduced-motion` | Resolved state. The sequence never starts |
+| Scrolls away at second two | Sequence mid-flight, but the DOM underneath was always correct |
+| Crawler / LLM retrieval | Resolved state in the server HTML |
+
+`useState<Phase>('resolved')` is the initial value, so SSR emits it. The effect returns to
+`'resolved'` at the end, so the DOM is never left altered.
 
 ---
 
@@ -106,58 +132,60 @@ it is a complete one that does not move.
 
 | Level | Reduced-motion behaviour |
 |---|---|
-| Micro | Colour and border changes retained; transforms removed |
-| Reveal | **Content appears immediately at full opacity.** No transform, no stagger |
-| Data | Counters render the final value instantly. Pulses stop. Route lines render complete |
-| Cinematic | Static composition. Parallax off. Hero renders as a still |
-| Transition | Instant. No cross-fade |
+| 1 Micro | Colour and border changes retained; `active:translate-y-px` disabled via `motion-reduce:` |
+| 2 Reveal | **Content rendered complete, at full opacity, with no inline style.** No transform, no stagger |
+| 3 Data | The readout renders the resolved state and never runs the sequence |
+| 4 Cinematic | (reserved) static composition, parallax off |
+| 5 Transition | (reserved) instant |
 
-Implementation: a global reduced-motion context read once, plus a CSS block that neutralises
-transitions and animations as a backstop, so a component that forgets to check still behaves.
+**Two mechanisms, deliberately:**
 
-**Meaning is preserved, never dropped.** If motion was the only thing conveying a state change, that
-state must also be conveyed by text, colour or position. A loading state that only spins is a
-loading state a reduced-motion user cannot perceive.
+1. **`useReducedMotion()` defaults to `true`.** Anything gated on it therefore renders calm and
+   complete during SSR and before the first effect. Motion is opted *into* after confirming it is
+   wanted, never opted out of after the fact.
+2. **A CSS backstop** in `app/globals.css` neutralises animation and transition durations globally.
+   A component that forgets to check the hook still behaves. Verified present in the shipped
+   stylesheet.
+
+**Meaning is preserved, never dropped.** The resolved readout says "Anti-jammer armed · Alert sent"
+whether or not the sequence ran — the argument survives without the motion.
 
 ---
 
-## 5. Performance
+## 5. Hard rules
 
-Animation is inside the PART 14 budgets, not exempt from them.
-
-- Motion primitives are dynamically imported where they sit below the fold.
-- No animation runs before the LCP element has painted.
-- Concurrent animating elements are capped — beyond roughly 12 on screen, a mid-range Android drops
-  frames regardless of how well written each one is.
-- Every animation is profiled on a throttled mobile profile, not on the development machine.
-- If an effect cannot hold 60 fps on a mid-range Android, **the effect is cut**, not optimised
-  indefinitely.
+- Nothing animates purely because it can.
+- **Content is never gated behind an animation** (§2, Level 2).
+- **No infinite ambient motion.** The sequence runs once and stops. Nothing loops.
+- **No scroll-jacking.** The scrollbar always means what it says.
+- **Animation never causes layout shift.** Measured CLS on the prototype: **0**, across 0 shifts.
+- **GPU-friendly properties only** — `transform` and `opacity`. No `will-change` was needed.
+- No layout-thrashing scroll handlers. `IntersectionObserver` only.
+- One animation library. Sprint 1 shipped with **none** — every level above is CSS transitions plus
+  `setTimeout`, which is why the route costs 110 kB of JS rather than 110 kB plus a motion library.
 
 ---
 
 ## 6. Accessibility
 
-Accessibility is never traded for an effect. If an effect cannot be made accessible, it is cut.
-
-- Focus is never lost or moved unexpectedly by an animation.
+- Focus is never moved or lost by an animation.
 - Focus rings are never animated in and are never swallowed by an animating surface.
-- Auto-advancing carousels do not exist. If a carousel is unavoidable it is user-driven, pausable,
-  and keyboard-operable.
+- `aria-live="off"` on the readout — a screen reader must not be narrated at by a decorative
+  sequence. The resolved status is in the DOM to be read on demand.
 - Nothing flashes more than three times per second.
-- Motion never conveys information on its own (§4).
+- Motion never conveys information on its own.
 
 ---
 
 ## 7. Review checklist per surface
 
 - [ ] Every animation maps to a named level
-- [ ] Each one communicates hierarchy, state, continuity or instrumentation — none is decoration
-- [ ] Content present in the DOM and server-rendered regardless of animation state
-- [ ] `transform` / `opacity` only; no layout properties animated
-- [ ] Reveals fire once, stagger capped at 6, travel ≤ 24 px
+- [ ] Each communicates hierarchy, state, continuity or instrumentation — none is decoration
+- [ ] Content present, server-rendered and visible regardless of animation state
+- [ ] `transform` / `opacity` only
+- [ ] Reveals fire once; stagger capped at 6; travel ≤ 24px
 - [ ] At most one Level 4 on the page
-- [ ] No infinite ambient motion beyond the rationed signal pulse
+- [ ] Nothing loops
 - [ ] Reduced motion verified — content complete, meaning intact
-- [ ] No CLS introduced, measured
-- [ ] 60 fps on a throttled mobile profile, measured
-- [ ] Any demonstration telemetry uses illustrative plates and is labelled
+- [ ] CLS measured, not assumed
+- [ ] Any demonstration telemetry uses an illustrative plate and is labelled

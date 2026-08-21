@@ -74,8 +74,16 @@ that 404s is honest; a stub page that ranks for an intent it cannot satisfy is w
 ## 2. The 301 map
 
 **This is the one irreversible part of the project.** `/services/*` holds whatever ranking equity the
-site has. Implemented in `next.config.js` in **Sprint 2**, not at launch, so it is exercised on every
-preview deployment for thirteen sprints before it matters.
+site has.
+
+> **STATUS: IMPLEMENTED AND VERIFIED — Sprint 2.** All 13 redirects live in `next.config.mjs` and
+> are checked by request, not by reading config, via `npm run check:redirects`. Every one returns
+> **308** with the correct `Location`. Destinations under `/solutions/*` and `/products/*` are built
+> in Sprints 5–6; a correct redirect to a not-yet-built page is the expected intermediate state.
+>
+> **Sprint 2 also removed `public/sitemap.xml` and `public/robots.txt`.** Those legacy CRA files
+> were *shadowing* the generated routes — Next serves `public/` in preference to a route handler, so
+> the site was still serving the old, incomplete sitemap: the very one missing the ECTS URL.
 
 All redirects are **permanent (308/301)**.
 

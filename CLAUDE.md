@@ -114,24 +114,40 @@ page states plainly who Nebsam is and where it operates — LLMs quote what is e
 
 Use the **`nebsam-content`** skill for any content migration or page copy.
 
-## 6. Design tokens
+## 6. Design tokens and typography
 
-Full system, derivation and verified contrast table: `docs/DESIGN_SYSTEM.md`. Values are sampled
-from `brand/logo/nebsam_transparent_logo.png` or computed — none is invented.
+**Implemented in Sprint 1.** Use the **`nebsam-brand`** skill when building or restyling any UI.
+Full system and verified contrast table: `docs/DESIGN_SYSTEM.md`. Direction: ADR-0002.
+
+Tokens live in `app/globals.css`; `tailwind.config.ts` maps onto them and never defines a colour.
 
 ```
-brand-navy #071233   brand-navy-raised #0F2A6B   brand-blue #020189   brand-blue-light #85A4D2
-brand-signal #2E7BF6 brand-signal-ink #1C64D8    ink #0F1620
-surface #FFFFFF      surface-raised #F4F7FB      surface-inverse #071233
-border-hairline #DCE3ED   border-strong #848DA0
-border-hairline-inverse #1E2A44   border-strong-inverse #5F6F94
-text-primary #0F1620 text-secondary #51607A      text-inverse #FFFFFF
-text-secondary-inverse #A8BBDC
-state-ok #0B7A53     state-warn #8A5406          state-alert #C4321F
+brand-navy #0A0E36   brand-navy-raised #121741   brand-blue #020189   brand-blue-light #85A4D2
+brand-signal #3D8BFF (dark only)    brand-signal-ink #1857C4 (light + every primary fill)
+ink #0F1620          surface #FFFFFF   surface-raised #F1F4FA   surface-inverse #0A0E36
+border-hairline #DFE5F0   border-strong #7E879B
+border-hairline-inverse #1E2450   border-strong-inverse #5A6B94
+text-primary #0F1620 text-secondary #4C5A75  text-inverse #FFFFFF  text-secondary-inverse #C3CEEA
+state-ok #3FD79B/#0A7350   state-warn #E8A33D/#8A5406   state-alert #FF7A66/#B62D1B
 ```
+
+**Two rules that hold the palette together.** Electric blue is *interface*, amber is *signal* — a
+control is never a state colour. And the signal splits by ground: `#3D8BFF` passes on navy (5.61) and
+fails on paper (3.01); `#1857C4` is the reverse.
+
+**Primary button is `#1857C4` with a white label on both grounds** (6.56), plus a `#3D8BFF` hairline
+on dark. **Focus ring follows the section, 2px with 2px offset** — a `#3D8BFF` ring *on* the
+`#1857C4` fill is 1.98:1, so the offset is what makes it legal.
+
+**Typography — Archivo + IBM Plex Mono. Two families, two delivered files** (budget ≤3). Display and
+body are one superfamily separated by **optical width** (`wdth 118` vs `wdth 100`), not two families.
+Mono is telemetry only. Sentence case headings, always.
+
+**Radius: instruments are not rounded** — `data 2px`, `control 6px`, `panel 10px`. Never 0.
 
 Light and dark **sections** composed as a rhythm across the page. **No user-facing theme toggle.**
-Never redraw or recolour the logo.
+Never redraw or recolour the logo — and note it is a *plaque*, not a free-standing mark, so it
+cannot sit on the navy ground until mono variants exist (V37).
 
 **Prohibited patterns (brief 6.6).** Uniform rounded-card grids · three-column feature blocks as the
 default answer · purple/blue AI gradients · abstract blobs · glass on everything · pill buttons
@@ -226,21 +242,22 @@ present alcohol screening as a legal or evidential test. Flag for legal review b
 
 ## 11. Commands
 
-The Next.js application does not exist yet — it lands in **Sprint 1**. Until then the only commands
-that apply are git and the docs.
+The Next.js app landed in Sprint 1. The legacy CRA app was removed from `develop` and remains
+recoverable on `main` and `chore/00-project-scaffold`.
 
 ```bash
-npm run dev          # Next dev server                    (from Sprint 1)
-npm run build        # production build                   (from Sprint 1)
-npm run lint         # ESLint                             (from Sprint 1)
-npm run typecheck    # tsc --noEmit                       (from Sprint 1)
+npm run dev          # Next dev server
+npm run build        # production build
+npm start            # serve the production build
+npm run lint         # ESLint
+npm run typecheck    # tsc --noEmit
 npm run test         # test suite                         (from Sprint 9)
 npx supabase migration new <name>   # new migration       (from Sprint 3)
 npx supabase db push                # apply migrations    (from Sprint 3)
 ```
 
-`npm start` and `npm run build` currently run the **legacy CRA app**. Do not use them for the
-rebuild.
+**Measure on the production build (`npm run build && npm start`), never on `next dev`** — dev builds
+are not production builds and the budget numbers will lie.
 
 **ESLint + Prettier + `tsc --noEmit` must pass before any commit.**
 
