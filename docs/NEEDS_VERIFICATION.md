@@ -75,6 +75,15 @@ Both must be empty of blockers before launch. Part A is where the risk is.
 | **V39** | **Named sprint approver** | Every gate in `docs/SPRINT_PLAN.md` says "human approves" without naming who | Client | Every gate | OPEN |
 | **V40** | **Target launch date** | No date exists against which to flag an at-risk sprint | Client | Sequencing | OPEN |
 
+### Raised in Sprint 1
+
+| # | Item | Why it matters | Owner | Blocks | Status |
+|---|---|---|---|---|---|
+| **V41** | **Fonts are not preloaded** — `next/font` emits no `<link rel="preload" as="font">` | Two woff2 files are fetched (Archivo 90 KB, IBM Plex Mono 10 KB) and the display headline is the likely LCP element. Without a preload they are discovered only after CSS parses, which costs LCP on a slow connection — the exact profile the audience is on | Claude | Sprint 2 | OPEN |
+| **V42** | **No mobile navigation** — the header hides its nav below `md` with no menu behind it | The Sprint 1 prototype is one screen so nothing is stranded yet, but from Sprint 2 the site has real routes and a phone user would have no way to reach them. Needs a keyboard-operable, focus-trapped menu (brief PART 15, and WCAG 2.2 2.4.11 given the sticky header) | Claude | Sprint 2 | OPEN |
+| **V43** | **Next.js transitive advisories remain** — `postcss` inside Next's own tree, and `sharp` <0.35 | The critical RCE was cleared by moving to 15.5.23. The two remaining highs only clear via **Next 16**, a breaking major that PART 2.5 says is not taken unilaterally. Decide whether to schedule the Next 16 upgrade before launch | Client | Sprint 14 | OPEN |
+| **V44** | **Disabled control styling uses an opacity multiplier** — 2.11:1 | WCAG 1.4.3 exempts inactive components so this is legal, but it is poor. Give disabled explicit tokens when forms ship | Claude | Sprint 2 | OPEN |
+
 ---
 
 # PART B — SPECIFICATION GAPS

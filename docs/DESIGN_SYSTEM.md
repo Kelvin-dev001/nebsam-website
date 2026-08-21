@@ -2,61 +2,61 @@
 
 Tokens, type scale, spacing, primitives and the verified contrast table.
 
-**Every colour below is either sampled from `brand/logo/nebsam_transparent_logo.png` or computed
-from a sampled value. None is invented.** Contrast ratios are calculated to the WCAG 2.x relative
-luminance formula, not estimated.
+**Status: implemented in Sprint 1.** Every value below is in the code — CSS variables in
+`app/globals.css`, mapped into Tailwind by `tailwind.config.ts`. Tailwind never defines a colour of
+its own.
 
-Sprint 0 defines this system. **Sprint 1 implements it** and produces the homepage prototype that
-proves it.
+Every colour is sampled from `brand/logo/nebsam_transparent_logo.png` or computed from a sampled
+value. Every ratio was calculated to the WCAG relative-luminance formula, not estimated.
+
+Direction record: `docs/decisions/ADR-0002-visual-direction.md`.
 
 ---
 
 ## 1. What the logo actually contains
 
-The master asset is a 1254×1254 PNG, 625 KB. Decoded and pixel-sampled directly:
+The master asset is a 1254×1254 PNG, 625 KB, decoded and pixel-sampled directly:
 
 | Colour | Coverage | Role in the artwork |
 |---|---|---|
 | `#85A4D2` | **33%** of opaque pixels | the rounded-rectangle **plaque background** |
 | `#020189` | 71,574 px | the **NEBSAM** wordmark |
-| `#D08833` (approx.) | 5,244 px | the **satellite signal arcs** — the only warm accent |
+| `#D08833` | 5,244 px | the **satellite signal arcs** — the only warm accent |
 | `#FFFFFF` | — | the "Digital Solutions (K) Ltd" lockup |
 
-Three consequences that shape everything below.
+Three consequences that shape the whole system:
 
-**The plaque fill is part of the artwork.** Despite the filename, this is not a free-standing
-transparent mark — only the corners are transparent. Placed on a dark navy header it renders a pale
-blue rectangle. Until an SVG and mono variants exist (`brand/README.md`, register **V37**), the logo
-can only be placed on light surfaces, and the header design must accommodate that.
+**The plaque fill is part of the artwork.** Despite the filename only the corners are transparent, so
+the logo cannot sit on the navy ground. The header gives it a light chip until mono variants exist
+(register **V37**). That is a constraint handled honestly, not a flourish.
 
-**`#85A4D2` cannot carry text on white.** It measures **2.55:1** — below every WCAG threshold. It is
-a surface and illustration colour, never a text or UI colour on a light ground. On navy it measures
-7.21:1 and is safe.
+**`#85A4D2` cannot carry text on white** — 2.55:1. Surfaces and illustration only.
 
-**The logo's own accent is warm, not electric blue.** Brief 6.2 specifies "a disciplined
-electric-blue signal accent", and that is what `brand-signal` is. But the mark already contains a
-warm colour that exists precisely to depict transmission — the signal arcs between satellite and
-earth. Rather than discard a genuinely brand-derived value, `#D08833` becomes the anchor for
-`state-warn`, where warmth carries meaning. This is recorded, not silently decided: if Sprint 1
-review prefers the logo orange as the signature accent instead, the value is already measured and
-the swap is one token.
+**The logo's own accent is warm.** Brief 6.2 specifies an electric-blue signal accent and that is
+what `brand-signal` is. But the mark already contains a colour that exists to depict transmission,
+so `#D08833` — lifted to `#E8A33D` for legibility — became `state-warn`, which is what the signature
+element turns amber with. The accent is earned from the brand rather than imported.
 
 ---
 
 ## 2. Colour tokens
 
-Required names are set by brief 6.2. Values are ours.
+Token names are fixed by brief PART 6.2.
 
 ### 2.1 Brand
 
-| Token | Value | Derivation |
+| Token | Value | Role |
 |---|---|---|
-| `brand-navy` | `#071233` | Derived from the wordmark `#020189` — pulled off the purple axis toward true blue and darkened, to give dark sections a ground that reads as navy rather than indigo |
-| `brand-navy-raised` | `#0F2A6B` | Lifted navy for raised surfaces on dark sections |
-| `brand-blue` | `#020189` | **Sampled** — the NEBSAM wordmark, unmodified |
-| `brand-blue-light` | `#85A4D2` | **Sampled** — the plaque fill. **Surfaces and illustration only** |
-| `brand-signal` | `#2E7BF6` | The disciplined electric-blue accent required by 6.2 |
-| `brand-signal-ink` | `#1C64D8` | Darkened signal, for signal-coloured **text on light** |
+| `brand-navy` | `#0A0E36` | Ground for dark sections. Derived from the wordmark, kept **chromatic** rather than sanded into a corporate navy |
+| `brand-navy-raised` | `#121741` | Raised surfaces on dark — the readout panel |
+| `brand-blue` | `#020189` | **Sampled.** The wordmark, unmodified. Display type on paper |
+| `brand-blue-light` | `#85A4D2` | **Sampled.** The plaque. **Surfaces and illustration only** |
+| `brand-signal` | `#3D8BFF` | Interactive accent **on dark sections only** |
+| `brand-signal-ink` | `#1857C4` | Interactive accent on light **and every primary button fill** |
+
+**The signal splits in two because no single blue passes as text on both grounds.** `#3D8BFF` is
+5.61:1 on navy and 3.01:1 on paper; `#1857C4` is the reverse. Rather than compromise both, the token
+is two values with an explicit rule about which ground each serves.
 
 ### 2.2 Surfaces and ink
 
@@ -64,124 +64,143 @@ Required names are set by brief 6.2. Values are ours.
 |---|---|---|
 | `ink` | `#0F1620` | Near-black with a blue cast — never pure `#000` |
 | `surface` | `#FFFFFF` | Light sections |
-| `surface-raised` | `#F4F7FB` | Cards and panels on light sections |
-| `surface-inverse` | `#071233` | Dark sections |
+| `surface-raised` | `#F1F4FA` | "Blueprint paper" — cool, deliberately not cream |
+| `surface-inverse` | `#0A0E36` | Dark sections |
 
-### 2.3 Borders — two kinds, deliberately
+### 2.3 Borders — two kinds, two obligations
 
 | Token | Value | Use | Obligation |
 |---|---|---|---|
-| `border-hairline` | `#DCE3ED` | Decorative dividers on light | None — decorative |
-| `border-strong` | `#848DA0` | Input borders, focus targets, meaningful boundaries on light | **≥ 3:1** |
-| `border-hairline-inverse` | `#1E2A44` | Decorative dividers on dark | None |
-| `border-strong-inverse` | `#5F6F94` | Meaningful boundaries on dark | **≥ 3:1** |
+| `border-hairline` | `#DFE5F0` | Decorative rules on light | none |
+| `border-strong` | `#7E879B` | Input borders, meaningful boundaries on light | **≥ 3:1** |
+| `border-hairline-inverse` | `#1E2450` | Decorative rules on dark | none |
+| `border-strong-inverse` | `#5A6B94` | Meaningful boundaries on dark | **≥ 3:1** |
 
-Conflating these is the usual way a design system fails an audit: a 1.29:1 hairline is correct for a
-decorative rule and illegal for an input border. Two tokens, two rules.
+Conflating these is how a design system fails an audit: a 1.26:1 hairline is correct for a divider
+and illegal for an input border.
 
 ### 2.4 Text
 
 | Token | Value | On |
 |---|---|---|
 | `text-primary` | `#0F1620` | light |
-| `text-secondary` | `#51607A` | light |
+| `text-secondary` | `#4C5A75` | light |
 | `text-inverse` | `#FFFFFF` | dark |
-| `text-secondary-inverse` | `#A8BBDC` | dark |
+| `text-secondary-inverse` | `#C3CEEA` | dark |
 
-### 2.5 State
+### 2.5 State — telemetry only
 
-| Token | Light | Dark | Note |
-|---|---|---|---|
-| `state-ok` | `#0B7A53` | `#2FBE8B` | |
-| `state-warn` | `#8A5406` | `#D08833` | **The dark value is the sampled logo orange.** The light value is it darkened to pass on white |
-| `state-alert` | `#C4321F` | `#FF6B57` | |
+**A control is never these colours.** They report status, they do not afford interaction.
 
-### 2.6 Focus
+| Token | Dark | Light |
+|---|---|---|
+| `state-ok` | `#3FD79B` | `state-ok-ink` `#0A7350` |
+| `state-warn` | `#E8A33D` | `state-warn-ink` `#8A5406` |
+| `state-alert` | `#FF7A66` | `state-alert-ink` `#B62D1B` |
 
-`focus-ring` = `brand-signal` `#2E7BF6`, minimum 2 px, with a 2 px offset so it never sits flush
-against the component edge. It measures 3.98:1 on white and 4.62:1 on navy — above the 3:1
-non-text requirement on both.
-
-**A glass or dark surface must never swallow the focus ring.** This is checked on every interactive
-element in every sprint, not once at the end.
+**The rule that keeps the palette from turning to mush: electric blue is interface, amber is signal.**
 
 ---
 
 ## 3. Verified contrast table
 
-Computed, not estimated. Body text needs 4.5:1; large text (≥ 24 px, or ≥ 19 px bold) and meaningful
-non-text UI need 3:1.
+Body text needs 4.5:1; large text (≥ 24px, or ≥ 19px bold) and meaningful non-text UI need 3:1.
+
+### 3.1 Text pairings used on the page
 
 | Foreground | Background | Ratio | Verdict |
 |---|---|---|---|
-| `text-primary` `#0F1620` | `surface` `#FFFFFF` | **18.17** | AAA |
-| `text-primary` `#0F1620` | `surface-raised` `#F4F7FB` | **16.91** | AAA |
-| `text-secondary` `#51607A` | `surface` `#FFFFFF` | **6.36** | AA |
-| `text-secondary` `#51607A` | `surface-raised` `#F4F7FB` | **5.92** | AA |
-| `brand-blue` `#020189` | `surface` `#FFFFFF` | **15.35** | AAA |
-| `brand-blue` `#020189` | `surface-raised` `#F4F7FB` | **14.28** | AAA |
-| `brand-signal-ink` `#1C64D8` | `surface` `#FFFFFF` | **5.44** | AA |
-| `brand-signal-ink` `#1C64D8` | `surface-raised` `#F4F7FB` | **5.06** | AA |
-| `text-inverse` `#FFFFFF` | `brand-navy` `#071233` | **18.37** | AAA |
-| `text-secondary-inverse` `#A8BBDC` | `brand-navy` `#071233` | **9.45** | AAA |
-| `brand-signal` `#2E7BF6` | `brand-navy` `#071233` | **4.62** | AA |
-| `brand-blue-light` `#85A4D2` | `brand-navy` `#071233` | **7.21** | AAA |
-| `state-ok` `#0B7A53` | `#FFFFFF` | **5.35** | AA |
-| `state-ok` `#0B7A53` | `#F4F7FB` | **4.98** | AA |
-| `state-ok-inverse` `#2FBE8B` | `brand-navy` | **7.75** | AAA |
-| `state-warn` `#8A5406` | `#FFFFFF` | **6.27** | AA |
-| `state-warn-inverse` `#D08833` | `brand-navy` | **6.34** | AA |
-| `state-alert` `#C4321F` | `#FFFFFF` | **5.49** | AA |
-| `state-alert-inverse` `#FF6B57` | `brand-navy` | **6.55** | AA |
-| `border-strong` `#848DA0` | `#FFFFFF` | **3.33** | AA (non-text) |
-| `border-strong` `#848DA0` | `#F4F7FB` | **3.10** | AA (non-text) |
-| `border-strong-inverse` `#5F6F94` | `brand-navy` | **3.66** | AA (non-text) |
-| `focus-ring` `#2E7BF6` | `#FFFFFF` | **3.98** | AA (non-text) |
-| `focus-ring` `#2E7BF6` | `brand-navy` | **4.62** | AA (non-text) |
+| `#FFFFFF` h1/display | `brand-navy` | **18.60** | AAA |
+| `#C3CEEA` body-lg, eyebrow | `brand-navy` | **11.81** | AAA |
+| `#E8A33D` eyebrow dot | `brand-navy` | **8.62** | AAA |
+| `#FFFFFF` readout value | `brand-navy-raised` | **17.15** | AAA |
+| `#C3CEEA` readout label | `brand-navy-raised` | **10.89** | AAA |
+| `#3FD79B` ok status | `brand-navy-raised` | **9.31** | AAA |
+| `#E8A33D` warn status | `brand-navy-raised` | **7.95** | AAA |
+| `#020189` "Complies." | `surface-raised` | **13.93** | AAA |
+| `#0F1620` body | `surface-raised` | **16.49** | AAA |
+| `#4C5A75` body-secondary, badge | `surface-raised` | **6.30** | AA |
+| `#0A7350` "Complies" mono | `surface-raised` | **5.32** | AA |
 
-### 3.1 Combinations that fail — recorded so they are not tried
+### 3.2 Every button variant
+
+| Variant | Foreground | Background | Ratio | Need | |
+|---|---|---|---|---|---|
+| primary — label (both grounds) | `#FFFFFF` | `#1857C4` | **6.56** | 4.5 | PASS |
+| primary — hover | `#FFFFFF` | `#134AA8` | **8.16** | 4.5 | PASS |
+| primary — fill boundary vs paper | `#1857C4` | `#F1F4FA` | **5.96** | 3.0 | PASS |
+| primary — hairline boundary vs navy | `#3D8BFF` | `#0A0E36` | **5.61** | 3.0 | PASS |
+| secondary on paper — label | `#0F1620` | `#F1F4FA` | **16.49** | 4.5 | PASS |
+| secondary on paper — border | `#7E879B` | `#F1F4FA` | **3.27** | 3.0 | PASS |
+| secondary on navy — label | `#FFFFFF` | `#0A0E36` | **18.60** | 4.5 | PASS |
+| secondary on navy — border | `#5A6B94` | `#0A0E36` | **3.51** | 3.0 | PASS |
+| secondary on navy — hover fill | `#FFFFFF` | `#121741` | **17.15** | 4.5 | PASS |
+| ghost on paper — label | `#1857C4` | `#F1F4FA` | **5.96** | 4.5 | PASS |
+| ghost on navy — label | `#3D8BFF` | `#0A0E36` | **5.61** | 4.5 | PASS |
+| **disabled primary (50% opacity)** | `#8BABE2` | `#F1F4FA` | **2.11** | — | **exempt** |
+
+> **The disabled row is a real weak spot, recorded rather than hidden.** WCAG 1.4.3 exempts inactive
+> components, so `disabled:opacity-50` is legal. It is still poor. When forms ship in Sprint 2,
+> disabled gets explicit tokens instead of an opacity multiplier.
+
+### 3.3 Focus ring
+
+The ring follows the **section**, never the component, and always carries a 2px offset.
+
+| | Ring | On | Ratio |
+|---|---|---|---|
+| Light sections | `#1857C4` | `#F1F4FA` | **5.96** |
+| Light sections | `#1857C4` | `#FFFFFF` | **6.56** |
+| Dark sections | `#3D8BFF` | `#0A0E36` | **5.61** |
+
+> `#3D8BFF` sitting **on** a `#1857C4` primary fill is **1.98:1**. The offset is not cosmetic — it is
+> what puts the ring on the section background and makes it legal. Verified in the browser.
+
+### 3.4 Combinations that fail — recorded so they are not attempted
 
 | Foreground | Background | Ratio | Rule |
 |---|---|---|---|
-| `brand-blue-light` `#85A4D2` | `#FFFFFF` | **2.55** | **Never text on light.** Surfaces and illustration only |
-| `state-warn-inverse` `#D08833` | `#FFFFFF` | **2.90** | Use `state-warn` `#8A5406` on light |
-| `brand-signal` `#2E7BF6` | `#FFFFFF` | **3.98** | **Large text and non-text only.** Body text on light uses `brand-signal-ink` |
-| `border-hairline` `#DCE3ED` | `#FFFFFF` | 1.29 | Decorative only — never an input border |
+| `brand-blue-light` `#85A4D2` | white | **2.55** | never text on light |
+| `state-warn` `#E8A33D` | white | **2.90** | use `state-warn-ink` on light |
+| `brand-signal` `#3D8BFF` | paper | **3.01** | dark sections only |
+| `border-hairline` `#DFE5F0` | paper | 1.15 | decorative rules only |
+| `border-hairline-inverse` `#1E2450` | navy | 1.26 | decorative rules only |
 
 ---
 
 ## 4. Typography
 
-Brief 6.3 asks for a characterful display face, a highly legible body face, and a mono/utility face
-for telemetry and technical labels. **Mono is part of the brand voice** — it is how the site signals
-instrumentation rather than brochure.
+**Two families, two files delivered** — against a PART 14 budget of three.
 
-Explicitly ruled out by 6.3: Inter with a purple gradient, and the current AI-design cluster.
+| Role | Face | Cut | Loaded |
+|---|---|---|---|
+| Display | **Archivo** | `wdth 118`, weight 700, `-0.02em` | variable, 1 file |
+| Display-tight | **Archivo** | `wdth 112`, weight 600 | same file |
+| Body | **Archivo** | `wdth 100`, weight 400–500 | same file |
+| Telemetry | **IBM Plex Mono** | weight 500 | 1 file |
 
-**The logo's own typeface is not a reference.** The wordmark is set in a casual rounded face; the
-site must not imitate it. The logo is legacy artwork to be respected, not a type specimen.
+Display and body are the same superfamily separated by **optical width**, not by a second family.
+Archivo carries a `wdth` axis, so one variable file gives both cuts. This is the typographic idea of
+the site and it is also why the pairing costs one file instead of two.
 
-| Role | Requirement | Candidates for Sprint 1 |
-|---|---|---|
-| Display | Characterful, engineered rather than friendly, strong at large sizes | Space Grotesk · Archivo · Chivo |
-| Body | Highly legible at 16 px on a mid-range Android | Source Sans 3 · IBM Plex Sans |
-| Mono | Telemetry, specs, order numbers, plates | IBM Plex Mono · JetBrains Mono |
+**The logo's own typeface is not a reference.** The wordmark is a casual rounded face; the site does
+not imitate it.
 
-**Final selection is a Sprint 1 decision** made against real rendered specimens, not chosen from a
-list in a document.
+**Measured:** `next/font` emits 8 woff2 files, but they are unicode-range subsets. An English page
+fetches exactly **2** — verified in the browser: Archivo 90,096 B and IBM Plex Mono 10,060 B.
+`font-display: swap` is set, and Next generates size-adjusted `Archivo Fallback` / `IBM Plex Mono
+Fallback` metrics, which is why CLS measured 0.
 
-Hard constraints from PART 14: **maximum 3 font files total.** Load only the weights actually used,
-`font-display: swap`, self-hosted or via `next/font` — no render-blocking font request. Three files
-across three families means one weight each, plus synthesised or variable weights.
+> **Known issue.** No `<link rel="preload" as="font">` is emitted. The display text is the likely LCP
+> element, so preloading should be forced in Sprint 2. Recorded in `docs/NEEDS_VERIFICATION.md`.
 
 ### 4.1 Type scale
 
-1.200 (minor third) on mobile, 1.250 (major third) from `md` up. Body stays 16 px minimum
-everywhere — never smaller on mobile.
+1.200 mobile / 1.250 desktop. Body never below 16px.
 
 | Step | Mobile | Desktop | Use |
 |---|---|---|---|
-| `display` | 36 | 60 | Hero only, once per page |
+| `display` | 36 | 60 | Hero and section openers, once each |
 | `h1` | 30 | 44 | One per page |
 | `h2` | 25 | 34 | Section |
 | `h3` | 21 | 26 | Subsection |
@@ -189,114 +208,99 @@ everywhere — never smaller on mobile.
 | `body` | 16 | 17 | Default |
 | `body-sm` | 14 | 15 | Secondary, captions |
 | `mono` | 14 | 15 | Telemetry, specs, order numbers |
-| `label` | 12 | 12 | Uppercase labels, ≥ 0.08em tracking |
+| `label` | 12 | 12 | Mono eyebrows, 0.08em, uppercase |
 
-Line height 1.5 for body, 1.15–1.25 for display and headings. Measure 60–75 characters for prose.
+Line height 1.5–1.6 body, 1.02–1.15 display. Measure capped at `max-w-prose` (62ch).
 
 ---
 
 ## 5. Spacing, radius, elevation
 
-**Spacing** — 4 px base: `4 8 12 16 24 32 48 64 96 128`. Section padding `64` mobile / `96–128`
-desktop.
+**Spacing** — 4px base: `4 8 12 16 24 32 48 64 96 128`. Section padding `4rem` mobile / `6rem`
+desktop (`py-section`, `py-section-lg`).
 
-**Radius** — `sm 4` · `md 8` · `lg 12` · `full 9999` (avatars and true pills only).
-**Not** a uniform radius on everything: 6.6 prohibits uniform rounded-card grids and pill buttons
-everywhere. Buttons and inputs use `md`; panels use `lg`; data surfaces and telemetry use `sm`,
-because instrumentation reads as precise, not soft.
+**Radius — instruments are not rounded.** Revised down from the Sprint 0 draft, which used the
+default 4/8/12 scale everyone ships.
 
-**Elevation** — four levels, restrained. Dark sections use borders and a lifted surface rather than
-shadow; shadow on navy reads as smudge.
+| Token | Value | Use |
+|---|---|---|
+| `radius-data` | **2px** | telemetry surfaces, spec tables, badges |
+| `radius-control` | **6px** | buttons, inputs |
+| `radius-panel` | **10px** | large panels |
 
-```
-e0  none                                    flat on surface
-e1  0 1px 2px   rgb(15 22 32 / 0.06)        resting card
-e2  0 4px 12px  rgb(15 22 32 / 0.08)        raised / hover
-e3  0 12px 32px rgb(15 22 32 / 0.12)        overlay, dialog
-```
+Not `0` — that is the broadsheet default brief 6.3 also warns against.
 
-**Glass is rationed.** 6.6 prohibits glass on everything. Where it appears it must be verified for
-text contrast *on the glass* and must not swallow the focus ring — the two ways glass usually fails.
+**Elevation** — dark sections use borders and a raised surface rather than shadow; shadow on navy
+reads as smudge. The prototype uses no shadow at all.
 
 ---
 
-## 6. Section rhythm
+## 6. Primitives — built in Sprint 1
 
-Light and dark **sections** composed as a rhythm across the page. **No user-facing theme toggle.**
+| Primitive | File | Notes |
+|---|---|---|
+| `Button` / `ButtonLink` | `components/ui/button.tsx` | primary / secondary / ghost, md / lg, 44px min target |
+| `Section` | `components/layout/section.tsx` | light / paper / dark; sets `data-section` |
+| `Shell` | same | the measure, `max-w-shell` |
+| `Eyebrow` | same | mono structural label |
+| `Field` | `components/ui/field.tsx` | visible label, `aria-describedby`, `role="alert"` errors |
+| `Badge` | `components/ui/badge.tsx` | factual marker only |
+| `Reveal` | `components/motion/reveal.tsx` | Level 2 |
+| `useReducedMotion` | `components/motion/use-reduced-motion.ts` | defaults to reduced |
+| `SignalReadout` | `components/telemetry/signal-readout.tsx` | the signature element |
 
-The failure mode 6.6 names is identical section rhythm — every section the same height, the same
-padding, the same centred heading. The counter is deliberate variation: dark sections are heavier
-and more spacious than light ones, one section per page breaks the container to full bleed, and
-section headings are not all centred.
+**No `Card` was built.** Brief 6.6 prohibits uniform rounded-card grids as the default answer, and
+the layout does not need one. A card will be added when a surface genuinely requires it, not
+pre-emptively.
 
-Anti-pattern reminder for every surface: uniform rounded-card grids · three-column feature blocks as
-the default answer · purple/blue AI gradients · abstract blobs · giant centred headings everywhere ·
-decorative icons carrying no meaning · 01/02/03 markers where the content is not a sequence · emoji
-as UI iconography.
+### 6.1 `data-section` is the hook the system keys off
 
----
-
-## 7. Primitives — Sprint 1 scope
-
-`Button` (primary / secondary / ghost / destructive; the primary action on a page is unmistakable,
-per the conversion hierarchy) · `Link` · `Field` (label, hint, inline specific error) · `Select` ·
-`Checkbox` / `Radio` · `Disclosure` · `Dialog` (focus-trapped, `Esc`, restores focus) · `Tabs`
-(**server-rendered content only** — never the place specifications live) · `Badge` · `Card` ·
-`Breadcrumbs` · `Table` (specification tables, horizontally scrollable on mobile) · `Prose` ·
-`ImagePlaceholder` · `PriceTag` (**always renders the `excl. VAT` label** — never optional) ·
-`TelemetryStrip` (the signature element).
-
-`PriceTag` deserves the note: brief 10.2 makes the VAT label mandatory on the product page, in the
-cart, in the total and inside the generated WhatsApp message. Making it a property of the component
-rather than a thing each caller remembers is what stops it being forgotten in one of those four
-places.
+`Section` sets `data-section="dark" | "light"`. The focus ring, the secondary button border, the
+ghost link colour and the eyebrow colour all read it. A component never has to be told which ground
+it is on.
 
 ---
 
-## 8. The signature element
+## 7. The signature element
 
-Brief 6.4 requires **one** thing the site is remembered by, derived from Nebsam's own world. Three
-directions to prototype in Sprint 1, **one to be proposed**:
+**"Jamming"** — `components/telemetry/signal-readout.tsx`. Full rationale in ADR-0002.
 
-1. **Live-feeling telemetry strip** — reads as a real vehicle status feed. Strongest fit with the
-   mono type role and the "instrumentation" voice.
-2. **Animated Kenya network map** — branches and coverage towns resolving as signal nodes. Directly
-   serves the 3-branches-plus-16-towns story that `/about/coverage` has to tell anyway.
-3. **Route line that draws itself on scroll** — carries section transitions.
+The readout runs a four-phase sequence on load: healthy → degrading → jammed → **anti-jammer armed**.
 
-A fourth, the device-frame platform viewer, is **not viable at launch**: it depends on real platform
-screenshots, and those are blocked by **V13**.
+**The resolved state is the default rendered DOM.** It is what the server sends, what a crawler
+reads, what renders with JS disabled, what a reduced-motion visitor sees, and where the sequence
+ends. Verified by `curl` against the production build.
 
-**Hard rule (6.5).** Demonstration telemetry must use obviously illustrative registration plates,
-never a real customer's; must be labelled as an illustration wherever a reasonable person could
-mistake it for live data; and must never be described as live customer data or real-time fleet
-status.
+Hard rules from brief 6.5, all implemented:
+- Plate is `KXX 000X` — not a valid Kenyan registration
+- A permanent, non-small-print caption reads "Illustration — not live customer data"
+- Never described as live customer data or real-time fleet status
+- `aria-live="off"` so a screen reader is not narrated at by a decorative sequence
 
-**Spend boldness in one place.** Everything around the signature stays quiet and disciplined.
+Domain detail that earns its place: a GSM jammer blocks the uplink, not GPS reception, so **GPS stays
+healthy while GSM collapses**. That asymmetry is the honest picture.
 
 ---
 
-## 9. Process — mandatory per major surface
+## 8. Prohibited patterns (brief 6.6)
 
-Brief 6.7, two passes:
+Uniform rounded-card grids · three-column feature blocks as the default answer · purple/blue AI
+gradients · abstract blobs · glass on everything · pill buttons everywhere · giant centred headings
+in every section · identical section rhythm · decorative icons that carry no meaning · stock
+corporate handshakes · stock "African businessman with tablet" · 01/02/03 markers where the content
+is not a sequence · motion for its own sake · emoji as UI iconography.
 
-1. **Plan** — token subset, type roles, layout concept in prose plus an ASCII wireframe, and the
-   signature element. Present it.
-2. **Critique before code** — ask whether any part is what would be produced for any generic
-   telematics brief. Revise what is, and say what changed and why.
-
-Then build, screenshot, critique the screenshot, **remove one thing**.
-
-Use the **frontend-design** skill for this.
+Also: not Inter with a purple gradient, and not the current AI-design cluster — cream with a
+high-contrast serif and terracotta; near-black with one acid accent; fake-broadsheet hairline
+columns.
 
 ---
 
-## 10. Open items
+## 9. Open items
 
 | Item | Register |
 |---|---|
-| SVG logo, plus horizontal, stacked, mono-white and mono-dark variants — the current asset is a 625 KB PNG with the plaque baked in and cannot be placed on dark surfaces | **V37** |
-| Final typeface selection against rendered specimens | Sprint 1 |
-| Signature element — three prototyped, one proposed | Sprint 1 |
-| Whether the logo's warm accent `#D08833` should carry the signature instead of `brand-signal` | Sprint 1 review |
-| Licensed font files, if any typeface is already owned | `brand/README.md` |
+| SVG logo plus horizontal, stacked, mono-white, mono-dark and favicon source | **V37** |
+| Force `<link rel="preload">` on the two fetched font files | **V41** |
+| Mobile navigation — the prototype hides nav below `md` with no menu yet | **V42** |
+| Disabled control tokens instead of an opacity multiplier | Sprint 2 |
