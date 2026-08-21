@@ -44,3 +44,6 @@ out/
 
 # Cleaned download-centre PDFs — derived artefacts, regenerable from _inbox/
 content-source/06-downloads/*.pdf
+
+# TypeScript incremental build cache
+*.tsbuildinfo
