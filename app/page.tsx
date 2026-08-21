@@ -1,9 +1,10 @@
-import { Header } from '@/components/layout/header';
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { ButtonLink } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Reveal } from '@/components/motion/reveal';
 import { SignalReadout } from '@/components/telemetry/signal-readout';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { ROUTES } from '@/lib/constants';
 
 /**
  * SPRINT 1 PROTOTYPE — one homepage screen, to judge the visual language.
@@ -25,11 +26,16 @@ const KEBS_PARAMETERS = [
   'Ignition-triggered power-on',
 ] as const;
 
+export const metadata = buildMetadata({
+  title: 'Vehicle Tracking & Fleet Telematics in Kenya',
+  description:
+    'Anti-jamming vehicle tracking, fleet telematics and vehicle security, installed and supported across Kenya from branches in Nairobi, Mombasa and Nakuru.',
+  path: ROUTES.home,
+});
+
 export default function HomePage() {
   return (
-    <>
-      <Header />
-      <main id="main">
+    <main id="main">
         {/* ── HERO ──────────────────────────────────────────────────────────
             Left-weighted and asymmetric. The dominant object is the readout,
             not the photograph — photography is a narrow band doing atmosphere,
@@ -145,7 +151,6 @@ export default function HomePage() {
             </div>
           </Shell>
         </Section>
-      </main>
-    </>
+    </main>
   );
 }
