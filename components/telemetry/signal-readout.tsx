@@ -150,7 +150,24 @@ export function SignalReadout() {
               aria-hidden="true"
               className="inline-block h-1.5 w-1.5 rounded-full bg-current"
             />
-            {v.status}
+            {/*
+              WIDTH IS RESERVED FOR THE LONGEST STATE, and this is a layout
+              correctness fix rather than a cosmetic one.
+
+              The four status strings run from "Link OK" (7 characters) to
+              "Anti-jammer armed · Alert sent" (29). Sitting in a `flex-wrap`
+              row, that swing changes where the row breaks, which changes the
+              container height, which is cumulative layout shift — on a mobile
+              viewport, where the row wraps at all. Lighthouse measured CLS
+              0.116 against a budget of 0.05 and attributed it to no element,
+              because the shifting thing is a wrap point rather than a box.
+
+              30ch is exact here: the readout is set in IBM Plex Mono, so one
+              `ch` is one glyph and the longest string fits precisely. Bars
+              already render a fixed count and vary only opacity, so this is
+              the last variable-width thing in the component.
+            */}
+            <span className="inline-block min-w-[30ch]">{v.status}</span>
           </span>
         </div>
       </div>
