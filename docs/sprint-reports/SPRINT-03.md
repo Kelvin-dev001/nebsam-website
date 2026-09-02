@@ -117,9 +117,14 @@ caught it; that is now accurate too. Now 52 characters.
 **The sign-in form rendered at 1248px instead of 448px.** `Shell` hard-codes `max-w-shell` and
 concatenates `className` rather than merging it, so passing `max-w-md` put both utilities on one
 element and Tailwind's source order — not the caller — picked the winner. A silent failure: the
-markup reads correctly and the layout is wrong. Sign-in now carries its own gutter. The collision is
-documented on `Shell` itself because every caller in the coming sprints can hit it. A real merge
-would need `tailwind-merge`; that is a dependency decision, flagged in §10 rather than taken quietly.
+markup reads correctly and the layout is wrong.
+
+Fixed at the source rather than at the caller: `Shell` now drops its own `max-w-shell` when the
+caller supplies a `max-w-*`, and its own `px-5 md:px-8` when the caller supplies a `px-*`. Those are
+the only two utilities Shell owns that a caller would reasonably want to change, so the failure class
+is closed rather than worked around, and no dependency was added (§10.2). Verified rendering: the
+sign-in container is 448px and centred with a single `max-w` class on the element, while the
+homepage still carries `max-w-shell` untouched.
 
 ---
 
@@ -205,12 +210,18 @@ off.**
 1. **Supabase access token or database password.** The only thing standing between this sprint and a
    complete pass. `supabase gen types` authenticates with neither the anon nor the service-role key.
    Either run `npx supabase login`, or issue a personal access token, or supply the database password.
-2. **`tailwind-merge`?** `Shell` concatenates rather than merges `className`, and the failure is
-   silent. The caller is fixed and the hazard documented, but every future caller can still hit it.
-   Adding `tailwind-merge` would remove the class entirely, at the cost of a dependency. Not taken
-   unilaterally, per CLAUDE.md §3.5.
-3. **`_to_delete/` and `nebsam-scaffold.zip`** are untracked and both exceed the §12 raw-media limit.
-   Confirm they can be removed.
+2. ~~**`tailwind-merge`?**~~ **RESOLVED 2 Sep 2026 — no dependency added.** `Shell` now drops its own
+   `max-w-shell` / `px-*` default when the caller supplies one, so the collision cannot occur. A
+   general merge would have meant a runtime dependency on a 180 KB route budget, for an audience
+   paying for data by the megabyte, to arbitrate two utilities in one component — the wrong trade at
+   this size. Revisit if several components later need real merging, with evidence to justify the
+   bytes. The sign-in page is back on `Shell` and verified rendering at 448px, which exercises the
+   guard in the exact case that exposed the bug.
+3. **`_to_delete/` and `nebsam-scaffold.zip`** exceed the §12 raw-media limit and Sprint 0's
+   `DISCOVERY_REPORT.md` already recommended removal. Verified safe to delete: the git bundle's ref
+   is an ancestor of the local `chore/00-project-scaffold`, both PNGs are re-derivable from PDFs
+   tracked in `content-source/`, and the remainder are zero-byte git lock files. **Removal was
+   approved but the command was denied at the permission prompt, so both remain in place.**
 
 ---
 

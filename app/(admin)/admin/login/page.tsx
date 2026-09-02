@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Shell } from '@/components/layout/section';
 import { Field } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { isDatabaseConfigured } from '@/lib/content';
@@ -36,14 +37,10 @@ export default async function AdminLogin({
   const unconfigured = !configured || params.reason === 'unconfigured';
 
   return (
-    // Deliberately NOT <Shell>. Shell hard-codes `max-w-shell` and merely
-    // concatenates whatever className it is handed, so a caller passing
-    // `max-w-md` ends up with both utilities on one element and Tailwind's
-    // source order — not the caller — decides. `max-w-shell` won, and this form
-    // silently stretched to 1248px instead of sitting in a 448px column.
-    // Sign-in is a standalone centred card, not page chrome, so it carries its
-    // own gutter and keeps Shell's defaults out of the argument entirely.
-    <div className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-5 py-section md:px-8">
+    // `max-w-md` overrides Shell's own measure. Shell drops `max-w-shell` when
+    // a caller supplies a max-width, so this renders as a 448px centred column
+    // rather than the full 1248px shell.
+    <Shell className="flex min-h-screen max-w-md flex-col justify-center py-section">
       <h1 className="font-display text-h1">Sign in</h1>
       <p className="mt-2 text-body-sm text-text-secondary">
         Nebsam staff accounts only. Ask an administrator if you need access.
@@ -89,6 +86,6 @@ export default async function AdminLogin({
         Sessions are validated against the auth server on every admin request, and permissions are
         enforced in row level security rather than in this interface.
       </p>
-    </div>
+    </Shell>
   );
 }
