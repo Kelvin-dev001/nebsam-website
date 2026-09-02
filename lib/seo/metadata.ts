@@ -77,7 +77,12 @@ export function buildMetadata({
   }
 
   return {
-    title: fullTitle,
+    // `absolute`, not a bare string: the root layout declares
+    // `title.template = '%s | Nebsam'`, and Next.js applies a parent template to
+    // any child that sets `title` as a plain string. Since fullTitle already
+    // carries the suffix, a bare string rendered as "… | Nebsam | Nebsam" on
+    // every page built through this helper.
+    title: { absolute: fullTitle },
     description,
     alternates: { canonical },
     robots: noindex ? { index: false, follow: false } : undefined,
