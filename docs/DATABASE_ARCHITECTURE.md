@@ -5,18 +5,41 @@ Tables, relations, RLS policies and the migration plan.
 Supabase Postgres. **RLS on every table, no exceptions.** Every migration is a reviewed file in
 `supabase/migrations/`; schema is never mutated outside a migration.
 
-> **STATUS — Sprint 3.** All 10 migrations are written in `supabase/migrations/`, along with the
-> RLS policies (0008) and the public read-only views (0009). **None has been applied**: there is no
-> Supabase project and no Docker on this machine (register **V46**), so type generation, seeding and
-> Supabase Auth are all blocked.
+> **STATUS — Sprint 3, updated 2 Sep 2026.** All 10 migrations are written in
+> `supabase/migrations/` and **have been applied to the Supabase project**, along with the RLS
+> policies (0008), the public read-only views (0009) and the reference seed (0010).
 >
-> What IS verified: `npm run check:migrations` confirms **RLS on all 30 tables**, 17 public views all
-> granted to `anon`, and **no base table exposed to `anon`**. That check is wired into `npm run build`
-> and was proven to fail on a table missing RLS, not merely to run.
+> **Verified against the live database**, not against the SQL, by `npm run verify:db`:
+>
+> | Check | Result |
+> |---|---|
+> | Tables present (service role) | 30 / 30 |
+> | Public views readable by `anon` | 17 / 17 |
+> | Base tables readable by `anon` | **0** — correct |
+> | Writes by `anon` refused | **30 / 30**, by RLS or permission denial |
+>
+> Seed landed as designed: 3 branches (Nairobi, Mombasa, Nakuru), 16 coverage towns, 5 product
+> categories, 8 blog categories. Every customer-bearing table — `orders`, `order_items`,
+> `submissions`, `installation_certificates`, `installation_plates_restricted`, `testimonials`,
+> `client_logos`, `payments`, `profiles` — is **empty**. Content tables (`solutions`, `products`,
+> `industries`, `faqs`, `authors`) are empty by design; content migration is Sprint 4 onward.
+>
+> Certificate shape confirmed as **Option A** by reading the live PostgREST schema:
+> `installation_certificates` carries `plate_hash`, `phone_last4_hash` and `certificate_number_last4`
+> and **no plaintext plate**; the only plaintext plate column in the entire schema is
+> `installation_plates_restricted.plate_plaintext`, which `anon` cannot read.
+>
+> **Still blocked (V46, narrowed):** `types/database.ts` is still the hand-written placeholder.
+> Generation needs a Supabase **personal access token** or the database password — neither the anon
+> nor the service-role key can authenticate `supabase gen types`.
+>
+> `npm run check:migrations` remains the build-time static gate; `npm run verify:db` is the live
+> counterpart and is **deliberately not in the build**, since it needs `.env.local` and network.
 >
 > One design point changed during implementation: a **separate restricted table**,
 > `installation_plates_restricted`, now holds plaintext plates for operations. Without it, rotating
 > `CERT_PLATE_HMAC_SECRET` would be unrecoverable — there would be nothing left to re-hash from.
+> That secret is **still empty in `.env.local`** and must be set before any certificate import.
 
 This document is the design the migrations are built to.
 
