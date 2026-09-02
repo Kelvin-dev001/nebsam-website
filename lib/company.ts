@@ -203,12 +203,35 @@ export const REGISTRATIONS = [
       'Private Security Regulatory Authority, Ministry of Interior and National Administration',
     reference: 'PSRA/NDSKL/19/00',
     effectiveOn: '2024-06-28',
-    expiresOn: '2029-06-28',
+    /**
+     * NULL, not '2029-06-28'.
+     *
+     * The certificate states a five-year term to 2029 but is expressly
+     * "subject to annual license renewal", and that annual renewal is
+     * unconfirmed (register V30). content-source/05-certifications/README.md
+     * §4A is explicit: publish only once the annual renewal is confirmed.
+     *
+     * The 2029 date was being read as current, so `llms.txt` was publishing
+     * this registration as live to every crawler and assistant that reads it.
+     * A five-year term conditional on a yearly renewal is not evidence of a
+     * current registration, and the safe reading of an unknown is "do not
+     * publish" — the same rule 0004 applies in the database.
+     */
+    expiresOn: null,
     scopeNote: 'Five-year term, subject to annual licence renewal.',
   },
 ] as const;
 
-/** True when a registration may be displayed. Brief 3.5: never show a lapsed permit. */
-export function isCurrent(expiresOn: string, now: Date = new Date()): boolean {
+/**
+ * True when a registration may be displayed. Brief 3.5: never show a lapsed
+ * permit.
+ *
+ * A null expiry means no confirmed expiry is on record, which is NOT evidence
+ * that the instrument is current — so it fails closed. This mirrors
+ * `public_certifications` in migration 0009, which requires
+ * `expires_on is not null and expires_on > current_date`.
+ */
+export function isCurrent(expiresOn: string | null, now: Date = new Date()): boolean {
+  if (!expiresOn) return false;
   return new Date(expiresOn).getTime() > now.getTime();
 }

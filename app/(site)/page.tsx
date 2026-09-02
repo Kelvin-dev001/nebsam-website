@@ -1,30 +1,69 @@
-import { Eyebrow, Section, Shell } from '@/components/layout/section';
-import { ButtonLink } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Reveal } from '@/components/motion/reveal';
-import { SignalReadout } from '@/components/telemetry/signal-readout';
+import { Hero } from '@/components/home/hero';
+import { ProofBand } from '@/components/home/proof-band';
+import { Thesis } from '@/components/home/thesis';
+import { KebsResult } from '@/components/home/kebs-result';
+import { HowWeWork } from '@/components/home/how-we-work';
+import { Coverage } from '@/components/home/coverage';
+import { ConversionClose } from '@/components/home/conversion-close';
+import { getBranches, getCertifications, getCoverageLocations } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { ROUTES } from '@/lib/constants';
 
 /**
- * SPRINT 1 PROTOTYPE — one homepage screen, to judge the visual language.
- * This is not the production homepage; that is Sprint 4.
+ * HOMEPAGE — production. Sprint 4.
  *
- * Everything here is hardcoded. No Supabase, no CMS, no real customer data.
- * The KEBS figures below are the genuine verified ones from brief PART 3.5 and
- * content-source/05-certifications/README.md.
+ * Brief 9.1 lists thirteen candidate sections and the acceptance criterion caps
+ * the page at twelve, "cut rather than pad". Seven ship. What happened to the
+ * other six is recorded here rather than in a commit message, because the next
+ * person to open this file will otherwise assume they were forgotten:
+ *
+ *   §2  Proof band      — SHIPS, without client logos. Six exist in
+ *                         public/clients/ and none has written permission (V12),
+ *                         so the band carries approved figures and the branch
+ *                         and coverage counts instead.
+ *   §5  Solutions       — DEFERRED to Sprint 5. `solutions` holds 0 rows and
+ *                         /solutions/* does not exist, so the section would
+ *                         render nothing and link to 404s.
+ *   §6  The platform    — CUT. Every available screenshot carries third-party
+ *                         branding (V13). The criterion is explicit: cut, not
+ *                         filled with placeholders.
+ *   §7  Shop            — DEFERRED to Sprint 6, as §5.
+ *   §8  Industries      — DEFERRED to Sprint 5, as §5.
+ *   §11 Customer proof  — ABSENT. No testimonial has attribution and permission
+ *                         (V15). The criterion: real, or the section is absent.
+ *   §12 Resources       — DEFERRED to Sprint 9, as §5.
+ *
+ * The four deferrals are one decision, not four. Each depends on content that
+ * a later sprint creates, and building them blind now would mean designing
+ * against imagined data and shipping code nobody can verify in a browser —
+ * which is the "verify, don't claim" rule inverted. They are added by the
+ * sprint that creates their content, when they can be designed against the
+ * real thing and reviewed.
+ *
+ * TONE RHYTHM: dark → paper → light → paper → dark → light → dark. Brief 6.6
+ * prohibits identical section rhythm, so no two adjacent sections share a
+ * ground and the page alternates weight as well as colour.
  */
 
-/** KEBS laboratory test report BS202445237, 5 February 2025. Verified. */
-const KEBS_PARAMETERS = [
-  'ADAS camera detection',
-  'Driver alerts',
-  'DSM camera detection',
-  'G-sensor detection',
-  'Power supply — in-built battery sustaining the system for a minimum of 30 minutes',
-  'System tampering detection',
-  'Ignition-triggered power-on',
-] as const;
+/**
+ * Revalidate hourly.
+ *
+ * This is not a performance tweak, it is a correctness requirement. The page is
+ * statically prerendered, so every database read here — including
+ * `public_certifications`, whose whole purpose is the filter
+ * `expires_on > current_date` — would otherwise be evaluated once at BUILD time
+ * and frozen into the HTML.
+ *
+ * The consequence of leaving it static: the KEBS permit expires on 26 Feb 2027
+ * and the page keeps displaying it until somebody happens to redeploy. That is
+ * exactly the lapsed permit brief 3.5 forbids, reintroduced by the rendering
+ * strategy after the database had already prevented it.
+ *
+ * An hour also means an admin edit in Sprint 11 appears without a deploy.
+ * Sprint 12 should replace this with on-demand revalidation on write, at which
+ * point this becomes the safety net rather than the mechanism.
+ */
+export const revalidate = 3600;
 
 export const metadata = buildMetadata({
   title: 'Vehicle Tracking & Fleet Telematics in Kenya',
@@ -33,124 +72,26 @@ export const metadata = buildMetadata({
   path: ROUTES.home,
 });
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetched in parallel. These are independent reads against three public
+  // views, and awaiting them in sequence would add two round trips to the
+  // server render for no reason — on a page whose LCP budget is 2.5s on a
+  // throttled mobile connection.
+  const [certifications, branches, coverage] = await Promise.all([
+    getCertifications(),
+    getBranches(),
+    getCoverageLocations(),
+  ]);
+
   return (
     <main id="main">
-        {/* ── HERO ──────────────────────────────────────────────────────────
-            Left-weighted and asymmetric. The dominant object is the readout,
-            not the photograph — photography is a narrow band doing atmosphere,
-            which inverts the convention rather than joining it. */}
-        <Section tone="dark" bleed className="relative overflow-hidden">
-          <Shell className="relative z-10 pb-10 pt-14 md:pb-16 md:pt-24">
-            <div className="max-w-[52rem]">
-              <Reveal index={0}>
-                <Eyebrow dot>Nairobi · Mombasa · Nakuru</Eyebrow>
-              </Reveal>
-
-              <Reveal index={1}>
-                <h1 className="mt-5 font-display text-display md:text-md-display">
-                  Losing signal is the alarm.
-                </h1>
-              </Reveal>
-
-              <Reveal index={2}>
-                <p className="mt-5 max-w-prose text-body-lg text-text-secondary-inverse">
-                  A GSM jammer cuts the uplink so a tracker cannot report. An anti-jamming tracker
-                  treats that silence as an event rather than a gap — alerting you and immobilising
-                  the vehicle according to the configured security logic.
-                </p>
-              </Reveal>
-
-              <Reveal index={3}>
-                <div className="mt-8">
-                  <SignalReadout />
-                </div>
-              </Reveal>
-
-              <Reveal index={4}>
-                <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
-                  <ButtonLink
-                    href="https://wa.me/254759000111"
-                    variant="primary"
-                    size="lg"
-                    className="w-full sm:w-auto"
-                  >
-                    Talk to us on WhatsApp
-                  </ButtonLink>
-                  <ButtonLink href="tel:+254769063333" variant="secondary" size="lg" className="w-full sm:w-auto">
-                    Call Mombasa
-                  </ButtonLink>
-                  <ButtonLink href="#" variant="ghost">
-                    Request a quote
-                  </ButtonLink>
-                </div>
-              </Reveal>
-
-              <Reveal index={5}>
-                <p className="mt-8 max-w-prose text-body-sm text-text-secondary-inverse">
-                  Nebsam Digital Solutions (K) Ltd installs and supports vehicle tracking, fleet
-                  telematics and vehicle security across Kenya, from branches in Nairobi, Mombasa
-                  and Nakuru.
-                </p>
-              </Reveal>
-            </div>
-          </Shell>
-
-        </Section>
-
-        {/* ── "COMPLIES." ───────────────────────────────────────────────────
-            No marketing heading. It opens with the word the laboratory wrote.
-            Brief 3.5: do not paraphrase "Complies" into anything stronger. */}
-        <Section tone="paper">
-          <Shell>
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
-              <div>
-                <Reveal index={0}>
-                  <Eyebrow>Third-party test result</Eyebrow>
-                </Reveal>
-                <Reveal index={1}>
-                  <p className="mt-4 font-display text-display text-brand-blue md:text-md-display">
-                    Complies.
-                  </p>
-                </Reveal>
-                <Reveal index={2}>
-                  <p className="mt-5 max-w-prose text-body text-text-secondary">
-                    KEBS laboratory test report{' '}
-                    <span className="font-mono text-mono text-text-primary">BS202445237</span>,
-                    5&nbsp;February&nbsp;2025. Tested against KNWA&nbsp;3006:2024 — Video telematics
-                    system for motor vehicle: Performance Requirements.
-                  </p>
-                </Reveal>
-              </div>
-
-              <Reveal index={3}>
-                <dl className="border-t border-border-hairline">
-                  {KEBS_PARAMETERS.map((parameter) => (
-                    <div
-                      key={parameter}
-                      className="flex items-baseline justify-between gap-6 border-b border-border-hairline py-3.5"
-                    >
-                      <dt className="text-body">{parameter}</dt>
-                      <dd className="shrink-0 font-mono text-mono uppercase tracking-[0.06em] text-state-ok-ink">
-                        Complies
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-
-                {/* Scope stated on the face of the page. Brief 3.5 names
-                    presenting the permit as company-wide as an accuracy trap. */}
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <Badge>Permit SM#84618</Badge>
-                  <p className="text-body-sm text-text-secondary">
-                    Covers vehicle cameras for video telematics under the STREAMAX brand. It is a
-                    permit to use the standardization mark, not a company-wide certification.
-                  </p>
-                </div>
-              </Reveal>
-            </div>
-          </Shell>
-        </Section>
+      <Hero />
+      <ProofBand />
+      <Thesis />
+      <KebsResult certifications={certifications.data} />
+      <HowWeWork />
+      <Coverage branches={branches.data} coverage={coverage.data} />
+      <ConversionClose />
     </main>
   );
 }

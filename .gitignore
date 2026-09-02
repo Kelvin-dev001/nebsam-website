@@ -50,3 +50,7 @@ content-source/06-downloads/*.pdf
 
 # Supabase CLI local state
 supabase/.temp/
+
+# Lighthouse reports — measured, never committed
+lh.json
+lighthouse*.json
