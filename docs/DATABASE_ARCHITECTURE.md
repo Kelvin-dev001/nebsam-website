@@ -29,9 +29,16 @@ Supabase Postgres. **RLS on every table, no exceptions.** Every migration is a r
 > and **no plaintext plate**; the only plaintext plate column in the entire schema is
 > `installation_plates_restricted.plate_plaintext`, which `anon` cannot read.
 >
-> **Still blocked (V46, narrowed):** `types/database.ts` is still the hand-written placeholder.
-> Generation needs a Supabase **personal access token** or the database password — neither the anon
-> nor the service-role key can authenticate `supabase gen types`.
+> **V46 CLOSED (2 Sep 2026).** `types/database.ts` is genuine `supabase gen types` output — 2,207
+> lines covering 30 tables, 17 views and 7 enums — regenerated with `npm run db:types`. It is pure
+> generated output and is never hand-edited; the derived aliases the application reads live in
+> `types/content.ts`, so regeneration cannot clobber them and every alias resolves through
+> `Database`.
+>
+> Closing it exposed a real gap: neither Supabase client was parameterised with `Database`, so every
+> query returned `any` and the row types in `lib/content/` were unchecked casts. The generated types
+> would have compiled and meant nothing. Both clients now take the generic, verified by a negative
+> test — `tsc` rejects a query against a table that does not exist.
 >
 > `npm run check:migrations` remains the build-time static gate; `npm run verify:db` is the live
 > counterpart and is **deliberately not in the build**, since it needs `.env.local` and network.
