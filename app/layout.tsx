@@ -1,24 +1,33 @@
 import { Archivo, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
-
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
-import { WhatsAppButton } from '@/components/layout/whatsapp-button';
-import { CookieNotice } from '@/components/consent/cookie-notice';
-import { JsonLd } from '@/components/seo/json-ld';
 import { rootMetadata } from '@/lib/seo/metadata';
-import { jsonLdGraph, organizationSchema, websiteSchema } from '@/lib/seo/schema';
+
+/**
+ * ROOT LAYOUT — deliberately minimal.
+ *
+ * It carries only what EVERY route needs regardless of audience: the document,
+ * the fonts, and the skip link.
+ *
+ * The public marketing chrome (header, footer, WhatsApp action, cookie bar,
+ * Organization/WebSite JSON-LD) lives in `app/(site)/layout.tsx`, not here.
+ * That split is not stylistic — a route group nests INSIDE the root layout and
+ * cannot replace it, so chrome placed here would render on `/admin` too. It
+ * did, and the admin sign-in page shipped with a marketing nav and a floating
+ * WhatsApp button over it until this was fixed.
+ *
+ * Structure now matches docs/PROJECT_ARCHITECTURE.md §2:
+ *   app/(site)   public — chrome, schema, consent
+ *   app/(admin)  staff  — its own chrome, noindex, auth-gated
+ */
 
 /**
  * TWO families, TWO files delivered — against a PART 14 budget of three.
  *
- * Display and body are the same superfamily separated by OPTICAL WIDTH, not by
- * a second family. Archivo carries a `wdth` axis, so one variable file gives
- * both the expanded display cut and the normal body cut.
+ * Display and body are the same superfamily separated by OPTICAL WIDTH.
+ * Archivo carries a `wdth` axis, so one variable file gives both cuts.
  *
- * `preload: true` is explicit rather than relying on the default (register
- * V41): the display headline is the likely LCP element, and without a preload
- * the font is only discovered after CSS parses.
+ * `preload: true` is explicit rather than left to the default (register V41),
+ * though note it does not currently emit a preload link — see that item.
  */
 const archivo = Archivo({
   subsets: ['latin'],
@@ -39,10 +48,6 @@ const plexMono = IBM_Plex_Mono({
 export const metadata = rootMetadata;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // Organization and WebSite are global — every page carries them, server
-  // rendered, in the HTML the crawler receives.
-  const graph = jsonLdGraph([organizationSchema(), websiteSchema()]);
-
   return (
     <html lang="en-KE" className={`${archivo.variable} ${plexMono.variable}`}>
       <body className="bg-surface font-sans text-body text-text-primary antialiased">
@@ -59,15 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-
-        <JsonLd json={graph} />
-
-        <Header />
         {children}
-        <Footer />
-
-        <WhatsAppButton />
-        <CookieNotice />
       </body>
     </html>
   );

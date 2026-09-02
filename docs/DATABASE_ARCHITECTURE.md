@@ -5,7 +5,50 @@ Tables, relations, RLS policies and the migration plan.
 Supabase Postgres. **RLS on every table, no exceptions.** Every migration is a reviewed file in
 `supabase/migrations/`; schema is never mutated outside a migration.
 
-Built in **Sprint 3**. This document is the design it is built to.
+> **STATUS — Sprint 3, updated 2 Sep 2026.** All 10 migrations are written in
+> `supabase/migrations/` and **have been applied to the Supabase project**, along with the RLS
+> policies (0008), the public read-only views (0009) and the reference seed (0010).
+>
+> **Verified against the live database**, not against the SQL, by `npm run verify:db`:
+>
+> | Check | Result |
+> |---|---|
+> | Tables present (service role) | 30 / 30 |
+> | Public views readable by `anon` | 17 / 17 |
+> | Base tables readable by `anon` | **0** — correct |
+> | Writes by `anon` refused | **30 / 30**, by RLS or permission denial |
+>
+> Seed landed as designed: 3 branches (Nairobi, Mombasa, Nakuru), 16 coverage towns, 5 product
+> categories, 8 blog categories. Every customer-bearing table — `orders`, `order_items`,
+> `submissions`, `installation_certificates`, `installation_plates_restricted`, `testimonials`,
+> `client_logos`, `payments`, `profiles` — is **empty**. Content tables (`solutions`, `products`,
+> `industries`, `faqs`, `authors`) are empty by design; content migration is Sprint 4 onward.
+>
+> Certificate shape confirmed as **Option A** by reading the live PostgREST schema:
+> `installation_certificates` carries `plate_hash`, `phone_last4_hash` and `certificate_number_last4`
+> and **no plaintext plate**; the only plaintext plate column in the entire schema is
+> `installation_plates_restricted.plate_plaintext`, which `anon` cannot read.
+>
+> **V46 CLOSED (2 Sep 2026).** `types/database.ts` is genuine `supabase gen types` output — 2,207
+> lines covering 30 tables, 17 views and 7 enums — regenerated with `npm run db:types`. It is pure
+> generated output and is never hand-edited; the derived aliases the application reads live in
+> `types/content.ts`, so regeneration cannot clobber them and every alias resolves through
+> `Database`.
+>
+> Closing it exposed a real gap: neither Supabase client was parameterised with `Database`, so every
+> query returned `any` and the row types in `lib/content/` were unchecked casts. The generated types
+> would have compiled and meant nothing. Both clients now take the generic, verified by a negative
+> test — `tsc` rejects a query against a table that does not exist.
+>
+> `npm run check:migrations` remains the build-time static gate; `npm run verify:db` is the live
+> counterpart and is **deliberately not in the build**, since it needs `.env.local` and network.
+>
+> One design point changed during implementation: a **separate restricted table**,
+> `installation_plates_restricted`, now holds plaintext plates for operations. Without it, rotating
+> `CERT_PLATE_HMAC_SECRET` would be unrecoverable — there would be nothing left to re-hash from.
+> That secret is **still empty in `.env.local`** and must be set before any certificate import.
+
+This document is the design the migrations are built to.
 
 ---
 

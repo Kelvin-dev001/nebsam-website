@@ -46,10 +46,41 @@ export function Section({
   );
 }
 
-/** The measure. Everything sits inside this unless it is deliberately bleeding. */
+/**
+ * Does `className` already carry a utility of this family, at any breakpoint?
+ *
+ * Matches `px-4` and `md:px-4`, and does not match a different family that
+ * merely contains the prefix — `max-w-md` is not a `px-` utility.
+ */
+function overrides(className: string, prefix: string): boolean {
+  return new RegExp(`(^|\\s)(\\w+:)*${prefix}`).test(className);
+}
+
+/**
+ * The measure. Everything sits inside this unless it is deliberately bleeding.
+ *
+ * Shell owns exactly two utilities a caller might reasonably want to change —
+ * the measure (`max-w-*`) and the gutter (`px-*`) — and it DROPS its own
+ * default when the caller supplies one of those. Without that, both classes
+ * land on the element and Tailwind's source order, not the caller, picks the
+ * winner: a silent failure where the markup reads correctly and the layout is
+ * wrong. The admin sign-in page hit exactly this, passing `max-w-md` and
+ * rendering at `max-w-shell`.
+ *
+ * This is deliberately a local guard rather than `tailwind-merge`. A general
+ * merge is a runtime dependency on a route budget of 180 KB, for an audience
+ * paying for data by the megabyte, to arbitrate two utilities in one component.
+ * If several components later need real merging, revisit it then — with the
+ * evidence to justify the bytes.
+ */
 export function Shell({ className = '', children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  const classes = ['mx-auto w-full'];
+  if (!overrides(className, 'max-w-')) classes.push('max-w-shell');
+  if (!overrides(className, 'px-')) classes.push('px-5', 'md:px-8');
+  if (className) classes.push(className);
+
   return (
-    <div className={['mx-auto w-full max-w-shell px-5 md:px-8', className].filter(Boolean).join(' ')} {...props}>
+    <div className={classes.join(' ')} {...props}>
       {children}
     </div>
   );

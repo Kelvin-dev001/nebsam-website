@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
 import { Section, Shell, Eyebrow } from '@/components/layout/section';
 import { ButtonLink } from '@/components/ui/button';
 import { LAUNCH_SOLUTIONS, ROUTES } from '@/lib/constants';
@@ -16,13 +18,18 @@ export const metadata: Metadata = {
  * visitor most likely wanted rather than apologising. `follow: true` so link
  * equity still flows through to the real pages.
  *
+ * It renders its own Header and Footer because it sits at the app root,
+ * OUTSIDE the (site) route group, so it does not inherit the site chrome.
+ *
  * Note this page is also what a *reserved but unbuilt* slug returns —
  * /solutions/fleet-management and /solutions/asset-tracking are deferred past
  * launch, and a 404 there is the honest answer.
  */
 export default function NotFound() {
   return (
-    <Section tone="dark">
+    <>
+      <Header />
+      <Section tone="dark">
       <Shell>
         <Eyebrow>404</Eyebrow>
         <h1 className="mt-4 max-w-[20ch] font-display text-display md:text-md-display">
@@ -57,6 +64,8 @@ export default function NotFound() {
           </ButtonLink>
         </div>
       </Shell>
-    </Section>
+      </Section>
+      <Footer />
+    </>
   );
 }

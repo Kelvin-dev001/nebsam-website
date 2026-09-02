@@ -4,14 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/check-retired-strings.mjs",
+    "build": "node scripts/check-migrations.mjs && next build && node scripts/check-retired-strings.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "check:strings": "node scripts/check-retired-strings.mjs",
-    "check:redirects": "node scripts/check-redirects.mjs"
+    "check:redirects": "node scripts/check-redirects.mjs",
+    "check:migrations": "node scripts/check-migrations.mjs",
+    "verify:db": "node scripts/verify-db.mjs",
+    "db:types": "supabase gen types typescript --project-id dufzsetbxrllegoikdxv > types/database.ts",
+    "db:push": "supabase db push"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.112.3",
     "next": "^15.5.23",
     "react": "19.1.0",
     "react-dom": "19.1.0"

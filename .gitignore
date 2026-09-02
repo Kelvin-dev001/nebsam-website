@@ -47,3 +47,6 @@ content-source/06-downloads/*.pdf
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# Supabase CLI local state
+supabase/.temp/
