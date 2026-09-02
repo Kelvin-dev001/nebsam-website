@@ -64,7 +64,23 @@ export function buildMetadata({
   noindex = false,
   ogImage = OG_IMAGE,
 }: PageMetaInput): Metadata {
-  const fullTitle = `${title} | ${COMPANY.shortName}`;
+  /**
+   * Do not append the brand twice.
+   *
+   * A title that already ends in "| Nebsam" gets used as-is. This is not
+   * hypothetical tidiness: it happened here the moment a `seo_title` was seeded
+   * from the database carrying the suffix, and it will happen again the moment
+   * a staff member types one into the Sprint 11 SEO panel — which is exactly
+   * the audience least likely to know the suffix is added automatically.
+   *
+   * The template-doubling bug this file already fixes (see `title: absolute`
+   * below) had the same shape and shipped on every page. Guarding the input is
+   * cheaper than finding it in a crawl report.
+   */
+  const suffix = ` | ${COMPANY.shortName}`;
+  const fullTitle = title.trimEnd().toLowerCase().endsWith(suffix.trim().toLowerCase())
+    ? title.trimEnd()
+    : `${title}${suffix}`;
   const canonical = `${SITE_URL}${path === '/' ? '' : path}`;
 
   if (fullTitle.length > TITLE_MAX) {
