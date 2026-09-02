@@ -1268,6 +1268,7 @@ export type Database = {
           id: string
           last_reviewed_at: string | null
           name: string
+          sections: Json
           seo_description: string | null
           seo_image: string | null
           seo_title: string | null
@@ -1284,6 +1285,7 @@ export type Database = {
           id?: string
           last_reviewed_at?: string | null
           name: string
+          sections?: Json
           seo_description?: string | null
           seo_image?: string | null
           seo_title?: string | null
@@ -1300,6 +1302,7 @@ export type Database = {
           id?: string
           last_reviewed_at?: string | null
           name?: string
+          sections?: Json
           seo_description?: string | null
           seo_image?: string | null
           seo_title?: string | null
@@ -1948,6 +1951,7 @@ export type Database = {
           id: string | null
           last_reviewed_at: string | null
           name: string | null
+          sections: Json | null
           seo_description: string | null
           seo_image: string | null
           seo_title: string | null
@@ -1962,6 +1966,7 @@ export type Database = {
           id?: string | null
           last_reviewed_at?: string | null
           name?: string | null
+          sections?: Json | null
           seo_description?: string | null
           seo_image?: string | null
           seo_title?: string | null
@@ -1976,6 +1981,7 @@ export type Database = {
           id?: string | null
           last_reviewed_at?: string | null
           name?: string | null
+          sections?: Json | null
           seo_description?: string | null
           seo_image?: string | null
           seo_title?: string | null
