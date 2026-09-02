@@ -46,7 +46,22 @@ export function Section({
   );
 }
 
-/** The measure. Everything sits inside this unless it is deliberately bleeding. */
+/**
+ * The measure. Everything sits inside this unless it is deliberately bleeding.
+ *
+ * `className` is CONCATENATED, not merged. Passing a utility that collides with
+ * one of the defaults below — `max-w-*` or `px-*` — puts both classes on the
+ * element and lets Tailwind's source order pick the winner, which is not
+ * necessarily the one you passed. It is a silent failure: the markup looks
+ * right and the layout is wrong. The admin sign-in page hit exactly this,
+ * passing `max-w-md` and rendering at `max-w-shell`.
+ *
+ * Use `className` for properties Shell does not already set. When you need a
+ * different measure or gutter, do not fight Shell — either nest your own
+ * container inside it, or write the container directly, as the sign-in page
+ * now does. A real merge would need `tailwind-merge`, which is a dependency
+ * decision and not one to take silently.
+ */
 export function Shell({ className = '', children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={['mx-auto w-full max-w-shell px-5 md:px-8', className].filter(Boolean).join(' ')} {...props}>
