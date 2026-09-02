@@ -13,7 +13,7 @@ import type {
   PublicProductCategory,
   PublicSolution,
   PublicTestimonial,
-} from '@/types/database';
+} from '@/types/content';
 
 /**
  * THE CONTENT ACCESS LAYER.

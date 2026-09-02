@@ -1,6 +1,7 @@
 'use client';
 
 import { createBrowserClient } from '@supabase/ssr';
+import type { Database } from '@/types/database';
 
 /**
  * Browser Supabase client — ANON KEY ONLY.
@@ -20,5 +21,5 @@ export function browserClient() {
   if (!url || !key) {
     throw new Error('Supabase is not configured. See .env.example.');
   }
-  return createBrowserClient(url, key);
+  return createBrowserClient<Database>(url, key);
 }

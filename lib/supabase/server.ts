@@ -1,5 +1,6 @@
 import 'server-only';
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
 
 /**
  * Server-side Supabase clients.
@@ -34,7 +35,7 @@ function required(name: string): string {
  * on any base table, and 0009 grants SELECT only on the public views.
  */
 export function publicClient() {
-  return createClient(
+  return createClient<Database>(
     required('NEXT_PUBLIC_SUPABASE_URL'),
     required('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
     { auth: { persistSession: false } },
@@ -55,7 +56,7 @@ export function publicClient() {
  * their job.
  */
 export function serviceClient() {
-  return createClient(
+  return createClient<Database>(
     required('NEXT_PUBLIC_SUPABASE_URL'),
     required('SUPABASE_SERVICE_ROLE_KEY'),
     { auth: { persistSession: false, autoRefreshToken: false } },
