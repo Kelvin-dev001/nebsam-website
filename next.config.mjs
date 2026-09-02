@@ -106,6 +106,20 @@ const headers = async () => [
     source: '/admin/:path*',
     headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
   },
+  {
+    /**
+     * Fonts are served from `public/`, which Next does NOT strongly cache by
+     * default — so without this a returning visitor re-downloads 100 KB of
+     * woff2 on every navigation. On metered Kenyan mobile data that is the
+     * whole point of the budget being spent twice.
+     *
+     * `immutable` is safe because these filenames are stable and their
+     * contents never change in place: a font revision ships under a new
+     * filename, exactly as the hashed `next/font` output used to.
+     */
+    source: '/fonts/:path*',
+    headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+  },
 ];
 
 const nextConfig = {

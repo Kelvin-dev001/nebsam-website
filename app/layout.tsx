@@ -1,4 +1,3 @@
-import { Archivo, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { rootMetadata } from '@/lib/seo/metadata';
 
@@ -21,35 +20,53 @@ import { rootMetadata } from '@/lib/seo/metadata';
  */
 
 /**
- * TWO families, TWO files delivered — against a PART 14 budget of three.
+ * FONTS ARE SELF-HOSTED, and declared in `app/globals.css` rather than loaded
+ * through `next/font`.
  *
- * Display and body are the same superfamily separated by OPTICAL WIDTH.
- * Archivo carries a `wdth` axis, so one variable file gives both cuts.
+ * The switch was made in Sprint 4 to close register item V41. `next/font`
+ * emits no `<link rel="preload" as="font">` — verified against both the
+ * `variable` and `className` forms — and the missing preload was the
+ * measurable cause of the homepage failing its LCP budget: the LCP element is
+ * hero text, and it repainted only when the webfont arrived, which the browser
+ * could not begin fetching until the stylesheet had been parsed.
  *
- * `preload: true` is explicit rather than left to the default (register V41),
- * though note it does not currently emit a preload link — see that item.
+ * Self-hosting from `public/fonts/` gives stable paths, which is what makes
+ * the two preload links below possible. Everything else about the type system
+ * is unchanged: same two families, same two delivered files, same
+ * metric-matched fallbacks.
  */
-const archivo = Archivo({
-  subsets: ['latin'],
-  axes: ['wdth'],
-  display: 'swap',
-  preload: true,
-  variable: '--font-archivo',
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: '500',
-  display: 'swap',
-  preload: true,
-  variable: '--font-plex-mono',
-});
 
 export const metadata = rootMetadata;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-KE" className={`${archivo.variable} ${plexMono.variable}`}>
+    <html lang="en-KE">
+      <head>
+        {/*
+          The reason this file changed. Only the two LATIN subsets are
+          preloaded — they are the only faces a reader of English or Kiswahili
+          actually downloads, and preloading a subset nobody fetches would cost
+          bandwidth on exactly the connection this site is built for.
+
+          `crossOrigin` is required even though these are same-origin: font
+          requests are CORS-mode by specification, and a preload without it
+          fetches the file a second time rather than priming the cache.
+        */}
+        <link
+          rel="preload"
+          href="/fonts/archivo-latin.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/plex-mono-latin.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="bg-surface font-sans text-body text-text-primary antialiased">
         {/*
           Skip link (WCAG 2.4.1). Deliberately NOT `sr-only` +
