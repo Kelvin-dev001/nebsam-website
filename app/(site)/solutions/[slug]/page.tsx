@@ -5,11 +5,13 @@ import { ButtonLink } from '@/components/ui/button';
 import { JsonLd } from '@/components/seo/json-ld';
 import { ProseSections } from '@/components/solution/prose-sections';
 import { SolutionFaqs } from '@/components/solution/solution-faqs';
+import { SolutionHardware } from '@/components/solution/solution-hardware';
 import { Coverage } from '@/components/home/coverage';
 import {
   getBranches,
   getCoverageLocations,
   getFaqs,
+  getProductsForSolution,
   getSolutionBySlug,
   getSolutions,
 } from '@/lib/content';
@@ -102,10 +104,11 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
   const name = solution.name;
   const solutionId = solution.id;
 
-  const [faqs, branches, coverage] = await Promise.all([
+  const [faqs, branches, coverage, hardware] = await Promise.all([
     getFaqs('solution', solutionId),
     getBranches(),
     getCoverageLocations(),
+    getProductsForSolution(solutionId),
   ]);
 
   const sections = solutionSections(solution.sections);
@@ -196,10 +199,10 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
 
       <ProseSections sections={sections} />
 
-      {/* 6 — Hardware options. The products that deliver this solution arrive
-          in Sprint 6; the join is read then and the section appears on its own.
-          Nothing is stubbed here, because a placeholder product is a fabricated
-          product. */}
+      {/* 6 — Hardware options, from product_solutions. Renders nothing for a
+          solution with no published products joined to it, which is still the
+          case for six of the nine. */}
+      <SolutionHardware products={hardware.data} />
 
       <SolutionFaqs faqs={faqs.data} />
 

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/company';
-import { PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
-import { getSolutions } from '@/lib/content';
+import { ROUTES } from '@/lib/constants';
+import { getProducts, getSolutions } from '@/lib/content';
 
 /**
  * Generated sitemap. The old site's was hand-maintained and was proven
@@ -28,29 +28,28 @@ import { getSolutions } from '@/lib/content';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
+  /**
+   * ONLY ROUTES THAT EXIST TODAY.
+   *
+   * This list previously named every route the site will eventually have, and
+   * 19 of them returned 404 — industries, platform, resources, about, support,
+   * contact and legal are all built by later sprints. A sitemap is a set of
+   * assertions that these URLs are real and worth crawling, so listing an
+   * unbuilt page is not optimism, it is 19 crawl errors we authored ourselves.
+   * Production is still pinned to `main`, so nothing has crawled it yet; this
+   * had to be fixed well before Sprint 15 regardless.
+   *
+   * ADD A ROUTE HERE IN THE SPRINT THAT BUILDS IT — the entry is part of
+   * shipping the page, not a separate task. Pending, with the sprint that owns
+   * each: industries (8) · platform (8, blocked on V13) · resources, blog,
+   * downloads, faqs (9) · about, certifications, coverage, team, partners (11)
+   * · support, book-installation, suggestions (11) · contact, quote (8) ·
+   * privacy, terms, cookies (11).
+   */
   const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
     { path: ROUTES.home, priority: 1.0, changeFrequency: 'weekly' },
     { path: ROUTES.solutions, priority: 0.9, changeFrequency: 'monthly' },
     { path: ROUTES.products, priority: 0.9, changeFrequency: 'weekly' },
-    { path: ROUTES.industries, priority: 0.7, changeFrequency: 'monthly' },
-    { path: ROUTES.platform, priority: 0.7, changeFrequency: 'monthly' },
-    { path: ROUTES.resources, priority: 0.6, changeFrequency: 'weekly' },
-    { path: ROUTES.blog, priority: 0.7, changeFrequency: 'weekly' },
-    { path: ROUTES.downloads, priority: 0.6, changeFrequency: 'monthly' },
-    { path: ROUTES.faqs, priority: 0.6, changeFrequency: 'monthly' },
-    { path: ROUTES.about, priority: 0.7, changeFrequency: 'monthly' },
-    { path: ROUTES.certifications, priority: 0.7, changeFrequency: 'monthly' },
-    { path: ROUTES.coverage, priority: 0.7, changeFrequency: 'monthly' },
-    { path: ROUTES.team, priority: 0.5, changeFrequency: 'monthly' },
-    { path: ROUTES.partners, priority: 0.5, changeFrequency: 'monthly' },
-    { path: ROUTES.support, priority: 0.6, changeFrequency: 'monthly' },
-    { path: ROUTES.bookInstallation, priority: 0.6, changeFrequency: 'monthly' },
-    { path: ROUTES.suggestions, priority: 0.4, changeFrequency: 'yearly' },
-    { path: ROUTES.contact, priority: 0.8, changeFrequency: 'monthly' },
-    { path: ROUTES.quote, priority: 0.8, changeFrequency: 'monthly' },
-    { path: ROUTES.privacy, priority: 0.3, changeFrequency: 'yearly' },
-    { path: ROUTES.terms, priority: 0.3, changeFrequency: 'yearly' },
-    { path: ROUTES.cookies, priority: 0.3, changeFrequency: 'yearly' },
   ];
 
   const { data: solutions } = await getSolutions();
@@ -60,13 +59,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       : [],
   );
 
-  const categoryRoutes = PRODUCT_CATEGORIES.map((c) => ({
-    path: ROUTES.productCategory(c.slug),
-    priority: 0.7,
-    changeFrequency: 'weekly' as const,
-  }));
+  /**
+   * PUBLISHED PRODUCTS, read from the view for the same reason solutions are:
+   * four products are held as drafts pending open audit items A01-A07, and a
+   * static list would have to remember that.
+   */
+  const { data: products } = await getProducts();
+  const productRoutes = products.flatMap((p) =>
+    p.slug
+      ? [{ path: ROUTES.product(p.slug), priority: 0.8, changeFrequency: 'weekly' as const }]
+      : [],
+  );
 
-  return [...staticRoutes, ...solutionRoutes, ...categoryRoutes].map((route) => ({
+  /**
+   * CATEGORY ROUTES ARE NOT LISTED. They were added here in Sprint 2 in
+   * anticipation of pages that do not exist yet — /products/category/* returns
+   * 404 for all five, so the sitemap was advertising five crawl errors of its
+   * own making. That is the same mistake the school bus solution caused in
+   * Sprint 5, and the same rule applies: a sitemap entry pointing at a 404 is a
+   * crawl error we would be authoring ourselves. Restore them in Sprint 7, when
+   * the routes exist.
+   */
+
+  return [...staticRoutes, ...solutionRoutes, ...productRoutes].map((route) => ({
     url: `${SITE_URL}${route.path === '/' ? '' : route.path}`,
     lastModified: now,
     changeFrequency: route.changeFrequency,

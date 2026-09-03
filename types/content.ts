@@ -100,3 +100,27 @@ export function solutionSections(value: PublicSolution['sections']): SolutionSec
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
   return value as SolutionSections;
 }
+
+// ── Product features ────────────────────────────────────────────────────────
+
+/** One feature on a product page: a short label and an explanation. */
+export interface ProductFeature {
+  title: string;
+  detail: string;
+}
+
+/**
+ * Read `features` off a product row.
+ *
+ * Stored as a jsonb array and typed as `Json` at the database boundary, so the
+ * assertion is made here once. Malformed entries are dropped rather than
+ * rendered, because a feature with no title is a bullet with no text.
+ */
+export function productFeatures(value: PublicProduct['features']): ProductFeature[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((f) =>
+    f && typeof f === 'object' && !Array.isArray(f) && 'title' in f && 'detail' in f
+      ? [{ title: String((f as Record<string, unknown>).title), detail: String((f as Record<string, unknown>).detail) }]
+      : [],
+  );
+}
