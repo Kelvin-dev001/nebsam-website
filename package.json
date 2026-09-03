@@ -12,6 +12,7 @@
     "check:redirects": "node scripts/check-redirects.mjs",
     "check:migrations": "node scripts/check-migrations.mjs",
     "verify:db": "node scripts/verify-db.mjs",
+    "check:sitemap": "node scripts/check-sitemap.mjs",
     "db:types": "node scripts/gen-types.mjs",
     "db:push": "supabase db push"
   },

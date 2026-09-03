@@ -199,6 +199,38 @@ export async function getFaqs(
   }, []);
 }
 
+/**
+ * The products that deliver a given solution — section 6 of the solution page.
+ *
+ * Two queries rather than a nested select, because `public_product_solutions`
+ * is a view over a join table and PostgREST cannot infer a relationship through
+ * it. The view already filters BOTH sides to published, so a draft product
+ * cannot reach a solution page through this route even if the join row exists —
+ * which matters, because four products are currently held as drafts pending
+ * open audit items.
+ */
+export async function getProductsForSolution(solutionId: string): Promise<Result<PublicProduct[]>> {
+  return query(async (db) => {
+    const { data: links, error: linkError } = await db
+      .from('public_product_solutions')
+      .select('product_id')
+      .eq('solution_id', solutionId);
+    if (linkError) throw linkError;
+
+    const ids = (links ?? []).map((l) => l.product_id).filter((id): id is string => Boolean(id));
+    if (ids.length === 0) return [];
+
+    const { data, error } = await db
+      .from('public_products')
+      .select('*')
+      .in('id', ids)
+      .order('featured', { ascending: false })
+      .order('name', { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as PublicProduct[];
+  }, []);
+}
+
 // ── Trust ───────────────────────────────────────────────────────────────────
 // Each of these three is permission- or expiry-gated inside its view. If a
 // result is empty, that is the correct, honest answer — brief 3.5 and PART 18
