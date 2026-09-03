@@ -72,7 +72,7 @@ const TABLES = [
   'branches', 'certifications', 'client_logos', 'coverage_locations', 'downloads',
   'faqs', 'industries', 'installation_certificates', 'installation_plates_restricted',
   'media', 'order_items', 'orders', 'payment_intents', 'payments', 'product_categories',
-  'product_industries', 'product_solutions', 'products', 'profiles', 'shipments',
+  'product_industries', 'product_solutions', 'products', 'profiles', 'redirects', 'shipments',
   'solution_industries', 'solutions', 'submissions', 'testimonials', 'verification_attempts',
 ];
 
