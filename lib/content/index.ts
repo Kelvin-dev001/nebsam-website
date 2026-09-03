@@ -231,6 +231,73 @@ export async function getProductsForSolution(solutionId: string): Promise<Result
   }, []);
 }
 
+/**
+ * The industries a solution serves, and the reverse — the solutions and
+ * products an industry uses. Together these satisfy the relationship rule in
+ * CONTENT_ARCHITECTURE §1: no page without an inbound internal link.
+ *
+ * Both join views filter BOTH sides to published, so a draft on either end
+ * cannot produce a link to a 404. That is load-bearing here: the school bus
+ * solution and four products are currently drafts.
+ */
+export async function getIndustriesForSolution(solutionId: string): Promise<Result<PublicIndustry[]>> {
+  return query(async (db) => {
+    const { data: links, error: linkError } = await db
+      .from('public_solution_industries')
+      .select('industry_id')
+      .eq('solution_id', solutionId);
+    if (linkError) throw linkError;
+    const ids = (links ?? []).map((l) => l.industry_id).filter((id): id is string => Boolean(id));
+    if (ids.length === 0) return [];
+    const { data, error } = await db
+      .from('public_industries')
+      .select('*')
+      .in('id', ids)
+      .order('sort_order', { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as PublicIndustry[];
+  }, []);
+}
+
+export async function getSolutionsForIndustry(industryId: string): Promise<Result<PublicSolution[]>> {
+  return query(async (db) => {
+    const { data: links, error: linkError } = await db
+      .from('public_solution_industries')
+      .select('solution_id')
+      .eq('industry_id', industryId);
+    if (linkError) throw linkError;
+    const ids = (links ?? []).map((l) => l.solution_id).filter((id): id is string => Boolean(id));
+    if (ids.length === 0) return [];
+    const { data, error } = await db
+      .from('public_solutions')
+      .select('*')
+      .in('id', ids)
+      .order('sort_order', { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as PublicSolution[];
+  }, []);
+}
+
+export async function getProductsForIndustry(industryId: string): Promise<Result<PublicProduct[]>> {
+  return query(async (db) => {
+    const { data: links, error: linkError } = await db
+      .from('public_product_industries')
+      .select('product_id')
+      .eq('industry_id', industryId);
+    if (linkError) throw linkError;
+    const ids = (links ?? []).map((l) => l.product_id).filter((id): id is string => Boolean(id));
+    if (ids.length === 0) return [];
+    const { data, error } = await db
+      .from('public_products')
+      .select('*')
+      .in('id', ids)
+      .order('featured', { ascending: false })
+      .order('name', { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as PublicProduct[];
+  }, []);
+}
+
 // ── Trust ───────────────────────────────────────────────────────────────────
 // Each of these three is permission- or expiry-gated inside its view. If a
 // result is empty, that is the correct, honest answer — brief 3.5 and PART 18
