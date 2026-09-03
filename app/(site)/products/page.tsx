@@ -18,6 +18,22 @@ import { ROUTES, VAT_LABEL } from '@/lib/constants';
  * KES 3,000 item or a KES 30,000 one, and making them open four pages to find
  * out is how a shop loses them.
  */
+/**
+ * Hourly revalidation, as elsewhere.
+ *
+ * A TRAP WORTH KNOWING ABOUT, because it will mislead the next person the way
+ * it misled this build: Next reuses `.next/cache` across builds, so a
+ * CONTENT-ONLY change — new rows, no code change — can leave a prerendered
+ * page serving the old list even after a fresh `npm run build`. Four car alarms
+ * were seeded and this index still rendered six products, while
+ * `/products/[slug]` regenerated correctly because `generateStaticParams` re-ran.
+ *
+ * It is not a correctness bug in production: the page self-corrects within the
+ * revalidate window, and Sprint 12's on-demand revalidation will make it
+ * immediate. It IS a verification hazard — if you are checking whether seeded
+ * content appears, confirm against the database or a cache-cleared build rather
+ * than trusting a prerendered page.
+ */
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
