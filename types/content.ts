@@ -56,3 +56,47 @@ export type AvailabilityStatus = Enums['availability_status'];
 export type VerificationOutcome = Enums['verification_outcome'];
 
 export type { Json } from '@/types/database';
+
+// ── Solution page sections ──────────────────────────────────────────────────
+
+/**
+ * The prose half of the eleven-section solution model, stored in
+ * `solutions.sections` (migration 0012).
+ *
+ * Every key is optional and a missing one simply does not render. That is
+ * deliberate: a solution with nothing truthful to say under a heading should
+ * omit the heading, not print it above an empty space or a placeholder.
+ *
+ * The other five sections are NOT here and must not be duplicated into the
+ * JSON, or the two copies will drift: hardware comes from `product_solutions`,
+ * coverage from the branch tables, FAQs from `faqs` scoped to the solution,
+ * related from the join tables, and the conversion block from the template.
+ */
+export interface SolutionSections {
+  /** 1 — What it is. One paragraph a non-specialist understands. */
+  what_it_is?: string[];
+  /** 2 — The problem it solves, in Kenyan operational terms. */
+  problem?: string[];
+  /** 3 — Who it is for: industries, fleet sizes, vehicle types. */
+  who_its_for?: { label: string; detail: string }[];
+  /** 4 — How it works. Four to six concrete steps, in order. */
+  how_it_works?: { title: string; detail: string }[];
+  /** 5 — What you get. Grouped and explained, never bulleted flatly. */
+  what_you_get?: { group: string; items: { title: string; detail: string }[] }[];
+  /** 7 — Installation and support: what happens, where, how long. */
+  installation_support?: string[];
+}
+
+/**
+ * Read `sections` off a solution row.
+ *
+ * The column arrives typed as `Json`, because that is what it is at the
+ * database boundary. This is the single place that assertion is made, so a
+ * malformed row degrades to "no sections" — every section is optional, so the
+ * page still renders its database-driven parts — rather than throwing inside a
+ * server component and taking the whole route down with it.
+ */
+export function solutionSections(value: PublicSolution['sections']): SolutionSections {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  return value as SolutionSections;
+}

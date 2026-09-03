@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/company';
-import { LAUNCH_SOLUTIONS, PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
+import { PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
+import { getSolutions } from '@/lib/content';
 
 /**
  * Generated sitemap. The old site's was hand-maintained and was proven
@@ -12,11 +13,19 @@ import { LAUNCH_SOLUTIONS, PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
  *  - the two DEFERRED solution slugs. A reserved slug that 404s is honest; a
  *    sitemap entry pointing at a 404 is a crawl error we would be authoring
  *    ourselves.
+ *  - any solution that is not PUBLISHED. Solutions are read from the published
+ *    view rather than from the static LAUNCH_SOLUTIONS list, because the static
+ *    list contains all ten and one of them is a draft. Mapping it listed
+ *    /solutions/school-bus-management in the sitemap while the route returned
+ *    404 — the exact self-authored crawl error this comment warns about, and it
+ *    also advertised the existence of an unpublished page about children's
+ *    data. Reading the view cannot make that mistake: school bus appears the
+ *    day it is published and not before.
  *
  * Product and blog entries arrive with the content layer in Sprint 3+; the
  * category and index routes are listed now because they are real routes.
  */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
@@ -44,11 +53,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: ROUTES.cookies, priority: 0.3, changeFrequency: 'yearly' },
   ];
 
-  const solutionRoutes = LAUNCH_SOLUTIONS.map((s) => ({
-    path: ROUTES.solution(s.slug),
-    priority: 0.9,
-    changeFrequency: 'monthly' as const,
-  }));
+  const { data: solutions } = await getSolutions();
+  const solutionRoutes = solutions.flatMap((s) =>
+    s.slug
+      ? [{ path: ROUTES.solution(s.slug), priority: 0.9, changeFrequency: 'monthly' as const }]
+      : [],
+  );
 
   const categoryRoutes = PRODUCT_CATEGORIES.map((c) => ({
     path: ROUTES.productCategory(c.slug),
