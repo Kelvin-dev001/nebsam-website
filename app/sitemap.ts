@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/company';
 import { ROUTES } from '@/lib/constants';
-import { getProducts, getSolutions } from '@/lib/content';
+import { getIndustries, getProducts, getSolutions } from '@/lib/content';
 
 /**
  * Generated sitemap. The old site's was hand-maintained and was proven
@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    *
    * ADD A ROUTE HERE IN THE SPRINT THAT BUILDS IT — the entry is part of
    * shipping the page, not a separate task. Pending, with the sprint that owns
-   * each: industries (8) · platform (8, blocked on V13) · resources, blog,
+   * each: platform (blocked on V13) · resources, blog,
    * downloads, faqs (9) · about, certifications, coverage, team, partners (11)
    * · support, book-installation, suggestions (11) · contact, quote (8) ·
    * privacy, terms, cookies (11).
@@ -50,6 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: ROUTES.home, priority: 1.0, changeFrequency: 'weekly' },
     { path: ROUTES.solutions, priority: 0.9, changeFrequency: 'monthly' },
     { path: ROUTES.products, priority: 0.9, changeFrequency: 'weekly' },
+    { path: ROUTES.industries, priority: 0.7, changeFrequency: 'monthly' },
   ];
 
   const { data: solutions } = await getSolutions();
@@ -81,7 +82,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    * the routes exist.
    */
 
-  return [...staticRoutes, ...solutionRoutes, ...productRoutes].map((route) => ({
+  const { data: industries } = await getIndustries();
+  const industryRoutes = industries.flatMap((i) =>
+    i.slug
+      ? [{ path: ROUTES.industry(i.slug), priority: 0.7, changeFrequency: 'monthly' as const }]
+      : [],
+  );
+
+  return [...staticRoutes, ...solutionRoutes, ...productRoutes, ...industryRoutes].map((route) => ({
     url: `${SITE_URL}${route.path === '/' ? '' : route.path}`,
     lastModified: now,
     changeFrequency: route.changeFrequency,

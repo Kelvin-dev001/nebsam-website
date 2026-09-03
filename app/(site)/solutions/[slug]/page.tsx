@@ -6,11 +6,13 @@ import { JsonLd } from '@/components/seo/json-ld';
 import { ProseSections } from '@/components/solution/prose-sections';
 import { SolutionFaqs } from '@/components/solution/solution-faqs';
 import { SolutionHardware } from '@/components/solution/solution-hardware';
+import { SolutionIndustries } from '@/components/solution/solution-industries';
 import { Coverage } from '@/components/home/coverage';
 import {
   getBranches,
   getCoverageLocations,
   getFaqs,
+  getIndustriesForSolution,
   getProductsForSolution,
   getSolutionBySlug,
   getSolutions,
@@ -104,11 +106,12 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
   const name = solution.name;
   const solutionId = solution.id;
 
-  const [faqs, branches, coverage, hardware] = await Promise.all([
+  const [faqs, branches, coverage, hardware, industries] = await Promise.all([
     getFaqs('solution', solutionId),
     getBranches(),
     getCoverageLocations(),
     getProductsForSolution(solutionId),
+    getIndustriesForSolution(solutionId),
   ]);
 
   const sections = solutionSections(solution.sections);
@@ -207,6 +210,9 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
       <SolutionFaqs faqs={faqs.data} />
 
       <Coverage branches={branches.data} coverage={coverage.data} />
+
+      {/* 10 — Related. Closes the loop so industry pages are not orphans. */}
+      <SolutionIndustries industries={industries.data} />
 
       {/* 11 — Conversion. WhatsApp first, then call, per the content skill. */}
       <Section tone="dark">
