@@ -1181,6 +1181,36 @@ export type Database = {
         }
         Relationships: []
       }
+      redirects: {
+        Row: {
+          created_at: string
+          from_path: string
+          id: string
+          note: string | null
+          source: string
+          status_code: number
+          to_path: string
+        }
+        Insert: {
+          created_at?: string
+          from_path: string
+          id?: string
+          note?: string | null
+          source?: string
+          status_code?: number
+          to_path: string
+        }
+        Update: {
+          created_at?: string
+          from_path?: string
+          id?: string
+          note?: string | null
+          source?: string
+          status_code?: number
+          to_path?: string
+        }
+        Relationships: []
+      }
       shipments: {
         Row: {
           carrier: string | null

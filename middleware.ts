@@ -17,7 +17,75 @@ import { createServerClient } from '@supabase/ssr';
  * `profiles.role` read under RLS cannot. Per-role authorisation is enforced by
  * `is_staff()` in the policies.
  */
+/**
+ * CMS REDIRECTS, cached in module scope.
+ *
+ * A slug rename writes a row to `redirects` (migration 0030), and this is what
+ * serves it. The static 301 map in next.config.mjs is compiled at build time
+ * and cannot carry a redirect an editor creates at 3pm on a Tuesday.
+ *
+ * THE CACHE IS THE POINT. Querying the database on every request would put a
+ * round trip in front of every page load, which is unaffordable on a 2.5s LCP
+ * budget for an audience on mobile data. The map is fetched at most once a
+ * minute per running instance; a rename is therefore live within a minute
+ * rather than instantly, which is the right trade for a rare operation.
+ *
+ * Failure is silent by design: if the lookup errors, the request continues to
+ * normal routing. A redirect table being unreachable must not take the site
+ * down.
+ */
+let redirectCache: { map: Map<string, { to: string; code: number }>; at: number } | null = null;
+const REDIRECT_TTL_MS = 60_000;
+
+async function cmsRedirect(pathname: string): Promise<{ to: string; code: number } | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+
+  const fresh = redirectCache && Date.now() - redirectCache.at < REDIRECT_TTL_MS;
+  if (!fresh) {
+    try {
+      const res = await fetch(`${url}/rest/v1/redirects?select=from_path,to_path,status_code`, {
+        headers: { apikey: key, Authorization: `Bearer ${key}` },
+        cache: 'no-store',
+      });
+      if (!res.ok) return redirectCache?.map.get(pathname) ?? null;
+      const rows: { from_path: string; to_path: string; status_code: number }[] = await res.json();
+      redirectCache = {
+        at: Date.now(),
+        map: new Map(rows.map((r) => [r.from_path, { to: r.to_path, code: r.status_code }])),
+      };
+    } catch {
+      return redirectCache?.map.get(pathname) ?? null;
+    }
+  }
+  return redirectCache?.map.get(pathname) ?? null;
+}
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  /**
+   * ANYTHING THAT IS NOT /admin IS HANDLED HERE AND RETURNS EARLY.
+   *
+   * This early return is load-bearing. The matcher below uses `:path*`, which
+   * matches the bare index path as well as its children, so `/solutions` enters
+   * this function too. Without returning, those requests fell through to the
+   * admin auth gate underneath and were redirected to /admin/login — verified:
+   * /solutions, /products and /industries all answered 307 until this was
+   * added. A middleware that silently redirects three index pages to a login
+   * screen is the kind of fault that reaches production looking like a routing
+   * problem.
+   */
+  if (!pathname.startsWith('/admin')) {
+    // Only a path that could have been renamed is worth a lookup.
+    if (/^\/(solutions|products|industries|resources)\/.+/.test(pathname)) {
+      const hit = await cmsRedirect(pathname);
+      if (hit) return NextResponse.redirect(new URL(hit.to, request.url), hit.code);
+    }
+    return NextResponse.next();
+  }
+
   const response = NextResponse.next({ request });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -64,5 +132,13 @@ export const config = {
    * unauthenticated visitor would be redirected to /admin/login, which would
    * match, which would redirect again — forever.
    */
-  matcher: ['/admin', '/admin/((?!login).*)'],
+  matcher: [
+    '/admin',
+    '/admin/((?!login).*)',
+    // Content paths, so a CMS slug rename keeps the old URL working.
+    '/solutions/:path*',
+    '/products/:path*',
+    '/industries/:path*',
+    '/resources/:path*',
+  ],
 };
