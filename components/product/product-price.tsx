@@ -1,4 +1,5 @@
 import { ButtonLink } from '@/components/ui/button';
+import { AddToCart } from '@/components/cart/add-to-cart';
 import { whatsappUrl } from '@/lib/company';
 import { VAT_LABEL } from '@/lib/constants';
 import type { PublicProduct } from '@/types/content';
@@ -21,9 +22,9 @@ import type { PublicProduct } from '@/types/content';
  * EVERY PRICE CARRIES `excl. VAT` VISIBLY. Stored prices are VAT-exclusive, and
  * a price displayed without that label is a price that will be disputed.
  *
- * Add-to-cart is deliberately absent: commerce is Sprint 7. Until then a priced
- * product converts through WhatsApp like an unpriced one, which is the honest
- * interim rather than a button that does nothing.
+ * ADD TO CART APPEARS ONLY WHERE THERE IS A PRICE. SHOP_ARCHITECTURE §8: a
+ * product with no price shows "Request price", no add-to-cart, and emits no
+ * Offer schema. All three follow from the same null, so they cannot drift apart.
  */
 
 function formatKes(amount: number): string {
@@ -75,18 +76,18 @@ export function ProductPrice({ product }: { product: PublicProduct }) {
       </p>
 
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-        <ButtonLink
-          href={whatsappUrl(
-            hasPrice
-              ? `Hello Nebsam, I would like to order the ${product.name}.`
-              : `Hello Nebsam, please send me a price for the ${product.name}.`,
-          )}
-          variant="primary"
-          size="lg"
-          className="w-full sm:w-auto"
-        >
-          {hasPrice ? 'Order on WhatsApp' : 'Request price on WhatsApp'}
-        </ButtonLink>
+        {hasPrice && product.id ? (
+          <AddToCart productId={product.id} />
+        ) : (
+          <ButtonLink
+            href={whatsappUrl(`Hello Nebsam, please send me a price for the ${product.name}.`)}
+            variant="primary"
+            size="lg"
+            className="w-full sm:w-auto"
+          >
+            Request price on WhatsApp
+          </ButtonLink>
+        )}
       </div>
     </div>
   );
