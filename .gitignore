@@ -54,3 +54,6 @@ supabase/.temp/
 # Lighthouse reports — measured, never committed
 lh.json
 lighthouse*.json
+
+# Assets awaiting optimisation. Nothing here ships until moved into public/.
+media-inbox/

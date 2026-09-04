@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+import { requireStaff } from '@/lib/admin/actor';
 import { Shell } from '@/components/layout/section';
 import { Badge } from '@/components/ui/badge';
 import { isDatabaseConfigured } from '@/lib/content';
@@ -13,6 +15,14 @@ import { isDatabaseConfigured } from '@/lib/content';
  * database exists at all.
  */
 export default async function AdminDashboard() {
+  /**
+   * Authorisation, not just authentication. The middleware only proves
+   * somebody is signed in; the service role used below bypasses RLS, so
+   * this is the check that decides whether they may be here at all.
+   */
+  const actor = await requireStaff('viewer');
+  if (!actor) redirect('/admin/login?reason=forbidden');
+
   const configured = isDatabaseConfigured();
 
   const sections = [

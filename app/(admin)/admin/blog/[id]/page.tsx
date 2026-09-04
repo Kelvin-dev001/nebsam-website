@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+import { requireStaff } from '@/lib/admin/actor';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PostEditor } from '@/components/admin/post-editor';
@@ -36,6 +38,14 @@ export default async function AdminPostEditorPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  /**
+   * Authorisation, not just authentication. The middleware only proves
+   * somebody is signed in; the service role used below bypasses RLS, so
+   * this is the check that decides whether they may be here at all.
+   */
+  const actor = await requireStaff('editor');
+  if (!actor) redirect('/admin/login?reason=forbidden');
+
   const { id } = await params;
   const db = serviceClient();
 

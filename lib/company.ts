@@ -116,7 +116,15 @@ export const CONTACT = {
   /** All shop orders route here — brief PART 1.5 #12. No per-branch routing. */
   whatsapp: { display: '+254 759 000111', e164: '254759000111' },
   salesEmail: 'onlinesales@nebsamdigital.com',
-  /** [[NEEDS_VERIFICATION: confirm info@nebsamdigital.com is live and monitored]] — V07 */
+  /**
+   * V07 — ANSWERED 4 Sep 2026: live and monitored.
+   *
+   * This is the ONLY published address. V35 found `info@nebsam.com` and
+   * `support@nebsam.com` live on the old site, on a domain Nebsam does not
+   * appear to control and collecting nothing. Neither exists in this codebase
+   * and neither is to be reintroduced; they disappear when Sprint 15 replaces
+   * the CRA site.
+   */
   generalEmail: 'info@nebsamdigital.com',
   hours: '24/7, Monday–Sunday',
   /** schema.org openingHours form */
@@ -157,11 +165,40 @@ export const COVERAGE_TOWNS = [
 /**
  * Social profiles for footer links and schema `sameAs`.
  *
- * DELIBERATELY EMPTY — register item V08. An absent `sameAs` is better than a
- * wrong one: a bad profile URL weakens entity resolution rather than helping it.
- * The schema builder omits the property entirely while this is empty.
+ * V08 — ANSWERED 4 Sep 2026. Emitted as `sameAs` on the Organization schema,
+ * which is how a search engine and an assistant tie this site to those
+ * accounts as one entity. An absent sameAs is better than a wrong one, so the
+ * array stays exactly these three until another is confirmed.
  */
-export const SOCIAL_PROFILES: string[] = [];
+export const SOCIAL_PROFILES: string[] = [
+  'https://www.facebook.com/nebsam1',
+  'https://www.instagram.com/nebsam_digital/',
+  'https://www.tiktok.com/@nebsamdigitalkenya',
+];
+
+/**
+ * V36 — ANSWERED 4 Sep 2026: founded 2010.
+ *
+ * Kept as a number rather than baked into a sentence so "over 10 years" and any
+ * future "over 15 years" derive from one fact instead of drifting apart. The
+ * approved copy stays "over 10 years", which remains true and is deliberately
+ * conservative against the 2010 date.
+ */
+export const FOUNDED_YEAR = 2010;
+
+/**
+ * V11 — data protection contact, published in the privacy policy because
+ * Nebsam is a registered data controller and processor under the DPA 2019.
+ *
+ * A named person and an email are given alongside the phone. A phone number on
+ * its own is hard to action a formal data request against, and a subject access
+ * request needs somewhere it can be sent in writing.
+ */
+export const DATA_PROTECTION_CONTACT = {
+  name: 'Kelvin Oyugi',
+  email: 'info@nebsamdigital.com',
+  phone: { display: '+254 759 000111', e164: '254759000111' },
+} as const;
 
 /**
  * Registrations held. Described as permits/registrations HELD, never as an

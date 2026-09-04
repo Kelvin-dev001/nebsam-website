@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+import { requireStaff } from '@/lib/admin/actor';
 import Link from 'next/link';
 import { serviceClient } from '@/lib/supabase/server';
 import { ROUTES } from '@/lib/constants';
@@ -24,6 +26,14 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function AdminBlogListPage() {
+  /**
+   * Authorisation, not just authentication. The middleware only proves
+   * somebody is signed in; the service role used below bypasses RLS, so
+   * this is the check that decides whether they may be here at all.
+   */
+  const actor = await requireStaff('viewer');
+  if (!actor) redirect('/admin/login?reason=forbidden');
+
   const { data: posts } = await serviceClient()
     .from('blog_posts')
     .select('id, title, slug, status, published_at, updated_at')

@@ -348,6 +348,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          display_status: string
           document_path: string | null
           effective_on: string | null
           expires_on: string | null
@@ -363,6 +364,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          display_status?: string
           document_path?: string | null
           effective_on?: string | null
           expires_on?: string | null
@@ -378,6 +380,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          display_status?: string
           document_path?: string | null
           effective_on?: string | null
           expires_on?: string | null
@@ -1594,6 +1597,7 @@ export type Database = {
       public_certifications: {
         Row: {
           description: string | null
+          display_status: string | null
           document_path: string | null
           effective_on: string | null
           expires_on: string | null
@@ -1607,6 +1611,7 @@ export type Database = {
         }
         Insert: {
           description?: string | null
+          display_status?: string | null
           document_path?: string | null
           effective_on?: string | null
           expires_on?: string | null
@@ -1620,6 +1625,7 @@ export type Database = {
         }
         Update: {
           description?: string | null
+          display_status?: string | null
           document_path?: string | null
           effective_on?: string | null
           expires_on?: string | null
