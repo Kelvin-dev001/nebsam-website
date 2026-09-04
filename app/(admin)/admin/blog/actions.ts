@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { serviceClient } from '@/lib/supabase/server';
-import { adminActor } from '@/lib/admin/actor';
+import { requireStaff } from '@/lib/admin/actor';
 import { ROUTES } from '@/lib/constants';
 
 /**
@@ -101,8 +101,9 @@ async function audit(
  * and, when they differ on an already-published post, writes the redirect itself.
  */
 export async function savePost(formData: FormData): Promise<ActionResult> {
-  const actor = await adminActor();
-  if (!actor) return { ok: false, message: 'Your session has expired. Sign in again.' };
+  // editor or above. A viewer or sales account can sign in and cannot publish.
+  const actor = await requireStaff('editor');
+  if (!actor) return { ok: false, message: 'You do not have permission to edit posts.' };
 
   const parsed = postSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
@@ -206,8 +207,8 @@ const autosaveSchema = z.object({
 });
 
 export async function autosavePost(formData: FormData): Promise<ActionResult> {
-  const actor = await adminActor();
-  if (!actor) return { ok: false, message: 'Session expired.' };
+  const actor = await requireStaff('editor');
+  if (!actor) return { ok: false, message: 'You do not have permission to edit posts.' };
 
   const parsed = autosaveSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { ok: false, message: 'Autosave skipped.' };
@@ -227,8 +228,9 @@ export async function autosavePost(formData: FormData): Promise<ActionResult> {
 
 /** Unpublish. Kept separate so it is a deliberate act, never a status dropdown slip. */
 export async function unpublishPost(id: string): Promise<ActionResult> {
-  const actor = await adminActor();
-  if (!actor) return { ok: false, message: 'Session expired.' };
+  // Unpublishing removes something the public can see. Admin only.
+  const actor = await requireStaff('admin');
+  if (!actor) return { ok: false, message: 'Only an administrator can unpublish a post.' };
   if (!z.string().uuid().safeParse(id).success) return { ok: false, message: 'Invalid post.' };
 
   const db = serviceClient();
