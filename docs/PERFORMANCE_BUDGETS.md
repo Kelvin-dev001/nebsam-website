@@ -54,6 +54,14 @@ Measuring on a development machine on fibre is how budgets get reported green an
 - Against a **Vercel preview deployment**, never `next dev` — dev builds are not production builds
 - Three runs, **median** reported
 
+**Measured results live in `docs/PERFORMANCE_BASELINE.md`**, which is appended to, never overwritten.
+The 5 Sep 2026 entry is the first measurement taken with page-level client JavaScript executing, and
+it supersedes every Lighthouse figure recorded in Sprints 4, 5 and 6.
+
+> **Unreconciled:** this section requires a Vercel preview deployment; `CLAUDE.md` §11 requires
+> `npm run build && npm start`. Every measurement to date has followed CLAUDE.md. Settle which is
+> authoritative before the Sprint 14 gate.
+
 **Per sprint, recorded in the sprint report as numbers:**
 
 ```
