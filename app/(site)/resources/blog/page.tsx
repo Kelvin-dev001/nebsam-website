@@ -1,5 +1,6 @@
 import { Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { getBlogPosts } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, jsonLdGraph } from '@/lib/seo/schema';
@@ -8,10 +9,10 @@ import { ROUTES } from '@/lib/constants';
 /**
  * BLOG INDEX.
  *
- * BREADCRUMB IS Home / Blog, NOT Home / Resources / Blog. `/resources` is a
- * Sprint 10 route and does not exist yet, and a breadcrumb linking to a 404 is
- * the same self-authored error the sitemap kept producing. The trail gains its
- * middle level when the hub is built.
+ * BREADCRUMB IS Home / Resources / Blog as of Sprint 10. It was Home / Blog
+ * until the hub existed, because a breadcrumb linking to a 404 is the same
+ * self-authored error the sitemap kept producing. `/resources` is now built, so
+ * the trail has gained its middle level exactly as that note said it would.
  *
  * The index will be empty until posts are published, and publishing is blocked:
  * every post needs a real byline and V09 — author names, roles and bios — is
@@ -33,6 +34,7 @@ export default async function BlogIndexPage() {
 
   const trail = [
     { name: 'Home', path: ROUTES.home },
+    { name: 'Resources', path: ROUTES.resources },
     { name: 'Blog', path: ROUTES.blog },
   ];
 
@@ -42,19 +44,7 @@ export default async function BlogIndexPage() {
 
       <Section tone="dark" bleed>
         <Shell className="pb-12 pt-10 md:pb-16 md:pt-14">
-          <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-x-2 font-mono text-label uppercase tracking-[0.08em] text-text-secondary-inverse">
-              <li>
-                <a href={ROUTES.home} className="underline underline-offset-4">
-                  Home
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <span aria-hidden="true">/</span>
-                <span aria-current="page">Blog</span>
-              </li>
-            </ol>
-          </nav>
+          <Breadcrumbs trail={trail} />
 
           <h1 className="mt-6 max-w-[24ch] font-display text-h1 text-text-inverse md:text-md-display">
             Insights
