@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/company';
 import { ROUTES } from '@/lib/constants';
-import { getIndustries, getProducts, getSolutions } from '@/lib/content';
+import { getBlogPosts, getIndustries, getProducts, getSolutions } from '@/lib/content';
 
 /**
  * Generated sitemap. The old site's was hand-maintained and was proven
@@ -41,17 +41,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    *
    * ADD A ROUTE HERE IN THE SPRINT THAT BUILDS IT — the entry is part of
    * shipping the page, not a separate task. Pending, with the sprint that owns
-   * each: platform (blocked on V13) · resources,
-   * downloads, faqs (9) · about, certifications, coverage, team, partners (11)
-   * · support, book-installation, suggestions (11) · contact, quote (8) ·
-   * privacy, terms, cookies (11).
+   * each: platform (blocked on V13) · about, certifications, coverage, team,
+   * partners (11) · support, book-installation, suggestions (11) · contact,
+   * quote (8) · privacy, terms, cookies (11).
+   *
+   * Sprint 10 added resources, downloads and faqs, and added published blog
+   * posts below.
    */
   const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
     { path: ROUTES.home, priority: 1.0, changeFrequency: 'weekly' },
     { path: ROUTES.solutions, priority: 0.9, changeFrequency: 'monthly' },
     { path: ROUTES.products, priority: 0.9, changeFrequency: 'weekly' },
     { path: ROUTES.industries, priority: 0.7, changeFrequency: 'monthly' },
+    { path: ROUTES.resources, priority: 0.6, changeFrequency: 'monthly' },
     { path: ROUTES.blog, priority: 0.7, changeFrequency: 'weekly' },
+    { path: ROUTES.faqs, priority: 0.7, changeFrequency: 'monthly' },
+    /**
+     * `/resources/downloads` is listed even though it currently publishes
+     * nothing. It differs from the unbuilt routes this comment warns about: it
+     * is a real route returning 200 with a real answer for the query it serves
+     * ("does Nebsam have a brochure I can download"). An empty section is not a
+     * crawl error; a 404 is.
+     */
+    { path: ROUTES.downloads, priority: 0.5, changeFrequency: 'monthly' },
   ];
 
   const { data: solutions } = await getSolutions();
@@ -83,6 +95,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    * the routes exist.
    */
 
+  /**
+   * PUBLISHED BLOG POSTS, from the view for the same reason as everything else
+   * here: `public_blog_posts` already filters to published with a
+   * `published_at` that is not in the future, so a scheduled post cannot reach
+   * the sitemap before it reaches the site.
+   */
+  const { data: posts } = await getBlogPosts();
+  const postRoutes = posts.flatMap((p) =>
+    p.slug
+      ? [{ path: ROUTES.blogPost(p.slug), priority: 0.6, changeFrequency: 'monthly' as const }]
+      : [],
+  );
+
   const { data: industries } = await getIndustries();
   const industryRoutes = industries.flatMap((i) =>
     i.slug
@@ -90,7 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       : [],
   );
 
-  return [...staticRoutes, ...solutionRoutes, ...productRoutes, ...industryRoutes].map((route) => ({
+  return [...staticRoutes, ...solutionRoutes, ...productRoutes, ...industryRoutes, ...postRoutes].map((route) => ({
     url: `${SITE_URL}${route.path === '/' ? '' : route.path}`,
     lastModified: now,
     changeFrequency: route.changeFrequency,
