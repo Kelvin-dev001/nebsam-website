@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
-import { getBlogPostBySlug, getBlogPosts } from '@/lib/content';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { getBlogPostBySlug, getBlogPosts, getSolutions } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { articleSchema, breadcrumbSchema, jsonLdGraph } from '@/lib/seo/schema';
-import { ROUTES } from '@/lib/constants';
+import { ARTICLE_SOLUTION, ROUTES } from '@/lib/constants';
 
 /**
  * BLOG POST.
@@ -59,8 +60,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const paragraphs = (post.body ?? '').split(/\n{2,}/).filter((p) => p.trim() !== '');
 
+  /**
+   * The solution this article sends the reader to, if it has one and if that
+   * solution is published. Read from the view rather than from the static
+   * LAUNCH_SOLUTIONS list for the same reason the sitemap is: the static list
+   * contains all ten and one of them is a draft.
+   */
+  const mappedSlug = ARTICLE_SOLUTION[slug];
+  const { data: solutions } = await getSolutions();
+  const relatedRow = mappedSlug ? solutions.find((s) => s.slug === mappedSlug) : undefined;
+  const related =
+    relatedRow?.slug && relatedRow.name ? { slug: relatedRow.slug, name: relatedRow.name } : null;
+
   const trail = [
     { name: 'Home', path: ROUTES.home },
+    // Gained in Sprint 10, when /resources was built. See the note on the index.
+    { name: 'Resources', path: ROUTES.resources },
     { name: 'Blog', path: ROUTES.blog },
     { name: title, path: ROUTES.blogPost(slug) },
   ];
@@ -97,18 +112,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       <Section tone="dark" bleed>
         <Shell className="pb-12 pt-10 md:pb-16 md:pt-14">
-          <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-x-2 font-mono text-label uppercase tracking-[0.08em] text-text-secondary-inverse">
-              {trail.slice(0, 2).map((crumb, i) => (
-                <li key={crumb.path} className="flex items-center gap-2">
-                  {i > 0 ? <span aria-hidden="true">/</span> : null}
-                  <a href={crumb.path} className="underline underline-offset-4">
-                    {crumb.name}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          {/*
+            The FULL trail, including this article as the current page.
+            It previously rendered `trail.slice(0, 2)` — every crumb a link and
+            no `aria-current`, which told a screen-reader user the trail had no
+            current page. When Sprint 10 inserted Resources into the trail, that
+            slice also silently dropped "Blog" from the visible breadcrumb while
+            leaving it in the BreadcrumbList schema: markup contradicting the
+            page, which is the one thing the SEO rules say is worse than no
+            markup. The product detail template already renders its full trail;
+            this now matches it.
+          */}
+          <Breadcrumbs trail={trail} />
 
           <h1 className="mt-6 max-w-[28ch] font-display text-h1 text-text-inverse md:text-md-display">
             {title}
@@ -146,6 +161,32 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {para}
               </p>
             ))}
+
+            {/*
+              LINK OUT. Required by the SEO plan: every article links to at
+              least one solution. Rendered only when the mapped solution is
+              actually published, so an unpublished or renamed solution produces
+              no link rather than a broken one — the school bus solution is a
+              draft today and is exactly the case this guards against.
+            */}
+            {related ? (
+              <p className="mt-10 border-t border-border-hairline pt-6 text-body text-text-secondary">
+                Read more:{' '}
+                <a href={ROUTES.solution(related.slug)} className="underline underline-offset-4">
+                  {related.name}
+                </a>
+              </p>
+            ) : null}
+
+            <p className="mt-4 text-body text-text-secondary">
+              <a href={ROUTES.blog} className="underline underline-offset-4">
+                All articles
+              </a>
+              {' · '}
+              <a href={ROUTES.faqs} className="underline underline-offset-4">
+                Frequently asked questions
+              </a>
+            </p>
           </div>
         </Shell>
       </Section>
