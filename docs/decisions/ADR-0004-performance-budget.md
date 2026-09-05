@@ -1,86 +1,77 @@
-# ADR-0004 — Performance budget: hold ≥ 90, or revise it to what the stack can hold
+# ADR-0004 — Where performance is measured, and what the budget should be
 
-**Status** Proposed, 5 September 2026 — awaiting the client decision recorded as register V53
-**Amends, if accepted** brief PART 14 and `docs/PERFORMANCE_BUDGETS.md` §2
-**Depends on** ADR-0003, which is why the earlier numbers were wrong
+**Status** Proposed, 5 September 2026 — revised the same day after the evidence it was built on was
+found to be wrong
+**Amends, if accepted** `CLAUDE.md` §11 and `docs/PERFORMANCE_BUDGETS.md` §3
+**Related** ADR-0003, which is why the Sprint 4–6 numbers were wrong; register V47 and V53
+
+## What this ADR is now about
+
+The first version of this ADR asked whether to hold the Performance ≥ 90 budget or revise it
+downward, on the evidence that the site measured 80–82 and that client JavaScript cost 17 points.
+
+**Both figures were measurement artefacts.** Re-measured under a controlled protocol the same day,
+the site medians **89 / 93 / 97** across the three built route types, and a paired control prices all
+client JavaScript at **+3 points**. The budget is not obviously unreachable, so the question is no
+longer whether to lower it.
+
+The question this ADR now records is the one that actually blocks progress: **the project has no
+measurement environment capable of deciding whether a budget is met.**
 
 ## Context
 
-The performance budgets were set in brief PART 14 before any code existed, which is the right way
-round: they are a design input, not a cleanup task. The audience test behind them is explicit — a
-mid-range Android on mobile data the reader pays for by the megabyte.
+`docs/PERFORMANCE_BUDGETS.md` §3 requires every measurement to be taken against a **Vercel preview
+deployment**. `CLAUDE.md` §11 requires `npm run build && npm start`. The two have contradicted each
+other since Sprint 1, and every measurement to date has followed CLAUDE.md, because it is the file
+read at the start of every session.
 
-Sprint 4 measured the homepage at Lighthouse mobile **Performance 95**, **TBT 80 ms**, **LCP
-2.878 s**, and reported that the trace showed *observed LCP at 237 ms, identical to FCP* — no real
-late paint. The client accepted the 378 ms LCP miss on that basis and directed Sprint 4 to proceed.
+On 5 September the development machine produced, for one page on one build:
 
-Every one of those readings was taken while `app/(site)/loading.tsx` suppressed hydration on every
-route in the group. Nothing inside `<main>` ever executed. ADR-0003 removed it in Sprint 7.
+- Performance scores from **72 to 97**
+- `environment.benchmarkIndex` from **606 to 3174** — a fivefold swing in reported CPU capability
 
-Re-measured on 5 September 2026 with hydration working, median of three per route:
-
-| | Homepage | Solution | Product |
-|---|---|---|---|
-| Performance | 80 | 80 | 82 |
-| LCP | 3.088 s | 2.988 s | 2.880 s |
-| TBT | 475 ms | 596 ms | 486 ms |
-
-Nine of eleven budgets still hold, including CLS, page weight, per-route JS, accessibility, best
-practices, SEO and font count. The two that miss are Performance ≥ 90 and LCP ≤ 2.5 s, and the
-control run below shows they are one defect, not two.
-
-## The measured floor
-
-A control run of the solution page with `/_next/static/chunks/*` blocked — the pre-Sprint-7
-condition reproduced deliberately — scores **97** with **LCP 2.412 s, inside budget**, and script
-evaluation falling from **832 ms to 18 ms**.
-
-That establishes the ceiling and the floor at once, because of how the bundle divides:
-
-| Chunk | Transferred (gz) | What it is |
-|---|---|---|
-| `4bd1b696….js` | 53 KB | React and react-dom |
-| `255….js` | 46 KB | The Next client runtime and router |
-| `webpack….js`, `main-app….js` | 2 KB | Module runtime |
-| `page….js`, `356….js`, `531….js` | ~10 KB | **This project's own client components** |
-
-Roughly **99 KB of the ~110 KB is framework**, and it hydrates the whole tree whether or not a route
-has interactive parts. This project's four client components — mobile navigation, cookie notice,
-WhatsApp button, reveal — account for about a tenth of the client JavaScript and cannot simply be
-deleted: they are the mobile menu, the consent gate and the cart's sibling machinery.
-
-So 97 is not an available score. It is the score of a site with no client JavaScript at all.
-
-## Options, with the trade-off named
-
-**A. Hold the budget and spend a sprint trying to reach it.** Replace the 191 KB legacy favicon
-(certain, minutes, helps LCP only), measure whether instancing the 89 KB Archivo variable font is
-actually smaller across the four weight and width combinations in use, and defer the cookie notice's
-hydration. *Trade-off:* one sprint of the fifteen, spent on a target the arithmetic above says it
-will not hit. The font route also reopens ADR-0002, which is a design decision, not a performance one.
-
-**B. Change the architecture.** Reaching ≥ 90 reliably means not shipping the framework runtime on
-content routes. *Trade-off:* a stack change eight sprints into a fifteen-sprint build, against a
-budget number rather than a user complaint. Not recommended, and stated only so the option is on the
-record rather than discovered later.
-
-**C. Revise the budget to the measured reality and keep everything else.** Set Performance ≥ 80 and
-LCP ≤ 3.1 s on mobile; leave CLS, weight, per-route JS, accessibility, best practices, SEO and fonts
-exactly as they are. *Trade-off:* the brief's headline number changes, and it changes downward. A
-budget that cannot be met is not a standard, it is a line item that gets waived at every gate, and
-this project's stated failure mode is reporting budgets green and shipping red.
-
-## Recommendation
-
-**A then C, in that order, and not as a dedicated sprint.** Do the favicon inside whatever sprint
-runs next — it costs minutes and it is indefensible to ship 191 KB of Create React App leftovers on
-the critical path. Measure the font question rather than assuming it. Then set the budget to what the
-measurements actually support, so the Sprint 14 gate means something.
-
-The one number worth protecting on its own terms is not the Lighthouse score. It is page weight,
-where the site is at 296–306 KB against a 1.0–1.5 MB budget — and that is the budget the brief's
-audience test is really about.
+A budget gate cannot be run on that. Worse, it is actively misleading: two of the three wrong
+conclusions this project has drawn about performance came from comparing runs taken minutes apart
+under different machine load, and reading the difference as a property of the code.
 
 ## Decision
 
-Not taken. This ADR stays Proposed until the client answers register V53.
+Three things, of which only the first is a real decision.
+
+**1. Budget compliance is judged on a Vercel preview deployment.** Local measurement stays useful for
+one thing — **paired comparisons**, where two variants are interleaved against the same server and
+the median of the differences is taken. Those are robust to drift and have already produced two
+trustworthy results (favicon −226 ms LCP; all client JS −449 ms LCP, +3 points). Absolute scores from
+a local run go in a sprint report as an indication, never as a gate result.
+
+*Trade-off:* it costs a deployment per measurement and cannot be done offline. Against that, it is
+the only way the Sprint 14 gate means anything, and it is what the budgets document already said.
+
+**2. `CLAUDE.md` §11 is amended to match.** It should say that budget numbers come from a preview
+deployment, and that `npm run build && npm start` is for paired local comparison. Leaving the two
+documents in contradiction guarantees the next session repeats this.
+
+**3. The budget numbers themselves are not changed yet.** Performance ≥ 90 is met at the median on
+two routes of three and missed by one point on the third; LCP ≤ 2.5 s is met on the product page and
+missed by 76–83 ms on the other two. Those are marginal, and a marginal miss measured on an
+unreliable rig is not grounds for rewriting the brief. Revisit once a preview measurement exists.
+
+## Consequences
+
+- **The client decision raised as V53 is withdrawn from the client for now.** It was going to ask them
+  to accept a sixteen-point miss or fund a sprint against it. Neither is the real situation, and
+  putting a decision to a client on numbers this unstable would have been the second avoidable error
+  in one day.
+- **The Sprint 4 acceptance stays withdrawn.** It was given on pre-hydration numbers, and that is
+  independent of everything above.
+- **The cookie-notice deferral is dropped.** With all client JavaScript priced at three points,
+  deferring one ~2 KB component is below the noise floor, and it would have put lazy-loading
+  indirection into consent code — the most legally sensitive client component on the site.
+- **The favicon fix ships regardless** (`47833df`). 191 KB → 3.4 KB, verified at −226 ms LCP by paired
+  measurement, same artwork re-encoded rather than redrawn.
+
+## What would change this decision
+
+A preview-deployment measurement showing the budget missed by a margin that survives repetition. At
+that point the options are the 89 KB Archivo variable font — which reopens ADR-0002 and must be
+measured rather than assumed — the render-blocking CSS, and only then the budget numbers themselves.
