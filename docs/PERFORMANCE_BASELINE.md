@@ -229,6 +229,17 @@ by these four components. Removing one of them will not return 17 points. The ho
 that items 1–3 together recover part of the LCP miss and only a few Performance points, and that
 item 4 is the conversation this measurement is really asking for.
 
+**Quantified, so item 4 is not an opinion.** Of the ~110 KB of client JavaScript on the homepage,
+**99 KB is framework** — `4bd1b696….js` at 53 KB gzipped is React and react-dom, `255….js` at 46 KB
+is the Next client runtime and router. This project's own client components compile to about **10 KB**
+across three route chunks (`page….js`, `356….js`, `531….js`; the `Reveal` component's
+`revealDecided` marker is in the 8 KB raw homepage chunk, not in either large one). The framework
+hydrates the whole tree whether or not a route has interactive parts.
+
+**Where this decision now lives.** The options are written up with their trade-offs in
+`docs/decisions/ADR-0004-performance-budget.md`, which stays **Proposed** until the client answers
+**V53**. V53 also withdraws the Sprint 4 acceptance, which was given on the pre-hydration numbers.
+
 ---
 
 ## 9. What was not measured
