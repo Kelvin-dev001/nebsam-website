@@ -1,8 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
-import { serviceClient } from '@/lib/supabase/server';
+import { contentTag, serviceClient } from '@/lib/supabase/server';
 import { requireStaff } from '@/lib/admin/actor';
 import { ROUTES } from '@/lib/constants';
 
@@ -100,6 +100,32 @@ async function audit(
  * with any slug. So the server compares the incoming slug against the stored one
  * and, when they differ on an already-published post, writes the redirect itself.
  */
+/**
+ * Invalidate everything a blog change can be visible through.
+ *
+ * ── revalidatePath ALONE WAS NOT ENOUGH, and this is register item V54 ──────
+ * It discards the rendered page correctly. The page then re-rendered and read
+ * the row straight back out of Next's fetch data cache, which held the old
+ * value for up to an hour and carried no tags, so nothing could reach it. The
+ * publish button did not publish. Proven in Sprint 10 by decoding the cache
+ * entry: it held the previous seo_title while the database held the new one.
+ *
+ * So the tag goes first. It drops the cached PostgREST reads for the view;
+ * revalidatePath then drops the rendered HTML, and the re-render reads fresh.
+ *
+ * The hub is included because it shows a live article count, and the sitemap
+ * because it lists published posts. Both would otherwise keep saying what was
+ * true an hour ago.
+ */
+function revalidateBlogSurfaces(slug?: string | null, previousSlug?: string | null) {
+  revalidateTag(contentTag('public_blog_posts'));
+  revalidatePath(ROUTES.blog);
+  revalidatePath(ROUTES.resources);
+  revalidatePath('/sitemap.xml');
+  if (slug) revalidatePath(ROUTES.blogPost(slug));
+  if (previousSlug && previousSlug !== slug) revalidatePath(ROUTES.blogPost(previousSlug));
+}
+
 export async function savePost(formData: FormData): Promise<ActionResult> {
   // editor or above. A viewer or sales account can sign in and cannot publish.
   const actor = await requireStaff('editor');
@@ -142,7 +168,7 @@ export async function savePost(formData: FormData): Promise<ActionResult> {
     const { data, error } = await db.from('blog_posts').insert(row).select('id').single();
     if (error) return { ok: false, message: friendly(error.message) };
     await audit(actor.id, 'create', data.id, { slug: row.slug, status: row.status });
-    revalidatePath(ROUTES.blog);
+    revalidateBlogSurfaces(row.slug);
     return { ok: true, id: data.id, message: 'Post created.' };
   }
 
@@ -186,10 +212,9 @@ export async function savePost(formData: FormData): Promise<ActionResult> {
     ...(slugChanged ? { slug_was: existing.slug, redirect_created: existing.status === 'published' } : {}),
   });
 
-  // On-demand revalidation: publish, refresh, it is live.
-  revalidatePath(ROUTES.blog);
-  revalidatePath(ROUTES.blogPost(row.slug));
-  if (slugChanged) revalidatePath(ROUTES.blogPost(existing.slug));
+  // On-demand revalidation: publish, refresh, it is live. See V54 — the tag
+  // is the half that was missing, and without it this comment was untrue.
+  revalidateBlogSurfaces(row.slug, slugChanged ? existing.slug : null);
 
   return { ok: true, id: input.id, message: 'Saved.' };
 }
@@ -243,8 +268,7 @@ export async function unpublishPost(id: string): Promise<ActionResult> {
   if (error) return { ok: false, message: friendly(error.message) };
 
   await audit(actor.id, 'unpublish', id, { slug: existing?.slug });
-  revalidatePath(ROUTES.blog);
-  if (existing?.slug) revalidatePath(ROUTES.blogPost(existing.slug));
+  revalidateBlogSurfaces(existing?.slug);
   return { ok: true, id, message: 'Unpublished. It is no longer public.' };
 }
 

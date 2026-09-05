@@ -1,6 +1,6 @@
 # SPRINT 10 — RESOURCES
 
-**Branch** `sprint/10-resources` · five commits · 5 September 2026
+**Branch** `sprint/10-resources` · eight commits · 5 September 2026
 **Delivers** Downloads, FAQs, guides
 
 ---
@@ -103,6 +103,8 @@ EDIT  app/(site)/resources/blog/[slug]/page.tsx breadcrumb fix + link out
 EDIT  app/sitemap.ts                            3 routes + published posts
 EDIT  app/llms.txt/route.ts                     3 routes
 EDIT  lib/constants.ts                          ARTICLE_SOLUTION
+EDIT  lib/supabase/server.ts                    V54 — tagged reads
+EDIT  app/(admin)/admin/blog/actions.ts         V54 — revalidateTag
 EDIT  docs/NEEDS_VERIFICATION.md                V54
 ```
 
@@ -260,15 +262,9 @@ result rather than paraphrasing it into anything stronger.
 
 ## 11. New register items
 
-**V54 — a rebuild does not reliably pick up a database change.** Migration 0036
-corrected three `seo_title` values; a full `npm run build` afterwards emitted HTML
-still carrying the old titles while the database held the new ones. The build read
-stale data. `.next/cache/fetch-cache` (134 entries) is the probable cause and was
-not cleared, so the mechanism is inferred rather than proven.
-
-This matters well beyond three titles. Sprint 9 shipped a CMS so non-technical
-staff can publish, and the whole point is that publishing makes content appear. A
-deploy that can serve a stale read is the quiet death CLAUDE.md §15 names.
+**V54 — a rebuild, and the CMS publish button, could serve a stale database
+read. RAISED AND FIXED THE SAME DAY**, at the client's instruction to settle it
+before Sprint 11. Full account in §15.
 
 No new `[[NEEDS_VERIFICATION]]` tokens were created. No public page ships carrying
 one.
@@ -299,12 +295,10 @@ A fifth document, the video telematics proposal, is **not in the repository** an
 carries the worst exposure on the project — customer plates, coordinates, device
 IDs and two identifiable faces. That is V14, and it is NOT CLEARED on arrival.
 
-### 12.2 V54 — the stale-read defect
-
-Fixing it means changing caching across the whole content layer: a no-store fetch
-on the Supabase client, or tag-based revalidation on publish. That is a data-layer
-decision under §3.5, so this sprint did not take it. It needs settling before
-Sprint 15 and ideally before Sprint 12.
+### 12.2 V54 — settled, no decision outstanding
+Fixed in this branch after the client asked for it to be settled first. See §15
+for what was proven, what was measured and rejected, and the one gap that
+remains. Nothing is needed from the client.
 
 ### 12.3 Smaller items
 
@@ -324,7 +318,7 @@ Sprint 15 and ideally before Sprint 12.
 
 | Item | Effect |
 |---|---|
-| **V54** | A rebuild can serve a stale database read. Three article SEO titles currently render 36–41 chars instead of the corrected 50–60; the database is right and a cold build fixes them |
+| **V54** | **Fixed.** Three article SEO titles still render short until the pre-existing cache entries expire (within the hour); the database is correct |
 | Downloads criterion 2 | The regenerate-vs-redact decision is unmade |
 | File-size rendering | Correct in unit tests, never exercised on a cleared row |
 | File delivery | No storage bucket exists; signed-URL delivery is Sprint 12 |
@@ -349,9 +343,91 @@ Then **Sprint 11 — Trust & Support**, which is where the certifications page,
 `display_status` and the V51 override land, and where the
 `related_solution_id` proposal belongs.
 
-**Do not start Sprint 11 before V54 is decided** if the answer might be "fix the
-content layer", because Sprint 11 adds more CMS-driven content to a site that
-cannot yet reliably publish it.
+V54 is settled, so Sprint 11 is no longer gated on it.
+
+---
+
+## 15. V54 — raised, diagnosed and fixed the same day
+
+Added after the client asked for it to be settled before Sprint 11.
+
+### What was actually wrong
+
+Not what the first draft of this report inferred. The cached entry for
+`/public_blog_posts?slug=eq.what-is-a-container-e-seal` was recovered from
+`.next/cache/fetch-cache` and decoded. It held:
+
+```
+seo_title:  "What is a container e-seal?"     <- the OLD value
+revalidate: 3600
+tags:       []
+```
+
+while the database held the corrected title. **Those empty tags were the
+defect.** The CMS publish action already called `revalidatePath`, which correctly
+discarded the rendered page — the page then re-rendered and read the row straight
+back out of the data cache, unchanged, for up to an hour. Nothing could reach
+that entry to invalidate it.
+
+So this was never really about three SEO titles. **The publish button could not
+publish**, and the comment sitting above it in `actions.ts` read "On-demand
+revalidation: publish, refresh, it is live." It was not live.
+
+### The fix that was tried and rejected
+
+`cache: 'no-store'` on the Supabase client, on the argument that the page cache
+is already the cache and a second cache underneath it can only go stale. A good
+argument and the wrong answer — and it was **measured rather than reasoned
+about**. The build moved the homepage, `/solutions`, `/products`, `/industries`,
+all three resources routes and `/sitemap.xml` from prerendered to server-rendered
+on demand. Only routes with `generateStaticParams` survived, and
+`check-retired-strings` fell from 265 build artefacts to 163 because there was
+less prerendered output left to scan.
+
+That trades a staleness bug for a performance regression on every index page, for
+an audience specified as a mid-range Android on metered data. Reverted.
+
+### The fix that shipped
+
+Every read is tagged with the PostgREST view it hit. The resource name is parsed
+from the request URL rather than passed at each call site, because a tag that has
+to be remembered in fifty places will be forgotten in one — and the failure mode
+of forgetting is silent staleness that looks exactly like this bug.
+
+`revalidateBlogSurfaces()` then invalidates the tag first and the paths second,
+and now also covers the resources hub (it shows a live article count) and the
+sitemap (it lists published posts). Both would otherwise have gone on saying what
+was true an hour ago.
+
+The admin and service-role clients take `no-store` instead. They are used only
+from `force-dynamic` admin routes and server actions, so they cannot pull a public
+route out of static generation, and a cached answer to "what does this row
+currently say" is a correctness bug in an editor.
+
+### Verified
+
+| Check | Result |
+|---|---|
+| Static generation intact | ✅ Indexes prerendered again, `[slug]` routes SSG, 1h revalidate, 265 artefacts scanned |
+| Cached reads carry tags | ✅ **133 of 133**, none untagged, across 12 views |
+| Tag naming | ✅ `sb:public_blog_posts`, `sb:public_faqs`, `sb:public_downloads`, … |
+| Typecheck, lint, migrations, build | ✅ All pass |
+
+### What is not verified, and the gap that remains
+
+**Not verified:** the publish → `revalidateTag` → fresh render round trip has not
+been exercised end to end, because there is still no admin account, outstanding
+from Sprint 9. The tags are proven present and the calls are proven wired; the
+click has not been performed. That is the first thing to do when an account
+exists.
+
+**Accepted gap:** a change made directly in SQL — a migration, or an edit in the
+Supabase dashboard — invalidates nothing, and can still be served stale for up to
+an hour. That is exactly how this was found. It is a developer action with a
+developer remedy, and it is documented in `lib/supabase/server.ts` and in the
+register rather than left to be rediscovered. It is also why the three corrected
+article titles still render short in this build: the database is right, and the
+pre-existing cache entries expire within the hour.
 
 ---
 
