@@ -29,7 +29,36 @@ import { ARTICLE_SOLUTION, ROUTES } from '@/lib/constants';
  * editor can use to break the design system.
  */
 export const revalidate = 3600;
-export const dynamicParams = false;
+
+/**
+ * `dynamicParams = true`, DELIBERATELY, and unlike solutions, products and
+ * industries. Register item V54.
+ *
+ * Those three are finite published sets that change only at deploy time, and
+ * they set `dynamicParams = false` to turn an unknown slug into a hard 404
+ * rather than a soft 200. The blog is not that. It is the one route type whose
+ * content is published by staff BETWEEN deploys, which is the entire reason the
+ * Sprint 9 CMS exists.
+ *
+ * With `false`, `revalidatePath(ROUTES.blogPost(slug))` — which the publish
+ * action calls — did not refresh the article. **It took the article offline.**
+ * The path was invalidated, Next tried to regenerate it, found no fallback
+ * permitted, and served a 404 until the next full build. Measured on two
+ * different articles, with `Internal: NoFallbackError` in the server log both
+ * times. So saving a post in the CMS unpublished it.
+ *
+ * The soft-404 worry that motivated `false` does NOT apply here — it was
+ * re-tested on this route rather than assumed:
+ *
+ *     /resources/blog/does-not-exist   ->  HTTP 404
+ *     /totally-unknown                 ->  HTTP 404
+ *
+ * `notFound()` returns a genuine 404 for an unknown slug, and a published post
+ * becomes reachable the moment it is published instead of at the next deploy.
+ * `generateStaticParams` still prerenders every post that exists at build time,
+ * so nothing is given up on the common path.
+ */
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const { data } = await getBlogPosts();

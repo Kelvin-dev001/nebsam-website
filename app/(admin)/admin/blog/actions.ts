@@ -103,15 +103,20 @@ async function audit(
 /**
  * Invalidate everything a blog change can be visible through.
  *
- * ── revalidatePath ALONE WAS NOT ENOUGH, and this is register item V54 ──────
- * It discards the rendered page correctly. The page then re-rendered and read
- * the row straight back out of Next's fetch data cache, which held the old
- * value for up to an hour and carried no tags, so nothing could reach it. The
- * publish button did not publish. Proven in Sprint 10 by decoding the cache
- * entry: it held the previous seo_title while the database held the new one.
+ * ── WHAT WAS ACTUALLY BROKEN, register item V54 ─────────────────────────────
+ * Not this function. `revalidatePath` was correct all along — tested on a
+ * running build, it alone produces fresh output after a database change.
  *
- * So the tag goes first. It drops the cached PostgREST reads for the view;
- * revalidatePath then drops the rendered HTML, and the re-render reads fresh.
+ * What was broken is that the article route set `dynamicParams = false`, so
+ * `revalidatePath` on a post did not refresh it, it **took it offline**: Next
+ * invalidated the path, found no fallback permitted, and served a 404 until the
+ * next full build. Saving a post in the CMS unpublished it. Fixed in the route,
+ * where the cause lives, and measured on two separate articles.
+ *
+ * The tag is kept as belt and braces. It is the only handle that exists on the
+ * fetch data cache, and the ISR background-regeneration path could not be
+ * tested without waiting out a full hour — but it is not what makes this work,
+ * and it should not be described as though it were.
  *
  * The hub is included because it shows a live article count, and the sitemap
  * because it lists published posts. Both would otherwise keep saying what was

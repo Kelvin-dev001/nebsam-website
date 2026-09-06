@@ -1,6 +1,6 @@
 # SPRINT 10 — RESOURCES
 
-**Branch** `sprint/10-resources` · eight commits · 5 September 2026
+**Branch** `sprint/10-resources` · ten commits · 5 September 2026
 **Delivers** Downloads, FAQs, guides
 
 ---
@@ -105,7 +105,8 @@ EDIT  app/llms.txt/route.ts                     3 routes
 EDIT  lib/constants.ts                          ARTICLE_SOLUTION
 EDIT  lib/supabase/server.ts                    V54 — tagged reads
 EDIT  app/(admin)/admin/blog/actions.ts         V54 — revalidateTag
-EDIT  docs/NEEDS_VERIFICATION.md                V54
+EDIT  app/(site)/resources/blog/[slug]/page.tsx dynamicParams = true (V54a)
+EDIT  docs/NEEDS_VERIFICATION.md                V54a closed, V54b open
 ```
 
 ---
@@ -295,10 +296,10 @@ A fifth document, the video telematics proposal, is **not in the repository** an
 carries the worst exposure on the project — customer plates, coordinates, device
 IDs and two identifiable faces. That is V14, and it is NOT CLEARED on arrival.
 
-### 12.2 V54 — settled, no decision outstanding
-Fixed in this branch after the client asked for it to be settled first. See §15
-for what was proven, what was measured and rejected, and the one gap that
-remains. Nothing is needed from the client.
+### 12.2 V54b — a rebuild can still serve a stale database read
+The publish path is fixed and verified (§15). The rebuild path is not, and it is
+the one that matters at cutover. Clear the data cache on deploy, shorten the
+fetch-level revalidate, or accept the window — a decision, not a fix.
 
 ### 12.3 Smaller items
 
@@ -318,7 +319,8 @@ remains. Nothing is needed from the client.
 
 | Item | Effect |
 |---|---|
-| **V54** | **Fixed.** Three article SEO titles still render short until the pre-existing cache entries expire (within the hour); the database is correct |
+| **V54a** | **Fixed.** Saving a post no longer 404s it |
+| **V54b** | **Open.** A rebuild can still emit stale content; matters at cutover |
 | Downloads criterion 2 | The regenerate-vs-redact decision is unmade |
 | File-size rendering | Correct in unit tests, never exercised on a cleared row |
 | File delivery | No storage bucket exists; signed-URL delivery is Sprint 12 |
@@ -347,87 +349,131 @@ V54 is settled, so Sprint 11 is no longer gated on it.
 
 ---
 
-## 15. V54 — raised, diagnosed and fixed the same day
+## 15. V54 — and the correction that followed
 
-Added after the client asked for it to be settled before Sprint 11.
+Added after the client asked for it to be settled before Sprint 11, then
+**substantially corrected** after they pushed on the one thing this report had
+left unverified. That push was right, and it found a worse bug than the one being
+chased.
 
-### What was actually wrong
+### 15.1 What the first attempt got wrong
 
-Not what the first draft of this report inferred. The cached entry for
-`/public_blog_posts?slug=eq.what-is-a-container-e-seal` was recovered from
-`.next/cache/fetch-cache` and decoded. It held:
+The first fix was shipped on a plausible causal story that turned out to be
+wrong. The cached entry for `/public_blog_posts?slug=eq.what-is-a-container-e-seal`
+was genuinely recovered from `.next/cache/fetch-cache` and decoded — it held the
+old `seo_title` with `revalidate: 3600` and `tags: []` while the database held
+the new value. All true. The inference drawn from it — that empty tags were why
+the CMS could not publish — was not tested, and it was wrong.
+
+**Tested afterwards, on a running production build:** after a direct database
+change, `revalidatePath` **alone** already produced fresh output, on both a
+dynamic article route and the statically generated blog index. Adding
+`revalidateTag` changed nothing observable.
+
+### 15.2 What was actually broken — and it was worse
+
+Verifying the round trip meant calling `revalidatePath` on a real article. It did
+not refresh the article. **It took it offline.**
 
 ```
-seo_title:  "What is a container e-seal?"     <- the OLD value
-revalidate: 3600
-tags:       []
+before revalidatePath:  What is telematics? A plain explanation | Nebsam
+after  revalidatePath:  Page not found | Nebsam
+server log:             Error: Internal: NoFallbackError
 ```
 
-while the database held the corrected title. **Those empty tags were the
-defect.** The CMS publish action already called `revalidatePath`, which correctly
-discarded the rendered page — the page then re-rendered and read the row straight
-back out of the data cache, unchanged, for up to an hour. Nothing could reach
-that entry to invalidate it.
+Reproduced on a second article to confirm it was systemic. The cause: the blog
+route set `dynamicParams = false`. That is correct for solutions, products and
+industries — finite published sets, where an unknown slug should be a hard 404
+rather than a soft 200, and where the draft gate is enforced at the routing
+layer. It is wrong for the one route type staff publish to **between deploys**,
+which is the entire reason the Sprint 9 CMS exists.
 
-So this was never really about three SEO titles. **The publish button could not
-publish**, and the comment sitting above it in `actions.ts` read "On-demand
-revalidation: publish, refresh, it is live." It was not live.
+So the publish button did not merely fail to publish. **Saving a post
+unpublished it**, until the next full build.
 
-### The fix that was tried and rejected
+That bug was sitting in the Sprint 9 code, and this sprint's own
+`revalidateBlogSurfaces()` inherited it. It would have been found by the first
+person to press Save — or not found, if nobody checked the post afterwards.
+
+### 15.3 The fix
+
+`dynamicParams = true`, on the blog route only. The soft-404 concern that
+motivated `false` was re-tested on this route rather than assumed:
+
+| Check | Result |
+|---|---|
+| `/resources/blog/does-not-exist` | **HTTP 404** — hard, not a soft 200 |
+| `/totally-unknown` | **HTTP 404** |
+| Real article after `revalidatePath` | **HTTP 200**, fresh content |
+| `generateStaticParams` | Still prerenders all seven posts at build |
+
+Solutions, products and industries keep `dynamicParams = false`. Nothing about
+their reasoning changed.
+
+### 15.4 What was tried and rejected
 
 `cache: 'no-store'` on the Supabase client, on the argument that the page cache
 is already the cache and a second cache underneath it can only go stale. A good
-argument and the wrong answer — and it was **measured rather than reasoned
-about**. The build moved the homepage, `/solutions`, `/products`, `/industries`,
-all three resources routes and `/sitemap.xml` from prerendered to server-rendered
-on demand. Only routes with `generateStaticParams` survived, and
+argument and the wrong answer — **measured rather than reasoned about**. The
+build moved the homepage, `/solutions`, `/products`, `/industries`, all three
+resources routes and `/sitemap.xml` from prerendered to server-rendered on
+demand. Only routes with `generateStaticParams` survived, and
 `check-retired-strings` fell from 265 build artefacts to 163 because there was
 less prerendered output left to scan.
 
 That trades a staleness bug for a performance regression on every index page, for
 an audience specified as a mid-range Android on metered data. Reverted.
 
-### The fix that shipped
+### 15.5 The tagging, kept but demoted
 
-Every read is tagged with the PostgREST view it hit. The resource name is parsed
-from the request URL rather than passed at each call site, because a tag that has
-to be remembered in fifty places will be forgotten in one — and the failure mode
-of forgetting is silent staleness that looks exactly like this bug.
+Every read is still tagged with the PostgREST view it hit — 133 of 133 cached
+reads, across 12 views, none untagged — and `revalidateBlogSurfaces()` still
+calls `revalidateTag` alongside `revalidatePath`, now also covering the resources
+hub (live article count) and the sitemap (post list).
 
-`revalidateBlogSurfaces()` then invalidates the tag first and the paths second,
-and now also covers the resources hub (it shows a live article count) and the
-sitemap (it lists published posts). Both would otherwise have gone on saying what
-was true an hour ago.
+But it is kept as hygiene, not sold as the fix. It is the only handle that exists
+on that cache, the ISR background-regeneration path could not be tested without
+waiting out a full hour, and a tag costs nothing to carry. The code comments in
+`lib/supabase/server.ts` and `actions.ts` were rewritten to say exactly this,
+because they had claimed more.
 
-The admin and service-role clients take `no-store` instead. They are used only
-from `force-dynamic` admin routes and server actions, so they cannot pull a public
+The admin and service-role clients take `no-store`. They run only in
+`force-dynamic` admin routes and server actions, so they cannot pull a public
 route out of static generation, and a cached answer to "what does this row
 currently say" is a correctness bug in an editor.
 
-### Verified
+### 15.6 The round trip, now actually verified
 
-| Check | Result |
+Run against a running production build, with the database changed directly
+between steps and restored afterwards:
+
+| Step | Result |
 |---|---|
-| Static generation intact | ✅ Indexes prerendered again, `[slug]` routes SSG, 1h revalidate, 265 artefacts scanned |
-| Cached reads carry tags | ✅ **133 of 133**, none untagged, across 12 views |
-| Tag naming | ✅ `sb:public_blog_posts`, `sb:public_faqs`, `sb:public_downloads`, … |
-| Typecheck, lint, migrations, build | ✅ All pass |
+| Baseline | page matches database |
+| Database changed, nothing invalidated | page unchanged — correct, that is the ISR window |
+| `revalidatePath` | **page fresh** |
+| `revalidateTag` + `revalidatePath` | page fresh |
+| Unknown slug throughout | HTTP 404 |
 
-### What is not verified, and the gap that remains
+The test used a temporary local route handler to call the two halves separately.
+It was removed afterwards and is not committed; `/api/v54-test` returns 404 in the
+final build, and no `/api` route exists. The test row was restored and all seven
+articles verified against the database.
 
-**Not verified:** the publish → `revalidateTag` → fresh render round trip has not
-been exercised end to end, because there is still no admin account, outstanding
-from Sprint 9. The tags are proven present and the calls are proven wired; the
-click has not been performed. That is the first thing to do when an account
-exists.
+### 15.7 What is still broken — V54b
 
-**Accepted gap:** a change made directly in SQL — a migration, or an edit in the
-Supabase dashboard — invalidates nothing, and can still be served stale for up to
-an hour. That is exactly how this was found. It is a developer action with a
-developer remedy, and it is documented in `lib/supabase/server.ts` and in the
-register rather than left to be rediscovered. It is also why the three corrected
-article titles still render short in this build: the database is right, and the
-pre-existing cache entries expire within the hour.
+**A rebuild still serves a stale database read.** With the previous build cache
+present, a fresh `npm run build` emitted the old value while the database held
+the new one. Verified twice. That is the original symptom that raised V54, and
+**it is not fixed** — tagging cannot help, because nothing calls `revalidateTag`
+during a build.
+
+Ordinary CMS publishing is unaffected: that path is fixed and verified above.
+This matters at **cutover**, when the deployed content must match the database
+exactly. Options are to clear the Next data cache on deploy, shorten the
+fetch-level revalidate, or accept a content change landing within an hour of a
+deploy. That is a decision, and it is now V54b in the register rather than a
+closed item that was never closed.
 
 ---
 

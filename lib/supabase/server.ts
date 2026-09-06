@@ -40,35 +40,42 @@ function required(name: string): string {
  * 10 holding `"seo_title": "What is a container e-seal?"` while the database
  * held the corrected value — and carrying `tags: []`.
  *
- * Those empty tags were the whole problem. The CMS publish action already calls
- * `revalidatePath`, which correctly discards the rendered page; the page then
- * re-rendered and read the row straight back out of the data cache, unchanged,
- * for up to an hour. **The publish button could not publish.** Sprint 9 built
- * that CMS so non-technical staff could keep the blog alive, and CLAUDE.md §15
- * names an admin they quietly abandon as a way this project fails.
+ * ── WHAT TAGGING ACTUALLY BUYS, having tested it rather than assumed ────────
+ * Less than the first version of this comment claimed. The honest account
+ * matters more than the tidy one.
  *
- * ── Why tagging, and not `cache: 'no-store'` ────────────────────────────────
- * `no-store` was the first thing tried, because "the page cache is already the
- * cache" is a good argument. It was MEASURED and rejected: it opts a route out
- * of static generation, and the build moved the homepage, /solutions,
- * /products, /industries, all three resources routes and /sitemap.xml from
- * prerendered to server-rendered on demand. Only routes with
- * `generateStaticParams` survived. That trades a staleness bug for a
- * performance regression on every index page, on an audience specified as
- * mid-range Android on metered data.
+ * Tagging makes the data cache invalidatable — `revalidateTag` can reach these
+ * entries, where previously nothing could. It is NOT, however, what makes the
+ * CMS work. Measured against a running production build:
  *
- * Tagging keeps the data cache and makes it invalidatable, which is what was
- * actually missing. Every read is tagged with the PostgREST resource it hit —
- * `sb:public_blog_posts`, `sb:public_faqs` — and a mutation invalidates the
- * tag for the thing it changed, so the next render reads fresh.
+ *   - after a direct database change, `revalidatePath` ALONE already produced
+ *     fresh output, on both a dynamic article route and the statically
+ *     generated blog index. Adding `revalidateTag` changed nothing observable.
+ *   - a REBUILD is still stale. With the previous build cache present, a fresh
+ *     build emitted the old value while the database held the new one. Tagging
+ *     cannot fix that — nothing calls `revalidateTag` during a build.
  *
- * ── The gap this leaves, stated plainly ─────────────────────────────────────
- * A change made DIRECTLY IN SQL — a migration, or an edit in the Supabase
- * dashboard — invalidates nothing, so it can still be served stale for up to an
- * hour. That is how V54 was found in the first place. It is acceptable because
- * it is a developer action with a developer remedy, and unacceptable to leave
- * undocumented, which is why it is written here and in the register rather than
- * discovered again in six months.
+ * The tags are kept as correct hygiene and as the only handle that exists on
+ * this cache: the ISR background-regeneration path could not be tested without
+ * waiting out a full hour, and a tag costs nothing to carry. But they are not
+ * load-bearing, and this comment should not pretend otherwise. What actually
+ * broke publishing was `dynamicParams = false` on the article route, which
+ * turned `revalidatePath` into a 404 — fixed where it belongs, in the route.
+ *
+ * ── Why not `cache: 'no-store'` ─────────────────────────────────────────────
+ * Tried first, because "the page cache is already the cache" is a good
+ * argument. MEASURED and rejected: it opts a route out of static generation,
+ * and the build moved the homepage, /solutions, /products, /industries, all
+ * three resources routes and /sitemap.xml from prerendered to server-rendered
+ * on demand. Only routes with `generateStaticParams` survived. That trades a
+ * staleness bug for a performance regression on every index page, for an
+ * audience specified as a mid-range Android on metered data.
+ *
+ * ── The gap that remains, stated plainly ────────────────────────────────────
+ * A rebuild within the revalidate window still serves the previous data-cache
+ * entries. That is the ORIGINAL V54 symptom and it is NOT fixed here. It is
+ * back in the register as an open item, because a deploy that does not reflect
+ * the database is a launch-blocking property rather than a curiosity.
  */
 const CONTENT_TAG_PREFIX = 'sb:';
 
