@@ -87,6 +87,9 @@ ${current
 - Solutions: ${SITE_URL}${ROUTES.solutions}
 - Products: ${SITE_URL}${ROUTES.products}
 - Industries: ${SITE_URL}${ROUTES.industries}
+- Resources: ${SITE_URL}${ROUTES.resources}
+- Frequently asked questions: ${SITE_URL}${ROUTES.faqs}
+- Downloads: ${SITE_URL}${ROUTES.downloads}
 - Fleet platform: ${SITE_URL}${ROUTES.platform}
 - Certifications: ${SITE_URL}${ROUTES.certifications}
 - Coverage network: ${SITE_URL}${ROUTES.coverage}

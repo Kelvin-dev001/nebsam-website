@@ -106,6 +106,41 @@ export const ORDER_STATUSES = [
 export const CONTENT_STATUSES = ['draft', 'in_review', 'published'] as const;
 
 /**
+ * The solution an article sends the reader to next, keyed by article slug.
+ *
+ * docs/SEO_LLM_STRATEGY.md §3 requires every article to link to at least one
+ * solution — "a page with no inbound internal link does not exist", and an
+ * article that links nowhere is a dead end for a reader who has just understood
+ * the term and wants the thing.
+ *
+ * ── Why this is a constant and not a column ─────────────────────────────────
+ * A `related_solution_id` on `blog_posts` would be the better long-term answer
+ * and is the obvious thing to reach for. It is a data-model change, and
+ * CLAUDE.md §3.5 requires those to be proposed and approved in writing before
+ * they are made — so Sprint 10 does not make it. Recorded in the sprint report
+ * as a proposal for the Sprint 11 CMS work instead.
+ *
+ * ── Why article bodies carry no links ───────────────────────────────────────
+ * The article template renders `body` as plain paragraphs, so an inline link
+ * cannot be authored there anyway. Rendering the relationship from here means a
+ * solution that is later unpublished or renamed cannot leave a dead link inside
+ * prose that nobody re-reads: the page checks the mapped slug against the
+ * PUBLISHED solutions and renders nothing if it is absent.
+ *
+ * An unmapped article is fine — it simply shows no related link. It is not an
+ * error, and it must never be a broken one.
+ */
+export const ARTICLE_SOLUTION: Readonly<Record<string, string>> = {
+  'what-is-telematics': 'vehicle-tracking',
+  'what-is-geofencing': 'vehicle-tracking',
+  'what-is-vehicle-immobilisation': 'vehicle-security',
+  'what-is-an-anti-jamming-tracker': 'vehicle-security',
+  'how-fuel-siphoning-is-detected': 'fuel-monitoring',
+  'what-is-a-poc-radio': 'radio-communication',
+  'what-is-a-container-e-seal': 'container-e-seal',
+};
+
+/**
  * VAT.
  *
  * All stored prices are VAT-EXCLUSIVE (brief PART 1.5 #10) and every displayed

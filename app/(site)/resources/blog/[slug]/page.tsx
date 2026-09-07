@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
-import { getBlogPostBySlug, getBlogPosts } from '@/lib/content';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { getBlogPostBySlug, getBlogPosts, getSolutions } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { articleSchema, breadcrumbSchema, jsonLdGraph } from '@/lib/seo/schema';
-import { ROUTES } from '@/lib/constants';
+import { ARTICLE_SOLUTION, ROUTES } from '@/lib/constants';
 
 /**
  * BLOG POST.
@@ -28,7 +29,36 @@ import { ROUTES } from '@/lib/constants';
  * editor can use to break the design system.
  */
 export const revalidate = 3600;
-export const dynamicParams = false;
+
+/**
+ * `dynamicParams = true`, DELIBERATELY, and unlike solutions, products and
+ * industries. Register item V54.
+ *
+ * Those three are finite published sets that change only at deploy time, and
+ * they set `dynamicParams = false` to turn an unknown slug into a hard 404
+ * rather than a soft 200. The blog is not that. It is the one route type whose
+ * content is published by staff BETWEEN deploys, which is the entire reason the
+ * Sprint 9 CMS exists.
+ *
+ * With `false`, `revalidatePath(ROUTES.blogPost(slug))` — which the publish
+ * action calls — did not refresh the article. **It took the article offline.**
+ * The path was invalidated, Next tried to regenerate it, found no fallback
+ * permitted, and served a 404 until the next full build. Measured on two
+ * different articles, with `Internal: NoFallbackError` in the server log both
+ * times. So saving a post in the CMS unpublished it.
+ *
+ * The soft-404 worry that motivated `false` does NOT apply here — it was
+ * re-tested on this route rather than assumed:
+ *
+ *     /resources/blog/does-not-exist   ->  HTTP 404
+ *     /totally-unknown                 ->  HTTP 404
+ *
+ * `notFound()` returns a genuine 404 for an unknown slug, and a published post
+ * becomes reachable the moment it is published instead of at the next deploy.
+ * `generateStaticParams` still prerenders every post that exists at build time,
+ * so nothing is given up on the common path.
+ */
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const { data } = await getBlogPosts();
@@ -59,8 +89,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const paragraphs = (post.body ?? '').split(/\n{2,}/).filter((p) => p.trim() !== '');
 
+  /**
+   * The solution this article sends the reader to, if it has one and if that
+   * solution is published. Read from the view rather than from the static
+   * LAUNCH_SOLUTIONS list for the same reason the sitemap is: the static list
+   * contains all ten and one of them is a draft.
+   */
+  const mappedSlug = ARTICLE_SOLUTION[slug];
+  const { data: solutions } = await getSolutions();
+  const relatedRow = mappedSlug ? solutions.find((s) => s.slug === mappedSlug) : undefined;
+  const related =
+    relatedRow?.slug && relatedRow.name ? { slug: relatedRow.slug, name: relatedRow.name } : null;
+
   const trail = [
     { name: 'Home', path: ROUTES.home },
+    // Gained in Sprint 10, when /resources was built. See the note on the index.
+    { name: 'Resources', path: ROUTES.resources },
     { name: 'Blog', path: ROUTES.blog },
     { name: title, path: ROUTES.blogPost(slug) },
   ];
@@ -97,18 +141,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       <Section tone="dark" bleed>
         <Shell className="pb-12 pt-10 md:pb-16 md:pt-14">
-          <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-x-2 font-mono text-label uppercase tracking-[0.08em] text-text-secondary-inverse">
-              {trail.slice(0, 2).map((crumb, i) => (
-                <li key={crumb.path} className="flex items-center gap-2">
-                  {i > 0 ? <span aria-hidden="true">/</span> : null}
-                  <a href={crumb.path} className="underline underline-offset-4">
-                    {crumb.name}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          {/*
+            The FULL trail, including this article as the current page.
+            It previously rendered `trail.slice(0, 2)` — every crumb a link and
+            no `aria-current`, which told a screen-reader user the trail had no
+            current page. When Sprint 10 inserted Resources into the trail, that
+            slice also silently dropped "Blog" from the visible breadcrumb while
+            leaving it in the BreadcrumbList schema: markup contradicting the
+            page, which is the one thing the SEO rules say is worse than no
+            markup. The product detail template already renders its full trail;
+            this now matches it.
+          */}
+          <Breadcrumbs trail={trail} />
 
           <h1 className="mt-6 max-w-[28ch] font-display text-h1 text-text-inverse md:text-md-display">
             {title}
@@ -146,6 +190,32 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {para}
               </p>
             ))}
+
+            {/*
+              LINK OUT. Required by the SEO plan: every article links to at
+              least one solution. Rendered only when the mapped solution is
+              actually published, so an unpublished or renamed solution produces
+              no link rather than a broken one — the school bus solution is a
+              draft today and is exactly the case this guards against.
+            */}
+            {related ? (
+              <p className="mt-10 border-t border-border-hairline pt-6 text-body text-text-secondary">
+                Read more:{' '}
+                <a href={ROUTES.solution(related.slug)} className="underline underline-offset-4">
+                  {related.name}
+                </a>
+              </p>
+            ) : null}
+
+            <p className="mt-4 text-body text-text-secondary">
+              <a href={ROUTES.blog} className="underline underline-offset-4">
+                All articles
+              </a>
+              {' · '}
+              <a href={ROUTES.faqs} className="underline underline-offset-4">
+                Frequently asked questions
+              </a>
+            </p>
           </div>
         </Shell>
       </Section>
