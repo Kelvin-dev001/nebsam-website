@@ -1,6 +1,6 @@
 # SPRINT 10 — RESOURCES
 
-**Branch** `sprint/10-resources` · ten commits · 5 September 2026
+**Branch** `sprint/10-resources` · ten commits · 5-6 September 2026 · **merged to develop 7 September**
 **Delivers** Downloads, FAQs, guides
 
 ---
@@ -330,22 +330,29 @@ fetch-level revalidate, or accept the window — a decision, not a fix.
 | V14 | The missing fifth PDF |
 | 360 px / ultrawide | Not rendered on real hardware |
 | Prettier | 43 pre-existing files unformatted |
-| `chore/perf-baseline-re-measure` | Unmerged; reserves V53 and holds the favicon fix and the corrected performance baseline |
+| ~~`chore/perf-baseline-re-measure`~~ | **Merged 7 September**, before this branch |
 
 ---
 
 ## 14. Recommended next step
 
-**Merge `chore/perf-baseline-re-measure` first**, then this branch. The perf branch
-carries the corrected baseline and the 191 KB → 3.4 KB favicon fix, and leaving
-two unmerged branches that both edit the register will produce a conflict that is
-tedious rather than interesting.
+**Both branches are now merged into `develop`** — `chore/perf-baseline-re-measure`
+first as recommended, then this one. Neither conflicted; git resolved the register
+cleanly, and it was checked by hand afterwards rather than trusted: V47 carries its
+re-diagnosed form from the perf branch, V53 is present, V54a is closed and V54b is
+open, with no duplicate identifiers. The merged tree passes typecheck, lint,
+migration checks and the build, all twelve public routes return 200, an unknown
+blog slug still hard-404s, and the favicon is 3,475 bytes.
 
-Then **Sprint 11 — Trust & Support**, which is where the certifications page,
-`display_status` and the V51 override land, and where the
-`related_solution_id` proposal belongs.
+Next is **Sprint 11 — Trust & Support**: the certifications page, `display_status`
+and the V51 override, and the natural home for the `related_solution_id` proposal
+from §3.
 
-V54 is settled, so Sprint 11 is no longer gated on it.
+Sprint 11 is not gated on V54 — the publish path is fixed (V54a). It *is* gated on
+client answers, and more tightly than any sprint so far: V03 and V04 decide how
+certificate verification is built at all, and V15, V12, V13, V32, V33 and V34 are
+its content. Starting it without those means building templates with nothing to put
+in them.
 
 ---
 
