@@ -54,6 +54,16 @@ Measuring on a development machine on fibre is how budgets get reported green an
 - Against a **Vercel preview deployment**, never `next dev` — dev builds are not production builds
 - Three runs, **median** reported
 
+**Measured results live in `docs/PERFORMANCE_BASELINE.md`**, which is appended to, never overwritten.
+The 5 Sep 2026 entry is the first measurement taken with page-level client JavaScript executing, and
+it supersedes every Lighthouse figure recorded in Sprints 4, 5 and 6.
+
+> **Resolved 5 Sep 2026 by evidence, pending the CLAUDE.md edit.** This section is right and
+> `CLAUDE.md` §11 is wrong. On the development machine one page on one build produced Performance
+> scores from **72 to 97**, with `benchmarkIndex` swinging 606–3174. A gate cannot run on that.
+> **Absolute budget numbers come from a preview deployment. Local runs are for paired comparisons
+> only** — two variants interleaved against the same server, median of the differences. See ADR-0004.
+
 **Per sprint, recorded in the sprint report as numbers:**
 
 ```
