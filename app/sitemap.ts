@@ -40,13 +40,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    * had to be fixed well before Sprint 15 regardless.
    *
    * ADD A ROUTE HERE IN THE SPRINT THAT BUILDS IT — the entry is part of
-   * shipping the page, not a separate task. Pending, with the sprint that owns
-   * each: platform (blocked on V13) · about, certifications, coverage, team,
-   * partners (11) · support, book-installation, suggestions (11) · contact,
-   * quote (8) · privacy, terms, cookies (11).
+   * shipping the page, not a separate task. Still pending, with what blocks
+   * each: platform (V13) · team, partners (both need content-source/03-company,
+   * which is empty) · privacy, terms, cookies.
    *
-   * Sprint 10 added resources, downloads and faqs, and added published blog
-   * posts below.
+   * Sprint 10 added resources, downloads and faqs, and published blog posts.
+   * Sprint 11 adds about, certifications, coverage, support, book-installation,
+   * suggestions, contact and quote.
+   *
+   * /support/verify-installation is NOT here and must never be. It is noindex,
+   * and a search result is a durable public record of a private lookup.
    */
   const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
     { path: ROUTES.home, priority: 1.0, changeFrequency: 'weekly' },
@@ -64,6 +67,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
      * crawl error; a 404 is.
      */
     { path: ROUTES.downloads, priority: 0.5, changeFrequency: 'monthly' },
+
+    // Sprint 11. Contact and quote sit above the hubs: one carries the NAP that
+    // local search and entity resolution key on, the other is the primary
+    // conversion route for anything the shop cannot price.
+    { path: ROUTES.about, priority: 0.7, changeFrequency: 'monthly' },
+    { path: ROUTES.certifications, priority: 0.7, changeFrequency: 'monthly' },
+    { path: ROUTES.coverage, priority: 0.7, changeFrequency: 'monthly' },
+    { path: ROUTES.contact, priority: 0.8, changeFrequency: 'monthly' },
+    { path: ROUTES.quote, priority: 0.8, changeFrequency: 'monthly' },
+    { path: ROUTES.support, priority: 0.6, changeFrequency: 'monthly' },
+    { path: ROUTES.bookInstallation, priority: 0.6, changeFrequency: 'monthly' },
+    { path: ROUTES.suggestions, priority: 0.4, changeFrequency: 'yearly' },
   ];
 
   const { data: solutions } = await getSolutions();
