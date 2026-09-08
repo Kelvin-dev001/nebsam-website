@@ -60,6 +60,19 @@ All six scans have been opened, viewed and OCR-scanned. Full record:
 
 **The headline finding was not a privacy one: three of the six certificates have already expired.**
 
+> **SPRINT 11 — ALL SIX FILES HAVE MOVED OUT OF `public/`.**
+> The paths in the table below are the ORIGINAL locations and are kept as the record of what was
+> found. Every one of these files now lives in `source-assets/certificates/`, which is tracked in git
+> and served by nothing. `public/certificates/` holds exactly one file:
+> **`kebs-permit-terms.jpg`** (1231×1107, 92 KB), cropped from the permit — the contact block, QR
+> code and signature are ABSENT FROM THE FILE rather than covered over, because a redaction box can
+> be removed and a crop cannot. See `source-assets/README.md`.
+>
+> This also closes a hole the build-time check could never have caught: `check-retired-strings.mjs`
+> reads rendered OUTPUT, so it is structurally incapable of seeing the unpublished phone number and
+> administrative email baked into `kebs.jpg` as pixels. Moving the file is what removes them from the
+> public web. **V32, V33 and V34 are closed.**
+
 | File | Size | Unpublished contact details | Status at 18 Aug 2026 | Action |
 |---|---|---|---|---|
 | `public/certificates/kebs.jpg` | 725 KB | **PRESENT** — phone, admin email, postal address, physical address, **plus a handwritten MD signature and an unread QR code** | Valid to 26 Feb 2027 | **CROP** to the mark number, dates and rows 1–4. Drop the entire contact block and the signature |
