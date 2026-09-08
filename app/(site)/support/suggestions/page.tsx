@@ -29,7 +29,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = buildMetadata({
   title: 'Send a suggestion to Nebsam',
   description:
-    'Tell Nebsam Digital Solutions what we could do better, or report something that went wrong. You can send it anonymously — we will not store your name or number with it.',
+    'Tell Nebsam what we could do better, or report something that went wrong. You can send it anonymously — we will not store your name or number.',
   path: ROUTES.suggestions,
 });
 

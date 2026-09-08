@@ -43,7 +43,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Nebsam coverage across Kenya',
   description:
-    'Where Nebsam Digital Solutions works: branches in Nairobi, Mombasa and Nakuru, and agents and technicians serving towns across Kenya from Lodwar to Malindi.',
+    'Where Nebsam works: branches in Nairobi, Mombasa and Nakuru, plus towns across Kenya served by agents and technicians, from Lodwar to Malindi.',
   path: ROUTES.coverage,
 });
 

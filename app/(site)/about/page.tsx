@@ -45,7 +45,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'About Nebsam Digital Solutions (K) Ltd',
   description:
-    'Who Nebsam Digital Solutions is and where we operate: vehicle tracking, telematics and vehicle security across Kenya from branches in Nairobi, Mombasa and Nakuru.',
+    'Who Nebsam Digital Solutions is and where we work: vehicle tracking, telematics and vehicle security across Kenya, from Nairobi, Mombasa and Nakuru.',
   path: ROUTES.about,
 });
 

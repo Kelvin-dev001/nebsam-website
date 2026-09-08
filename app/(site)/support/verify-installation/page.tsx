@@ -43,7 +43,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = buildMetadata({
   title: 'Verify a Nebsam installation certificate',
   description:
-    'Confirm that a Nebsam vehicle tracking installation certificate is genuine and current, using the vehicle registration and the phone number registered at installation.',
+    'Confirm a Nebsam installation certificate is genuine and current, using the vehicle registration and the phone number registered at installation.',
   path: ROUTES.verifyInstallation,
   noindex: true,
 });

@@ -30,7 +30,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = buildMetadata({
   title: 'Request a vehicle tracking quote in Kenya',
   description:
-    'Get a written quote from Nebsam Digital Solutions for vehicle tracking, fuel monitoring, video telematics or fleet telematics in Kenya. VAT and recurring fees stated.',
+    'Get a written quote from Nebsam for vehicle tracking, fuel monitoring or video telematics in Kenya. VAT and any recurring fees stated clearly.',
   path: ROUTES.quote,
 });
 

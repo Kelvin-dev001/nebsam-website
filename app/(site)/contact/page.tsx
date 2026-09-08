@@ -33,7 +33,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Contact Nebsam — Nairobi, Mombasa & Nakuru',
   description:
-    'Contact Nebsam Digital Solutions (K) Ltd for vehicle tracking, fleet telematics and vehicle security in Kenya. WhatsApp, phone and email, and our three branch addresses.',
+    'Contact Nebsam Digital Solutions for vehicle tracking and fleet telematics in Kenya. WhatsApp, phone, email, and our three branch addresses.',
   path: ROUTES.contact,
 });
 
