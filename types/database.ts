@@ -2096,7 +2096,12 @@ export type Database = {
         | "installation"
         | "suggestion"
       user_role: "admin" | "editor" | "sales" | "viewer"
-      verification_outcome: "valid" | "expired" | "not_found" | "factor_failed"
+      verification_outcome:
+        | "valid"
+        | "expired"
+        | "not_found"
+        | "factor_failed"
+        | "rate_limited"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2243,7 +2248,13 @@ export const Constants = {
         "suggestion",
       ],
       user_role: ["admin", "editor", "sales", "viewer"],
-      verification_outcome: ["valid", "expired", "not_found", "factor_failed"],
+      verification_outcome: [
+        "valid",
+        "expired",
+        "not_found",
+        "factor_failed",
+        "rate_limited",
+      ],
     },
   },
 } as const

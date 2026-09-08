@@ -1,0 +1,35 @@
+-- ============================================================================
+-- 0039 — `verification_outcome` gains 'rate_limited'.
+--
+-- WHY THIS COULD NOT BE LEFT ALONE
+--
+-- SECURITY_REQUIREMENTS §1.5 requires every verification attempt to be logged
+-- with its outcome, and §1.5 again requires a spike alert in admin, because
+-- "an enumeration attack looks like traffic; you only see it if you are
+-- counting". The four existing outcomes — valid, expired, not_found,
+-- factor_failed — describe what the LOOKUP found. None of them describes an
+-- attempt that was refused before any lookup happened.
+--
+-- Without this value there are only two options, and both are worse:
+--
+--   1. Do not log the refused attempt at all. The log then goes QUIET exactly
+--      when an attack crosses the rate limit — the moment it becomes most
+--      interesting. The spike alert would be blindest at the peak.
+--   2. Record it as 'not_found'. That poisons the same log with fabricated
+--      lookup results, and 'not_found' is the outcome an analyst counts to
+--      detect enumeration in the first place.
+--
+-- A refused attempt is still an attempt, and the enumerator's fingerprint is a
+-- long run of these. This is the value that makes the run visible.
+--
+-- SCOPE. Additive, and reversible by not using it — an unused enum label costs
+-- nothing and drops out with the next type rewrite. No table, column, policy or
+-- view changes. It is nonetheless a data-model change made inside a sprint, so
+-- it is raised explicitly in the Sprint 11 report rather than buried here.
+--
+-- `add value if not exists` is idempotent, and Postgres 12+ permits it inside a
+-- transaction as long as the new label is not USED in that same transaction.
+-- Nothing here uses it; the first writer is the server action, at runtime.
+-- ============================================================================
+
+alter type verification_outcome add value if not exists 'rate_limited';
