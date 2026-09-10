@@ -62,3 +62,28 @@ export function formatDate(value: string | null | undefined): string | null {
   if (Number.isNaN(d.getTime())) return null;
   return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
+
+/**
+ * Kenyan shillings, as a whole number of shillings.
+ *
+ * ── Why this is here rather than inline ─────────────────────────────────────
+ *
+ * Seven copies of `KES ${n.toLocaleString('en-KE')}` already exist across the
+ * cart, the product price, the solution hardware list, the order confirmation,
+ * two index pages and the order server action. Sprint 12 would have added two
+ * more in the admin. The existing seven are deliberately left alone — they
+ * work, and rewriting seven files across five sprints' worth of verified pages
+ * is not the smallest coherent change — but nothing new should add to the
+ * count. Recorded in the Sprint 12 report as a tidy-up for Sprint 14.
+ *
+ * Prices are stored as whole shillings, VAT-EXCLUSIVE (brief PART 1.5 #10).
+ * This function does NOT append the `excl. VAT` label: that label belongs next
+ * to the number in the layout, where it can be given its own emphasis, and
+ * baking it in here would put it inside table cells and totals where it reads
+ * as noise. `VAT_LABEL` in `lib/constants.ts` is the single source for the
+ * wording.
+ */
+export function formatKes(amount: number | null | undefined): string | null {
+  if (amount == null || !Number.isFinite(amount)) return null;
+  return `KES ${amount.toLocaleString('en-KE')}`;
+}

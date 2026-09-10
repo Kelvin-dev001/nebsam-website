@@ -146,7 +146,14 @@ export function Th({ children, className = '' }: { children: React.ReactNode; cl
   );
 }
 
-export function Td({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+/** `children` is optional so a spacer cell in a `tfoot` row is `<Td />`. */
+export function Td({
+  children,
+  className = '',
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
   return (
     <td className={['border-b border-border-hairline px-4 py-3 align-top', className].join(' ')}>
       {children}
