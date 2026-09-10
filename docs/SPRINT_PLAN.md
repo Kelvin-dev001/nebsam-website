@@ -247,17 +247,38 @@ suggestions, contact, quote, booking.
 
 ---
 
-## Sprint 12 — Admin Completion
+## Sprint 12 — Admin Completion ✅
 
 **Delivers** Orders pipeline, inbox, media library, roles, audit log.
 **Gate** Staff walkthrough.
 
-- [ ] A staff member adds a product, changes a price, uploads a brochure, imports certificates and
-      reads the inbox — **unaided**
-- [ ] Role separation verified per role **against RLS**, not the UI
-- [ ] `audit_log` append-only; no update or delete policy exists for anyone
-- [ ] Media library: alt text enforced at the database level; privacy prompt on upload
-- [ ] CSV import: dry-run preview, transactional, plates hashed at import
+- [x] A staff member adds a product, changes a price, uploads a brochure, imports certificates and
+      reads the inbox — **unaided**. All five surfaces built and exercised in a real browser. The
+      sign-in form had no action behind it until this sprint, so the gate failed before the first
+      click; that is wired now
+- [x] Role separation verified per role **against RLS**, not the UI — `npm run verify:roles`,
+      **47 checks, clean, twice**. It creates a real auth user per role, signs in and asks the
+      database directly, because the admin runs under the service role and a UI test would prove
+      nothing about the policies
+- [x] `audit_log` append-only; no update or delete policy exists for anyone — proven rather than
+      asserted: no role can INSERT, and the delete trigger blocked the verification script's own
+      cleanup, which is how **V60** was found
+- [x] Media library: alt text enforced at the database level; privacy prompt on upload — and the
+      prompt is a **required choice**, not a skippable checkbox. Uploads are validated from their
+      bytes, not their extension; SVG is deliberately excluded
+- [x] CSV import: dry-run preview, transactional, plates hashed at import — 8-row messy file
+      rejected correctly row by row, 2-row clean file imported, and the imported certificate then
+      **verified through the public customer endpoint**, proving the importer and the lookup
+      normalise identically
+
+**Two defects found in the browser pass, both fixed or written:**
+
+- **V54c** — saving one product 404ed **29 public pages** until the next full build. Fixed.
+- **V60** — a staff member who has made any admin change could never be deleted. Migration written,
+      blocked on **V61**.
+
+**Blocked on the client:** `SUPABASE_ACCESS_TOKEN` is expired (**V61**), so migrations 0041, 0042
+and 0043 are written and unapplied.
 
 ---
 
@@ -319,6 +340,7 @@ owner at launch. That is a deliberate, recorded cost of not fabricating content.
 
 | # | Item | Blocks |
 |---|---|---|
+| **V61** | **Supabase access token expired** | **Three written migrations cannot be applied** |
 | **V25** | Search Console cross-check | **Sprint 2 cannot close** |
 | **V28a** | ODPC renewal confirmation | **Sprint 2 cannot close** |
 | V03 | Verification second factor | Sprint 11 |

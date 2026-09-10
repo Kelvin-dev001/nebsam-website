@@ -258,6 +258,11 @@ npx supabase db push                # apply migrations    (from Sprint 3)
 npm run seed:certs                  # illustrative certificates for testing verification
 npm run seed:certs -- --remove      # and their teardown
 npm run pentest:verify              # the Sprint 11 gate — 37 checks over HTTP
+
+npm run verify:roles                # the Sprint 12 gate — 47 RLS checks, per role  (from Sprint 12)
+npm run db:apply -- --status        # which migrations are applied, which are pending
+npm run db:apply -- --pending       # apply every pending migration, in order
+npm run storage:init                # create/repair the PRIVATE uploads bucket, and assert it is private
 ```
 
 **Certificate fixtures are a script, never a migration.** Migrations run everywhere in order,
@@ -268,6 +273,15 @@ trustworthiness tell a visitor something false.
 **`npm run pentest:verify` needs a running production build** (`npm run build && npm start`) and the
 fixtures seeded. It clears `verification_attempts` first so the run is reproducible, and refuses to
 do so against anything but localhost.
+
+**`npm run db:apply` and `npm run db:types` need `SUPABASE_ACCESS_TOKEN`**, a personal access token
+that is local-development only. It is **currently expired** (register item V61), which is why
+migrations 0041–0043 are written and unapplied. The service-role key is unaffected, so the app,
+the Storage API and every verification script still work.
+
+**`npm run verify:roles` creates four throwaway auth accounts, runs the matrix and deletes them.**
+It asserts against the POLICIES, not the screens — the admin runs under the service-role key and
+bypasses RLS entirely, so clicking around the admin proves nothing about the database boundary.
 
 **Measure on the production build (`npm run build && npm start`), never on `next dev`** — dev builds
 are not production builds and the budget numbers will lie.

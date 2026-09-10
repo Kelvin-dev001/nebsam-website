@@ -48,6 +48,26 @@ Supabase Postgres. **RLS on every table, no exceptions.** Every migration is a r
 > `CERT_PLATE_HMAC_SECRET` would be unrecoverable — there would be nothing left to re-hash from.
 > That secret is **still empty in `.env.local`** and must be set before any certificate import.
 
+> **SPRINT 12, 10 September 2026 — three migrations WRITTEN AND NOT APPLIED.**
+>
+> | # | What | Why it is not applied |
+> |---|---|---|
+> | `0041_submission_attempts` | The `submission_attempts` table. Register item **V58**, approved by the client on 10 Sep 2026 before the file was written | **V61** — the project's `SUPABASE_ACCESS_TOKEN` returns 401, so `npm run db:apply` cannot run |
+> | `0042_download_count_and_storage_policies` | `increment_download_count()`, and a read policy on `storage.objects` for the `uploads` bucket | As above |
+> | `0043_audit_actor_survives_deletion` | Drops the `audit_log.actor_id` foreign key. Register item **V60** | As above |
+>
+> The **private `uploads` storage bucket DOES exist** — created by `npm run storage:init`, which uses
+> the service-role key rather than the management token, and which reads the bucket back and fails if
+> it reports itself public.
+>
+> `submission_attempts` deliberately holds **no link to `submissions`**. That is the point of it: an
+> anonymous suggestion can be rate limited without becoming attributable to a person.
+>
+> `audit_log.actor_id` loses its foreign key rather than its value. `ON DELETE SET NULL` is
+> implemented as an UPDATE, which the append-only trigger rejects — so a staff member who had made
+> any change could not be deleted at all, and the obvious "fix" of relaxing the trigger would have
+> erased a departed person's name from every change they ever made.
+
 This document is the design the migrations are built to.
 
 ---
