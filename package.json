@@ -15,6 +15,8 @@
     "check:sitemap": "node scripts/check-sitemap.mjs",
     "db:types": "node scripts/gen-types.mjs",
     "db:push": "supabase db push",
+    "storage:init": "node scripts/ensure-storage.mjs",
+    "db:apply": "node scripts/apply-migration.mjs",
     "seed:certs": "node scripts/seed-verification-fixtures.mjs",
     "pentest:verify": "node scripts/pentest-verification.mjs"
   },
