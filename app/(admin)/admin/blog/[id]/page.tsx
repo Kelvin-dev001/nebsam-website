@@ -79,7 +79,7 @@ export default async function AdminPostEditorPage({
   }
 
   return (
-    <div className="mx-auto w-full max-w-[52rem] px-5 py-section md:px-8">
+    <div className="max-w-[52rem]">
       <Link
         href="/admin/blog"
         className="font-mono text-label uppercase tracking-[0.08em] underline underline-offset-4"

@@ -1,0 +1,86 @@
+-- ============================================================================
+-- 0043 — A staff account can be deleted again, and the audit log stops
+--        forgetting who did things.
+--
+-- REGISTER ITEM V60. Found in the Sprint 12 browser pass, by trying to delete
+-- the throwaway admin account the pass had used.
+--
+-- ── The fault ───────────────────────────────────────────────────────────────
+--
+-- Migration 0007 declares:
+--
+--     actor_id uuid references profiles (id) on delete set null
+--
+-- and, in the same file, a before-update trigger that raises
+-- `audit_log is append-only`.
+--
+-- Those two cannot both hold. `ON DELETE SET NULL` is implemented as an UPDATE
+-- on `audit_log`, so Postgres runs the trigger, the trigger raises, and the
+-- DELETE on `profiles` fails:
+--
+--     DELETE /rest/v1/profiles?email=eq...  ->  400
+--     {"code":"P0001","message":"audit_log is append-only"}
+--
+-- The consequence is not subtle: ANY STAFF MEMBER WHO HAS EVER MADE AN ADMIN
+-- CHANGE CAN NEVER BE REMOVED. Deleting their Supabase Auth user fails the same
+-- way, because that cascades to `profiles`. Offboarding is impossible.
+--
+-- It was latent until now only because nothing wrote to `audit_log` — Sprint 12
+-- makes every admin action write one, so from this sprint on it applies to
+-- every account.
+--
+-- ── Why the fix drops the foreign key rather than relaxing the trigger ──────
+--
+-- The obvious repair is to let the trigger permit an update that only nulls
+-- `actor_id`. That restores deletion and keeps the log append-only in spirit,
+-- and it is the WRONG repair, because it leaves the underlying behaviour
+-- intact: deleting an account would still erase that person's name from every
+-- change they ever made.
+--
+-- An audit log exists to answer "who did this". A log that forgets the actor
+-- the moment the actor leaves answers it for exactly the people who are still
+-- around to ask in person, and goes blank for the one case anybody actually
+-- investigates. `docs/CMS_ARCHITECTURE.md` §8 — "a log an administrator can
+-- edit is not a log" — is about tamper resistance, and quietly nulling a column
+-- on account deletion is tampering with extra steps.
+--
+-- So the column keeps the uuid and loses the constraint. The id of a deleted
+-- account is not personal data on its own — it is an opaque identifier whose
+-- corresponding row is gone — and `/admin/audit` already renders a missing
+-- profile as "a deleted account", which is both truthful and more useful than a
+-- blank cell.
+--
+-- What is given up is referential integrity on a column that no longer needs
+-- it: nothing joins `audit_log` to `profiles` in SQL, the admin resolves names
+-- with a separate lookup and a fallback, and an audit row must outlive the row
+-- it points at by design.
+--
+-- The append-only triggers from 0007 are UNTOUCHED. No update, no delete, for
+-- anyone, including admin. That property is the reason this file takes the
+-- longer route.
+-- ============================================================================
+
+alter table audit_log drop constraint if exists audit_log_actor_id_fkey;
+
+comment on column audit_log.actor_id is
+  'The profile id of whoever acted. DELIBERATELY NOT a foreign key: an audit entry must outlive the account it names, and ON DELETE SET NULL both erased the attribution and — with the append-only trigger — made staff deletion impossible. See migration 0043.';
+
+-- ── The same fault, everywhere else it exists ───────────────────────────────
+--
+-- `media.uploaded_by` and `submissions.assigned_to` also reference `profiles`
+-- with ON DELETE SET NULL. Those are NOT changed, and the difference is worth
+-- stating rather than leaving as an inconsistency:
+--
+--   - Neither table has an append-only trigger, so the SET NULL succeeds and
+--     deletion is not blocked.
+--   - Neither is a record of WHO DID SOMETHING for accountability. An upload
+--     whose uploader has left is still the same file; an enquiry assigned to
+--     someone who has left genuinely should become unassigned, because the
+--     alternative is a queue item owned by nobody that still looks owned.
+--
+-- `downloads.cleared_by` is the interesting middle case and is also left alone.
+-- It IS an accountability record — 0004's `clearance_is_attributable` CHECK
+-- exists to make it one — and SET NULL there would violate that CHECK on any
+-- cleared row, blocking deletion exactly as audit_log did. It is left as-is
+-- because changing it is a separate decision with a live constraint attached,
+-- and it is raised in the Sprint 12 report as V60a rather than fixed in passing.

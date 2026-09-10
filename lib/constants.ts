@@ -106,6 +106,26 @@ export const ORDER_STATUSES = [
 export const CONTENT_STATUSES = ['draft', 'in_review', 'published'] as const;
 
 /**
+ * The enquiry inbox pipeline.
+ *
+ * `submissions.status` is a plain `text` column with a default of `'new'`, so
+ * these are the only values the application writes and the server action is
+ * what enforces that. A constrained enum would be better and is a data-model
+ * change; the column already exists and constraining it now would be a
+ * migration for a rule the one write path already keeps.
+ *
+ * FOUR states, not seven. Each one answers a different question a salesperson
+ * actually asks — has anyone seen this, is someone on it, is it done, was it
+ * junk — and a pipeline with more stages than questions is a pipeline people
+ * leave everything in `new`.
+ *
+ * `spam` is a status rather than a delete, because a deleted row cannot be
+ * counted and the honeypot's effectiveness is worth knowing.
+ */
+export const SUBMISSION_STATUSES = ['new', 'in_progress', 'answered', 'spam'] as const;
+export type SubmissionStatus = (typeof SUBMISSION_STATUSES)[number];
+
+/**
  * The solution an article sends the reader to next, keyed by article slug.
  *
  * docs/SEO_LLM_STRATEGY.md §3 requires every article to link to at least one

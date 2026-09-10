@@ -40,11 +40,17 @@ import { SHORT_DESCRIPTION, whatsappUrl } from '@/lib/company';
  * line and is repeated in the link's accessible name, so a screen-reader user
  * gets it before activating the link rather than after.
  *
- * ── File delivery is Sprint 12 ──────────────────────────────────────────────
- * No storage bucket exists yet. `file_path` is rendered as the href when a row
- * has one, but no row does, and signed-URL delivery from a private bucket is
- * the uploads sprint's job. A cleared row arriving before then would render
- * without a link rather than with a broken one.
+ * ── File delivery, built in Sprint 12 ───────────────────────────────────────
+ * The private `uploads` bucket now exists and the link points at
+ * `/api/downloads/<slug>`, not at `file_path`. A storage path is an object
+ * inside a private bucket and resolves to nothing on its own — the route
+ * re-reads the row through `public_downloads`, which requires BOTH
+ * `status = 'published'` AND `cleared_for_publication`, and redirects to a
+ * signed URL that expires in five minutes.
+ *
+ * Reading through the view rather than repeating the two conditions is
+ * deliberate: this page and that route then cannot disagree about which
+ * documents exist.
  */
 export const revalidate = 3600;
 
@@ -163,8 +169,16 @@ export default async function DownloadsPage() {
 
                         {item.file_path ? (
                           <p className="mt-4">
+                            {/*
+                              The href is the DELIVERY ROUTE, never the storage
+                              path. `file_path` is an object inside a private
+                              bucket and does not resolve on its own; the route
+                              re-checks published AND cleared through
+                              `public_downloads` and answers with a link that
+                              expires in five minutes.
+                            */}
                             <a
-                              href={item.file_path}
+                              href={`/api/downloads/${item.slug}`}
                               aria-label={label}
                               className="inline-flex min-h-[44px] items-center underline underline-offset-4"
                             >

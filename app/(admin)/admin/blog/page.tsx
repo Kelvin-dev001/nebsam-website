@@ -44,7 +44,7 @@ export default async function AdminBlogListPage() {
     .select('*', { head: true, count: 'exact' });
 
   return (
-    <div className="mx-auto w-full max-w-shell px-5 py-section md:px-8">
+    <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="font-display text-h1">Blog</h1>
         <Link

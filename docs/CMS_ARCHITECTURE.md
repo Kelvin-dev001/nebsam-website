@@ -10,6 +10,21 @@ weekly blog cadence actually happens.
 The Sprint 9 gate is literal: **a non-technical user publishes a post unaided.** Not "is shown how
 to". Unaided.
 
+> **STATUS — Sprint 12, 10 September 2026.** The admin is built: navigation, a working sign-in, a
+> dashboard that shows only what needs action, the enquiry inbox, the order pipeline, product and
+> shop editing, the media library, download clearance, certificate import, the verification spike
+> alert and the audit log viewer.
+>
+> **What is NOT built, and is recorded rather than quietly missing:** solutions, industries, FAQs,
+> blog categories and authors, homepage featured slots, branches, coverage locations, testimonials,
+> client logos, users and roles, and site settings. Each is a screen over a table that already
+> exists; none is a design problem. Products, blog and downloads are the three content types staff
+> touch weekly, and they are the ones Sprint 12 chose.
+>
+> Three deviations from this document are deliberate and argued in the sprint report: no image
+> re-encoding on upload (**V62**), no drag-and-drop and no public delivery path for uploaded images
+> (**V63**), and specs/features edited as text rather than with a repeater (**V64**).
+
 ---
 
 ## 1. Information architecture

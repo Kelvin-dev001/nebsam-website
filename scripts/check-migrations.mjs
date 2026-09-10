@@ -77,11 +77,26 @@ for (const table of tables) {
 }
 
 // 2. policies reference real tables
+//
+// SCHEMA-QUALIFIED TARGETS ARE SKIPPED, not resolved. `create policy … on
+// storage.objects` names a table Supabase owns; it is not created by any
+// migration here, so checking it against `tables` would report a false failure
+// — which is what happened when migration 0042 added a policy to the storage
+// bucket and this check called the table "storage".
+//
+// Skipping is the right answer rather than adding `storage.objects` to a known
+// list: this check exists to catch a policy naming a table THIS PROJECT
+// forgot to create, and a qualified name is by definition somebody else's
+// namespace. The alternative — parsing only the part after the dot — would
+// have looked for a table called `objects` and failed just as wrongly.
 for (const file of files) {
   const code = readFileSync(join(DIR, file), 'utf8').replace(/--[^\n]*/g, '');
-  for (const m of code.matchAll(/create\s+policy\s+\S+\s+on\s+([a-z_][a-z0-9_]*)/gi)) {
-    const t = m[1].toLowerCase();
-    if (!tables.has(t)) problems.push(`${file}: policy targets unknown table "${t}"`);
+  for (const m of code.matchAll(
+    /create\s+policy\s+\S+\s+on\s+([a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)?)/gi,
+  )) {
+    const target = m[1].toLowerCase();
+    if (target.includes('.')) continue;
+    if (!tables.has(target)) problems.push(`${file}: policy targets unknown table "${target}"`);
   }
 }
 

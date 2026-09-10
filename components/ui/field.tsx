@@ -176,7 +176,18 @@ export interface SelectFieldProps extends React.SelectHTMLAttributes<HTMLSelectE
   label: string;
   hint?: string;
   error?: string;
-  options: string[];
+  /**
+   * Either plain strings, where the submitted value IS the visible text, or
+   * explicit `{ value, label }` pairs where they differ.
+   *
+   * The pair form was added in Sprint 12 for the admin, where a status submits
+   * `in_progress` and reads "In progress". The first attempt kept `string[]`
+   * and mapped label back to value in an `onChange` handler — which works with
+   * JavaScript and silently submits the LABEL without it, failing server-side
+   * validation on exactly the path this project has already paid to keep
+   * working. Putting the value on the `<option>` is what the element is for.
+   */
+  options: (string | { value: string; label: string })[];
 }
 
 export function SelectField({
@@ -204,11 +215,15 @@ export function SelectField({
         ].join(' ')}
         {...props}
       >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
+        {options.map((option) => {
+          const { value, label: text } =
+            typeof option === 'string' ? { value: option, label: option } : option;
+          return (
+            <option key={value} value={value}>
+              {text}
+            </option>
+          );
+        })}
       </select>
     </FieldShell>
   );
