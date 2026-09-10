@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Shell } from '@/components/layout/section';
-import { Field } from '@/components/ui/field';
-import { Button } from '@/components/ui/button';
+import { LoginForm } from '@/components/admin/login-form';
 import { isDatabaseConfigured } from '@/lib/content';
 
 export const metadata: Metadata = {
@@ -12,17 +11,19 @@ export const metadata: Metadata = {
 /**
  * Admin sign-in.
  *
- * Sprint 3 ships the FORM, not the flow. Wiring Supabase Auth needs a real
- * project (register V46), and a half-wired auth form that appears to work is
- * worse than one that says plainly it is not connected.
+ * Sprint 3 shipped the FORM with no flow behind it, because there was no
+ * Supabase project to sign into and a half-wired auth form that appears to work
+ * is worse than one that says plainly it is not connected. Sprint 12 wires it:
+ * an admin nobody can enter fails the staff-walkthrough gate before the first
+ * click.
  *
  * Deliberately excluded from the middleware matcher — if the gate covered this
  * page, an unauthenticated visitor would redirect here, match, and redirect
  * again forever.
  *
  * Note the absence of a "forgot password" link and a sign-up link. Staff
- * accounts are created by an admin, not self-served: `profiles.role` defaults
- * to `viewer` and only an admin can raise it (policy in 0008).
+ * accounts are created by an admin, not self-served: an auth user with no
+ * `profiles` row has no role, and only an admin can grant one (policy in 0008).
  */
 export default async function AdminLogin({
   searchParams,
@@ -60,29 +61,21 @@ export default async function AdminLogin({
         </div>
       ) : null}
 
-      <form className="mt-8 flex flex-col gap-5" aria-describedby="login-status">
-        <Field
-          label="Email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          disabled={unconfigured}
-        />
-        <Field
-          label="Password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          disabled={unconfigured}
-        />
-        <Button type="submit" variant="primary" size="lg" disabled={unconfigured}>
-          Sign in
-        </Button>
-      </form>
+      {params.reason === 'forbidden' ? (
+        <div
+          role="status"
+          className="mt-6 rounded-panel border border-state-warn-ink/30 bg-surface p-4"
+        >
+          <p className="text-body-sm">
+            That page needs a role your account does not hold. Sign in with an account that has it,
+            or ask an administrator.
+          </p>
+        </div>
+      ) : null}
 
-      <p id="login-status" className="mt-6 text-body-sm text-text-secondary">
+      <LoginForm next={params.next ?? '/admin'} disabled={unconfigured} />
+
+      <p className="mt-6 text-body-sm text-text-secondary">
         Sessions are validated against the auth server on every admin request, and permissions are
         enforced in row level security rather than in this interface.
       </p>
