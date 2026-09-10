@@ -85,9 +85,22 @@ export function AdminChrome({
             </Link>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="hidden font-mono text-mono uppercase tracking-[0.06em] text-text-secondary sm:inline">
-              {email ?? 'signed in'} &middot; {role}
+          {/*
+            `min-w-0` on the flex child and `truncate` on the email.
+            
+            Found in the browser pass, not by reading the code: an email long
+            enough to fill the row pushed the SIGN OUT BUTTON off the right edge
+            of a 1456px viewport entirely. A flex item defaults to
+            `min-width: auto`, so a long unbreakable string refuses to shrink
+            and takes the space from its siblings instead. The role is outside
+            the truncation because it is the shorter and more useful of the two.
+          */}
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="hidden min-w-0 truncate font-mono text-mono uppercase tracking-[0.06em] text-text-secondary sm:inline">
+              {email ?? 'signed in'}
+            </span>
+            <span className="hidden shrink-0 font-mono text-mono uppercase tracking-[0.06em] text-text-secondary sm:inline">
+              &middot; {role}
             </span>
             {/*
               A real form POST, not a fetch. Sign-out must work on the
@@ -95,10 +108,10 @@ export function AdminChrome({
               this one matters more, because a staff member on a borrowed phone
               needs the session gone.
             */}
-            <form action="/admin/signout" method="post">
+            <form action="/admin/signout" method="post" className="shrink-0">
               <button
                 type="submit"
-                className="inline-flex min-h-11 items-center rounded-control border border-border-strong px-4 text-body-sm"
+                className="inline-flex min-h-11 shrink-0 items-center rounded-control border border-border-strong px-4 text-body-sm"
               >
                 Sign out
               </button>

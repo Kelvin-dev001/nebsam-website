@@ -28,7 +28,47 @@ import { productFeatures } from '@/types/content';
  * drafts and are therefore unreachable, not merely unlinked.
  */
 export const revalidate = 3600;
-export const dynamicParams = false;
+/**
+ * `dynamicParams = true`. CHANGED IN SPRINT 12 — register item V54c.
+ *
+ * This route set `false` until Sprint 12, for a good reason that stopped being
+ * true. The reasoning was that solutions, products and industries are "finite
+ * published sets that change only at deploy time", so an unknown slug should be
+ * a hard 404 rather than a soft 200. The first half of that is what broke:
+ * Sprint 12 gives staff a product editor, so products now change BETWEEN
+ * deploys, exactly like the blog.
+ *
+ * WHAT WAS MEASURED, on a production build, before and after one price edit:
+ *
+ *     fresh build, no admin action   -> every route 200
+ *     save one product in the admin  -> /products/[slug]   404  (all 14)
+ *                                       /solutions/[slug]  404  (all 9)
+ *                                       /industries/[slug] 404  (all 13)
+ *                                       /resources/blog/[slug] 200
+ *
+ * Twenty-nine pages offline until the next full build, from editing one price.
+ * The blog survived because Sprint 10 had already fixed it — this is register
+ * item V54a on three more routes.
+ *
+ * SOLUTIONS AND INDUSTRIES ARE INCLUDED even though nothing edits them yet,
+ * because they were taken down too. They read products through the shared
+ * `public_products` cache tag (a solution lists its hardware, an industry its
+ * products), so invalidating that tag forces them to regenerate, and
+ * `dynamicParams = false` forbids it. Fixing only products would leave the
+ * other twenty-two pages failing for a reason nobody would think to look for.
+ *
+ * THE SOFT-404 WORRY WAS RE-TESTED RATHER THAN ASSUMED AWAY, on these routes:
+ *
+ *     /products/does-not-exist    -> HTTP 404
+ *     /solutions/does-not-exist   -> HTTP 404
+ *     /industries/does-not-exist  -> HTTP 404
+ *
+ * `notFound()` in the page produces a genuine 404, and `generateStaticParams`
+ * still prerenders every published slug at build time, so nothing is given up
+ * on the common path. The draft gate also still holds: a draft is absent from
+ * the published set the page queries, so it 404s rather than rendering.
+ */
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const { data } = await getProducts();
