@@ -98,6 +98,12 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     heading: 'Operations',
     items: [
       {
+        label: 'Certifications',
+        href: '/admin/certifications',
+        minRole: 'viewer',
+        detail: 'KEBS, CAK, ODPC, PSRA — and how long each has left',
+      },
+      {
         label: 'Certificates',
         href: '/admin/certificates',
         minRole: 'admin',

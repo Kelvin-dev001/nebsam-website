@@ -157,7 +157,11 @@ export async function getDashboard(): Promise<Dashboard> {
     {
       label: 'Registrations expired or expiring within 90 days',
       count: expiring.count ?? 0,
-      href: '/admin/certificates',
+      // `/admin/certifications`, the COMPANY registrations. `/admin/certificates`
+      // is the customer installation records, which is a different table and a
+      // different problem — and the two names being one letter apart is exactly
+      // why this link was pointed at the wrong one first.
+      href: '/admin/certifications',
       clear: 'No registration needs renewing in the next 90 days.',
       tone: 'alert',
       note: 'The public page cannot display a lapsed instrument, so a lapse shows up as a document quietly disappearing rather than as an error.',
