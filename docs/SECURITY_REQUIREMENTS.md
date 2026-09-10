@@ -38,7 +38,7 @@ No SMS cost, one extra field, and it defeats casual and automated enumeration.
 
 **V03 is still open.** Option B (plate + OTP to the registered phone) is stronger, carries SMS cost
 and friction, and is worth offering as the fallback when the number on file has changed. Switching
-is a change to the second factor only — it does not alter the schema or the threat model. ADR-0002
+is a change to the second factor only — it does not alter the schema or the threat model. ADR-0005
 is written when V03 is answered.
 
 Option C (plate + certificate number) defeats the purpose of the change and is not on the table.

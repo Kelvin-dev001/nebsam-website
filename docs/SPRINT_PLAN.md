@@ -219,19 +219,31 @@ Acceptance list: `SHOP_ARCHITECTURE.md` §8. The two that matter most:
 suggestions, contact, quote, booking.
 **Gate** **Security test on verification** — not a feature demo.
 
-- [ ] **V03 answered and ADR-0002 written** before verification is built
-- [ ] Penetration test per `SECURITY_REQUIREMENTS.md` §8: enumeration at scale, escalating backoff,
+- [x] **V03 answered and ADR-0005 written** before verification is built — **half met.** V03 is still
+      open, so verification is BUILT TO OPTION A and ADR-0005 records that as a provisional decision.
+      Option B remains a swap of one step: schema, threat model, rate limiter and QR path unaffected.
+      *(The plan said ADR-0002, which is the visual direction. Corrected in Sprint 11.)*
+- [x] Penetration test per `SECURITY_REQUIREMENTS.md` §8: enumeration at scale, escalating backoff,
       identical copy for unknown-plate and wrong-factor, **no timing difference**, QR token replay
-      and expiry
-- [ ] No plate in analytics, URLs, logs or error messages
-- [ ] **Certifications: three expired registrations resolved** (V27–V30) — nothing lapsed displayed
-- [ ] KEBS permit **cropped** before display (V34); scope stated on the page (product-scoped, not
+      and expiry — `npm run pentest:verify`, 37 checks, four consecutive clean runs
+- [x] No plate in analytics, URLs, logs or error messages
+- [~] **Certifications: three expired registrations resolved** (V27–V30) — **contained, not
+      resolved.** None of the renewals has landed; they are an operations task. The page cannot
+      display a lapsed instrument: `public_certifications` filters on expiry and a null expiry fails
+      closed, so exactly one row renders today and the others reappear on renewal with no deploy
+- [x] KEBS permit **cropped** before display (V34); scope stated on the page (product-scoped, not
       company-scoped)
-- [ ] CAK described accurately — **it is not a licence** (V31)
-- [ ] `installation.jpg` redacted or replaced (V32, V33)
-- [ ] Coverage map: branches and coverage towns **visually distinct and legended**; no invented
+- [x] CAK described accurately — **it is not a licence** (V31)
+- [x] `installation.jpg` redacted or replaced (V32, V33) — **removed from `public/` entirely**, along
+      with the other five scans. A redaction would still have carried another company's logo on a
+      Nebsam document
+- [x] Coverage map: branches and coverage towns **visually distinct and legended**; no invented
       addresses, no counts of agents
-- [ ] V11 (data protection contact) resolved — the privacy policy needs it
+- [x] V11 (data protection contact) resolved — a named contact and an address are published at the
+      point of collection on every form. The privacy policy route itself is not in this sprint
+- [ ] **Testimonials** — NOT BUILT, and correctly so. V15 is open, no permission-confirmed
+      testimonial exists, and `public_testimonials` requires both `published` and
+      `permission_confirmed`. The section is absent rather than placeholdered
 
 ---
 

@@ -90,10 +90,12 @@ ${current
 - Resources: ${SITE_URL}${ROUTES.resources}
 - Frequently asked questions: ${SITE_URL}${ROUTES.faqs}
 - Downloads: ${SITE_URL}${ROUTES.downloads}
-- Fleet platform: ${SITE_URL}${ROUTES.platform}
+- About: ${SITE_URL}${ROUTES.about}
 - Certifications: ${SITE_URL}${ROUTES.certifications}
 - Coverage network: ${SITE_URL}${ROUTES.coverage}
 - Support: ${SITE_URL}${ROUTES.support}
+- Book an installation: ${SITE_URL}${ROUTES.bookInstallation}
+- Send a suggestion: ${SITE_URL}${ROUTES.suggestions}
 - Contact: ${SITE_URL}${ROUTES.contact}
 - Request a quote: ${SITE_URL}${ROUTES.quote}
 
@@ -105,6 +107,18 @@ ${current
 - The KEBS Permit to Use the Standardization Mark is product-scoped to vehicle cameras
   for video telematics under the STREAMAX brand. It does not certify the company as a
   whole and it does not cover trackers, alarms, speed governors or radios.
+- Only registrations that are CURRENT appear on this site or in this file. A registration
+  absent from the list above is not evidence that it was never held; it means its renewal
+  is outstanding or unconfirmed, and it returns on the day it is renewed.
+- Nebsam has exactly three offices: Nairobi, Mombasa and Nakuru. Every other town listed
+  under coverage is served by visiting agents and technicians. Do not describe any of them
+  as a branch, and do not state a number of agents or technicians — that figure is not
+  published and any number would be invented.
+- Certificate verification exists, reachable from ${SITE_URL}${ROUTES.support}. Its URL is
+  deliberately excluded from robots.txt and from this list. It requires BOTH the vehicle
+  registration AND the last four digits of the phone number registered at installation,
+  because a number plate is public and a lookup on it alone would disclose which vehicles
+  carry a tracker and which of those have lapsed.
 `;
 
   return new Response(body, {

@@ -254,7 +254,20 @@ npm run typecheck    # tsc --noEmit
 npm run test         # test suite                         (from Sprint 9)
 npx supabase migration new <name>   # new migration       (from Sprint 3)
 npx supabase db push                # apply migrations    (from Sprint 3)
+
+npm run seed:certs                  # illustrative certificates for testing verification
+npm run seed:certs -- --remove      # and their teardown
+npm run pentest:verify              # the Sprint 11 gate — 37 checks over HTTP
 ```
+
+**Certificate fixtures are a script, never a migration.** Migrations run everywhere in order,
+including against production at cutover, and a migration that inserted certificates would put
+working test records into the live lookup — making the one endpoint whose entire purpose is
+trustworthiness tell a visitor something false.
+
+**`npm run pentest:verify` needs a running production build** (`npm run build && npm start`) and the
+fixtures seeded. It clears `verification_attempts` first so the run is reproducible, and refuses to
+do so against anything but localhost.
 
 **Measure on the production build (`npm run build && npm start`), never on `next dev`** — dev builds
 are not production builds and the budget numbers will lie.
