@@ -555,4 +555,39 @@ after staff had started editing.
 
 ---
 
+## 15. Merged into `develop`, 10 September 2026
+
+Both sprints merged on the client's instruction, in order, each with its own merge commit so the
+sprint boundaries stay visible in history:
+
+```
+Merge sprint/11-trust-support   into develop
+Merge sprint/12-admin-completion into develop
+```
+
+Sprint 12 was cut from Sprint 11 rather than from `develop`, so the second merge is a
+fast-forward's worth of content on top of the first. Nothing conflicted.
+
+**Verified on the merged tree, not assumed from the branches:**
+
+| | |
+|---|---|
+| `tsc --noEmit` | ✅ |
+| `eslint .` | ✅ |
+| `npm run build` | ✅ · **43 migrations · 32 tables · 17 views** · retired-string check clean over 394 artefacts |
+| `npm run check:redirects` | ✅ 13 redirects + 4 direct routes |
+| `npm run check:sitemap` | ✅ every sitemap URL 200 — the §3.1 fix holds after the merge |
+| `npm run verify:roles` | ✅ **47/47** |
+| `npm run verify:db` | ✅ no base table readable by anon, no table writable by anon |
+| Admin routes signed out | ✅ 307 to the login page |
+
+`develop` is **not pushed**. `main` remains frozen and Vercel production stays pinned to it until
+Sprint 15, per the branch model.
+
+The two `profiles` rows are the client's account and the browser-pass account that **cannot be
+deleted until 0043 is applied** (§3.2). It is demoted to `viewer`, banned, and its password rotated
+to a value nobody holds.
+
+---
+
 **STOPPING HERE FOR REVIEW.**
