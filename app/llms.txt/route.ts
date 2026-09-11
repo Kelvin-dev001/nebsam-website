@@ -8,7 +8,8 @@ import {
   SITE_URL,
   isCurrent,
 } from '@/lib/company';
-import { LINKED_SOLUTIONS, PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
+import { LINKED_SOLUTIONS, ROUTES } from '@/lib/constants';
+import { getProducts } from '@/lib/content';
 
 /**
  * /llms.txt — brief PART 13.3.
@@ -24,11 +25,28 @@ import { LINKED_SOLUTIONS, PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
  * Lapsed registrations are filtered out: brief 3.5 requires the site never
  * presents a lapsed permit, and that applies to the machine-readable surface
  * exactly as it applies to the page.
+ *
+ * ── Sprint 13: products are READ, not categories from a constant ────────────
+ *
+ * Register item V95. This file listed five `/products/category/<slug>` URLs
+ * from PRODUCT_CATEGORIES, and the crawl audit found every one returns 404:
+ * the products index groups by family and no category route was ever built.
+ * A self-authored 404 in a machine-readable index is worse than an omission,
+ * because an assistant repeats it as fact (Sprint 11 removed /platform from
+ * here for that reason). Products replace categories because products are
+ * what have pages, and they come from the published view the sitemap reads,
+ * since staff add and rename them in the admin. The product admin revalidates
+ * this file for the same reason it revalidates the sitemap.
  */
 export const dynamic = 'force-static';
 
-export function GET() {
+export async function GET() {
   const current = REGISTRATIONS.filter((r) => isCurrent(r.expiresOn));
+
+  const { data: products } = await getProducts();
+  const productLines = products
+    .flatMap((p) => (p.slug && p.name ? [`- ${p.name}: ${SITE_URL}${ROUTES.product(p.slug)}`] : []))
+    .join('\n');
 
   const body = `# ${COMPANY.legalName}
 
@@ -65,9 +83,9 @@ ${COVERAGE_TOWNS.join(', ')}
 
 ${LINKED_SOLUTIONS.map((s) => `- ${s.name}: ${SITE_URL}${ROUTES.solution(s.slug)}`).join('\n')}
 
-## Product categories
+## Products
 
-${PRODUCT_CATEGORIES.map((c) => `- ${c.name}: ${SITE_URL}${ROUTES.productCategory(c.slug)}`).join('\n')}
+${productLines}
 
 ## Registrations and permits held
 

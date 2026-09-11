@@ -28,8 +28,8 @@ const EXPECTED = [
   // Found in Sprint 0, absent from every prior inventory.
   ['/services/electronic-cargo-tracking-system', '/solutions/container-e-seal'],
   // Dead nav links on the old site.
-  ['/team', '/about/team'],
-  ['/clients', '/about/partners'],
+  ['/team', '/about'],
+  ['/clients', '/about'],
   // Shop consolidation.
   ['/shop', '/products'],
   ['/shop/hybrid-tracker', '/products/hybrid-tracker'],
