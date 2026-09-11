@@ -555,6 +555,48 @@ after staff had started editing.
 
 ---
 
+## 14a. The >1h edit case — tested, and the worry was wrong
+
+Raised in the Sprint 12 hand-off as speculation: `lib/admin/actor.ts` builds its client with
+`setAll: () => {}`, so if a staff member spent over an hour on the product editor and then saved,
+the refreshed tokens would be discarded and the save might fail with *"You do not have permission to
+edit products"* — a wrong and alarming message for what is really an expired session.
+
+**It does not happen.** Tested 11 September 2026 against the production build by backdating
+`expires_at` in the auth cookie, which is the field supabase-js actually consults when deciding
+whether to refresh:
+
+| Probe | Result |
+|---|---|
+| Control: fresh `expires_at`, `GET /admin/products` | 200, **no Set-Cookie** |
+| Stale `expires_at`, `GET /admin/products` | 200, **Set-Cookie** (the auth cookie) |
+| Stale, repeated five times over 12 s | 200 every time, **never bounced to login** |
+| Stale, **POST** to `/admin/products/<id>` | 200, **Set-Cookie** |
+| Stale, `GET /admin/inbox/export` | 200, and the `submission.export` audit row was written **with the correct `actor_id`** |
+
+The first two rows are the ones that carry the argument: a `Set-Cookie` appears **only** when the
+session actually needed refreshing, so the refresh branch is genuinely being exercised rather than a
+still-valid session being waved through.
+
+**Why the no-op is safe: the middleware is the refresher, not `adminActor()`.** It runs on every
+`/admin/*` request, including the POST a server action makes — an action posts to its own route
+path, and the matcher is method-agnostic. Its client has a real `setAll` that writes to the
+response, so by the time `adminActor()` runs the cookies are already fresh and there is nothing left
+for it to persist.
+
+**No code changed.** The finding is recorded as a comment in `lib/admin/actor.ts` with the
+measurements, so the next person to notice that no-op does not have to re-derive this — including
+the one thing that *would* break it: narrowing the middleware matcher, or deleting `middleware.ts`
+on the reasoning that RLS is the real boundary anyway. RLS is the real boundary for
+**authorisation**; it is not what keeps a session alive.
+
+Two side effects of the test, both harmless and both recorded rather than hidden: one
+`submission.export` audit row for an export of **0 rows**, which is append-only and stays; and the
+stuck browser-pass account was briefly un-banned and promoted to `editor` to run the test, then
+**returned to banned / `viewer` / unknown password**.
+
+---
+
 ## 15. Merged into `develop`, 10 September 2026
 
 Both sprints merged on the client's instruction, in order, each with its own merge commit so the

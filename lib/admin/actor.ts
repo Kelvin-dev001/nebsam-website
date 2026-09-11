@@ -56,9 +56,44 @@ export async function adminActor(): Promise<AdminActor | null> {
   const supabase = createServerClient(url, key, {
     cookies: {
       getAll: () => cookieStore.getAll(),
-      // A server action cannot always set cookies; refreshing the session is
-      // the middleware's job. Swallowing here keeps a read-only lookup from
-      // throwing inside an action.
+      /**
+       * A NO-OP, AND IT IS SAFE. Measured 11 September 2026, because it looks
+       * exactly like the bug where a staff member loses an hour's typing.
+       *
+       * The worry: a user JWT lasts an hour. If somebody sits on the product
+       * editor composing a description for longer than that and then saves,
+       * supabase-js refreshes the session, hands the new pair to this function,
+       * this function throws it away — and the save fails with "you do not have
+       * permission", which is both wrong and alarming.
+       *
+       * It does not happen, because THE MIDDLEWARE IS THE REFRESHER and it runs
+       * on every `/admin/*` request — including the POST a server action makes,
+       * since an action posts to its own route path and the matcher is
+       * method-agnostic. Its client has a real `setAll` that writes to the
+       * response, so by the time this file runs the cookies are already fresh.
+       *
+       * Verified against the production build with a cookie whose `expires_at`
+       * was backdated, which is the field supabase-js actually consults:
+       *
+       *   fresh expires_at, GET /admin/products   200, NO Set-Cookie
+       *   stale expires_at, GET /admin/products   200, Set-Cookie (auth cookie)
+       *   stale, repeated 5x over 12s             200 every time, never bounced
+       *   stale, POST to /admin/products/<id>     200, Set-Cookie
+       *   stale, GET /admin/inbox/export          200, and the audit row was
+       *                                           written with the right actor_id
+       *
+       * The first two lines are the ones that matter: a Set-Cookie appears ONLY
+       * when the session needed refreshing, so the refresh branch is genuinely
+       * being taken rather than a still-valid session being waved through.
+       *
+       * WHAT WOULD BREAK IT. Narrowing the middleware matcher, or removing
+       * middleware.ts on the reasoning that "RLS is the real boundary anyway".
+       * It is the real boundary for authorisation; it is not what keeps a
+       * session alive. If the matcher ever stops covering a route that calls
+       * this function, that route needs its own refreshing client — see
+       * `lib/admin/session.ts`, which exists precisely because sign-in could not
+       * use this one.
+       */
       setAll: () => {},
     },
   });
