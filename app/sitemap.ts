@@ -79,6 +79,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: ROUTES.support, priority: 0.6, changeFrequency: 'monthly' },
     { path: ROUTES.bookInstallation, priority: 0.6, changeFrequency: 'monthly' },
     { path: ROUTES.suggestions, priority: 0.4, changeFrequency: 'yearly' },
+
+    /**
+     * The legal pages, listed deliberately rather than left out.
+     *
+     * Two of the three currently carry a visible "not yet through legal review"
+     * banner, and the instinct is to withhold them from search until that is
+     * gone. That instinct is wrong for these three specifically: a privacy
+     * notice and a cookie notice are documents people go looking for — often
+     * BY searching — and a site that hides them ranks its own embarrassment
+     * above the reader's need.
+     *
+     * The banner is a pre-launch state, not a permanent one. Sprint 15's gate
+     * forbids launching with an unresolved [[NEEDS_VERIFICATION]] on any public
+     * page, so by cutover the review has happened or the pages do not ship.
+     * Listing them now means the sitemap describes the site as it will be
+     * rather than needing a change nobody remembers to make.
+     *
+     * Low priority: they are important to have and not what the site wants to
+     * rank for.
+     */
+    { path: ROUTES.privacy, priority: 0.3, changeFrequency: 'yearly' },
+    { path: ROUTES.terms, priority: 0.3, changeFrequency: 'yearly' },
+    { path: ROUTES.cookies, priority: 0.3, changeFrequency: 'yearly' },
   ];
 
   const { data: solutions } = await getSolutions();
