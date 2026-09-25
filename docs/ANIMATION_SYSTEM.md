@@ -50,7 +50,9 @@ interface catch up.
 **Press has its own token, `DURATION.press` = 120ms** (`--dur-press`, `duration-press`), the floor of
 PART 17's Level 1 range, because a press answers the hand directly. It only takes effect where a
 component transitions `transform`: `Button` uses `transition-colors`, so its press is currently
-instant. Sprint 12b T5 decides per component whether that changes.
+instant. Sprint 12b T5 decides per component whether that changes. **Where press is transitioned it
+uses `EASE.outQuart`**, not the `inOutQuad` Level 1 uses for colour: press feedback is ease-out,
+because an in-out curve starts slow at the moment the finger lands.
 
 ### Level 2 — Reveal, 420ms
 Fires **once**, never on re-scroll. `IntersectionObserver` at 0.15 threshold, disconnected on first

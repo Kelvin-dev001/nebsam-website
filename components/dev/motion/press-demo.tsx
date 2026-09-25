@@ -10,11 +10,15 @@ import { Button } from '@/components/ui/button';
  * today's press is INSTANT. The sample adds transform to the transition at
  * --dur-press (120ms) so the two can be compared side by side. Whether any
  * shipped component adopts it is Sprint 12b T5's decision, not this page's.
+ *
+ * The curve is outQuart, not the inOutQuad Level 1 uses for colour: press
+ * feedback is ease-out, because an in-out curve starts slow at the exact
+ * moment the finger lands (review-animations STANDARDS, "Button press").
  */
 const pressSample =
   'inline-flex min-h-[44px] items-center justify-center rounded-control bg-brand-signal-ink px-4 py-2.5 ' +
   'text-body font-medium text-white hover:bg-[#134aa8] ' +
-  'transition-[transform,background-color] duration-press ease-in-out-quad ' +
+  'transition-[transform,background-color] duration-press ease-out-quart ' +
   'active:translate-y-px motion-reduce:active:translate-y-0 ' +
   '[[data-section=dark]_&]:border [[data-section=dark]_&]:border-brand-signal';
 
