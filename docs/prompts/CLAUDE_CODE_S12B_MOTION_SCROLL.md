@@ -20,16 +20,16 @@ Read these before T0:
 ```
 DECISIONS — Kelvin fills before running
 (options are defined in S12B_MOTION_DECISION_MEMO.md; the first option is Cowork's recommendation)
-D0  Branch ............ sprint/12b-motion-scroll | other                        ANSWER:
-D1  Visual direction .. A Option B whole, Falcon = mechanics only | B | C       ANSWER:
-D2  Tiers ............. memo table, no pins below 768px | adjusted as noted     ANSWER:
-D3  Home story ........ H1 One vehicle, instrumented | H2 | H3 | H4             ANSWER:
-D3b Hero .............. b readout moves to beat 5, 3 headline drafts | a | c    ANSWER:
-D4  Scroll build ...... native sticky + IO + CSS scroll-driven | Motion hooks  ANSWER:
-D5  Asset generation .. none | approved list                                   ANSWER:
-D6  NV-1 to NV-5 ...... Claude Code logs them in T0 | Kelvin logs them          ANSWER:
-D7  ADR-0006 .......... A permit native sticky pinning | B no pin               ANSWER:
-D8  Tooling ........... as memo D8 | changes as noted                          ANSWER:
+D0  Branch ............ sprint/12b-motion-scroll | other                        ANSWER: use Cowork's recommendation
+D1  Visual direction .. A Option B whole, Falcon = mechanics only | B | C       ANSWER: use Cowork's recommendation
+D2  Tiers ............. memo table, no pins below 768px | adjusted as noted     ANSWER:use Cowork's recommendation
+D3  Home story ........ H1 One vehicle, instrumented | H2 | H3 | H4             ANSWER:use Cowork's recommendation
+D3b Hero .............. b readout moves to beat 5, 3 headline drafts | a | c    ANSWER:use Cowork's recommendation
+D4  Scroll build ...... native sticky + IO + CSS scroll-driven | Motion hooks  ANSWER:use Cowork's recommendation
+D5  Asset generation .. none | approved list                                   ANSWER:use Cowork's recommendation
+D6  NV-1 to NV-5 ...... Claude Code logs them in T0 | Kelvin logs them          ANSWER:use Cowork's recommendation
+D7  ADR-0006 .......... A permit native sticky pinning | B no pin               ANSWER:use Cowork's recommendation
+D8  Tooling ........... as memo D8 | changes as noted                          ANSWER:use Cowork's recommendation
 ```
 
 If any ANSWER is blank, stop at T0 and ask. Where an answer differs from the recommendation, follow the answer and adapt the tasks to it.
