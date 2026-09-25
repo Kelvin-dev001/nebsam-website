@@ -57,3 +57,7 @@ lighthouse*.json
 
 # Assets awaiting optimisation. Nothing here ships until moved into public/.
 media-inbox/
+
+# scroll-craft working files (builds, harness screenshots, contact sheets). Only a set
+# piece's BRIEF.md is copied into docs/design/; the workspace itself never ships.
+.scrollcraft/
