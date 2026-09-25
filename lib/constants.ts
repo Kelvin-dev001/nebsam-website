@@ -36,6 +36,12 @@ export const ROUTES = {
   privacy: '/legal/privacy-policy',
   terms: '/legal/terms',
   cookies: '/legal/cookies',
+  /**
+   * DEVELOPMENT ONLY. The Sprint 12b motion playground: noindex, absent from
+   * the sitemap and llms.txt, and a 404 in production unless
+   * MOTION_PLAYGROUND=1. Never link to it from a public page.
+   */
+  devMotion: '/dev/motion',
 } as const;
 
 /**
