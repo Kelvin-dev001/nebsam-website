@@ -9,6 +9,8 @@ import { StageDimDemo } from '@/components/dev/motion/stage-dim-demo';
 import { TokenTable } from '@/components/dev/motion/token-table';
 import { ROUTES } from '@/lib/constants';
 import { buildMetadata } from '@/lib/seo/metadata';
+// Route-scoped utilities: the dev files are excluded from the global sheet.
+import './playground.css';
 
 /**
  * /dev/motion — the Sprint 12b motion playground. DEVELOPMENT ONLY.

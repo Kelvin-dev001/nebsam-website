@@ -4,8 +4,19 @@ import type { Config } from 'tailwindcss';
  * Tailwind maps onto the CSS variables in app/globals.css — it never defines a
  * colour of its own. One source of truth; see docs/DESIGN_SYSTEM.md.
  */
+
+/** Every file that can carry a class. The dev stylesheet scans all of it too. */
+export const CONTENT_ALL = ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'];
+
 const config: Config = {
-  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  /**
+   * The development-only routes (/dev/*) are EXCLUDED from the site's global
+   * stylesheet, which every public page downloads render-blocking. Scanned,
+   * the Sprint 12b motion playground added 2,023 B of layout utilities no
+   * public page uses. It gets its own stylesheet instead — see
+   * tailwind.dev.config.ts.
+   */
+  content: [...CONTENT_ALL, '!./app/**/dev/**', '!./components/dev/**'],
   theme: {
     extend: {
       colors: {
