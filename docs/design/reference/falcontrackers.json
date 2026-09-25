@@ -1,0 +1,97 @@
+{
+  "source": "https://falcontrackers.com",
+  "tokens": {
+    "spacing": {
+      "scale": [5, 10, 15, 16, 20, 24, 30, 40, 50],
+      "base_unit": 10
+    },
+    "typography": {
+      "families": ["Cabin"],
+      "scale": [
+        { "role": "hero (h3 in the slider)", "size": "65px", "weight": "700", "family": "Cabin" },
+        { "role": "h1 (about section)", "size": "40px", "weight": "700", "family": "Cabin" },
+        { "role": "h2 section title", "size": "40px", "weight": "700", "family": "Cabin" },
+        { "role": "step title", "size": "28px", "weight": "700", "family": "Cabin" },
+        { "role": "card title", "size": "24px", "weight": "600", "family": "Cabin" },
+        { "role": "h4", "size": "19px", "weight": "600", "family": "Cabin" },
+        { "role": "body", "size": "16px", "weight": "400", "family": "Cabin" },
+        { "role": "nav and small text", "size": "14px", "weight": "700", "family": "Cabin" }
+      ]
+    },
+    "colors": [
+      { "role": "background (70% of painted area)", "value": "#FFFFFF" },
+      { "role": "headings, nav, links, arrow discs", "value": "#2F3292" },
+      { "role": "dark text", "value": "#051451" },
+      { "role": "muted text", "value": "#9B9B9B" },
+      { "role": "muted text, cool", "value": "#929BA2" },
+      { "role": "primary CTA fill (Get Started)", "value": "#3BD633" },
+      { "role": "secondary CTA fill (Member Login), counter numerals", "value": "#4DC247" },
+      { "role": "light ground gradient stop", "value": "#E7E2FF" },
+      { "role": "light ground gradient stop (0.91 alpha)", "value": "#CCCDFF" },
+      { "role": "dark ground gradient start", "value": "#020024" },
+      { "role": "dark ground gradient end", "value": "#090979" },
+      { "role": "footer gradient start", "value": "#051451" },
+      { "role": "footer gradient end", "value": "#001983" }
+    ],
+    "radius": ["0px", "4px", "8px", "10px", "15px", "16px", "50px", "50%"],
+    "shadows": [
+      "0 5px 83px rgba(40,40,40,0.21)",
+      "0 3px 63px rgba(40,40,40,0.11)",
+      "0 4px 8px rgba(0,0,0,0.1)",
+      "0 4px 8px rgba(0,0,0,0.537)",
+      "0 8px 16px rgba(0,0,0,0.15)"
+    ],
+    "image_ratios": [
+      { "usage": "hero slide, full bleed", "ratio": "2.61:1" },
+      { "usage": "client logo tile", "ratio": "1.61:1" },
+      { "usage": "blog card thumbnail", "ratio": "~16:9" }
+    ],
+    "grid": { "max_width": "1320px", "columns": 12, "gutter": "24px" }
+  },
+  "taste": [
+    {
+      "name": "Walls of colour instead of dividers",
+      "trigger": "When separating 14 stacked topics on one long scroll",
+      "decision": "Chose full-width hard ground changes (white, lavender gradient, indigo gradient) with 0px gaps over whitespace-and-rule separation on a single ground",
+      "reason": "Because a reader skimming at speed registers a colour change before a heading, so each switch is a free chapter marker",
+      "evidence": [
+        "section gaps measured 0px",
+        "13 ground switches across ~11,250px",
+        "lavender three sections in a row and indigo two in a row, where the marker stops working"
+      ]
+    },
+    {
+      "name": "Conversion green, fenced off",
+      "trigger": "When deciding where the second brand colour goes",
+      "decision": "Chose to confine green to Get Started, Member Login and counter numerals over spreading it across headings, icons or grounds",
+      "reason": "Because a colour that only ever means act here is found without reading; the cost they accepted is a white label at 1.94:1 on #3BD633",
+      "evidence": [
+        "#3BD633 is 1.1% of painted area",
+        "#4DC247 fills 8 elements",
+        "#2F3292 carries headings and nav (39 text uses)"
+      ]
+    },
+    {
+      "name": "One typeface, no instrument voice",
+      "trigger": "When a vehicle-tracking company chose its type system",
+      "decision": "Chose Cabin alone in three weights over pairing a text face with a monospaced or technical face for data",
+      "reason": "Because one rounded sans reads as approachable to non-technical fleet buyers, at the price of never sounding like instrumentation",
+      "evidence": [
+        "Cabin on 664 elements",
+        "weights 700 x102, 600 x50, 400 x51",
+        "0 monospaced elements, including on counter and dashboard figures"
+      ]
+    },
+    {
+      "name": "Liveness through perpetual motion",
+      "trigger": "When the page had to feel live, like the tracking product",
+      "decision": "Chose infinite ambient keyframes and six autoplay carousels over motion that responds only to the reader",
+      "reason": "Because constant movement tells a first-time visitor real-time in the first second, before any copy is read",
+      "evidence": [
+        "pulse, location-pulse, dot-travel, gpsMove, moveDots, satellite-float and signal-pulse among 30+ keyframes",
+        "transition: all at 0.3s",
+        "scroll-behavior: smooth delays programmatic scroll"
+      ]
+    }
+  ]
+}
