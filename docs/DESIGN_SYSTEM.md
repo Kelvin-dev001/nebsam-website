@@ -166,6 +166,25 @@ The ring follows the **section**, never the component, and always carries a 2px 
 | `border-hairline` `#DFE5F0` | paper | 1.15 | decorative rules only |
 | `border-hairline-inverse` `#1E2450` | navy | 1.26 | decorative rules only |
 
+### 3.5 Dimmed text in the pinned stage (ADR-0006)
+
+Inactive steps are dimmed with opacity only, to `STAGE.inactiveOpacity` = **0.6**, and a dimmed step is
+still content, so it must still clear 4.5:1. Ratios are for the foreground alpha-blended onto the
+ground at 0.6, computed to the WCAG formula; the same script reproduces every full-opacity ratio in
+§3.1 exactly.
+
+| Foreground at 0.6 | Ground | Ratio | Minimum opacity for 4.5 | Verdict |
+|---|---|---|---|---|
+| `text-inverse` `#FFFFFF` | `brand-navy` | **7.07** | 0.46 | PASS |
+| `text-secondary-inverse` `#C3CEEA` | `brand-navy` | **4.86** | 0.58 | PASS |
+| `state-warn` `#E8A33D` | `brand-navy` | **3.71** | 0.69 | **FAIL: active step only** |
+| `text-primary` `#0F1620` | `surface-raised` | **4.61** | 0.60 | pass, at the floor |
+| `text-secondary` `#4C5A75` | `surface-raised` | **2.65** | 0.86 | **FAIL** |
+
+Two rules follow, and they are why 0.6 is safe: **the stage sits on the dark ground**, and **state
+colours appear only in the active step**. The progress rail's fill is `text-secondary-inverse` on
+navy (11.81) and its track `border-hairline-inverse` (1.26, decorative).
+
 ---
 
 ## 4. Typography
@@ -186,13 +205,13 @@ the site and it is also why the pairing costs one file instead of two.
 **The logo's own typeface is not a reference.** The wordmark is a casual rounded face; the site does
 not imitate it.
 
-**Measured:** `next/font` emits 8 woff2 files, but they are unicode-range subsets. An English page
-fetches exactly **2** — verified in the browser: Archivo 90,096 B and IBM Plex Mono 10,060 B.
-`font-display: swap` is set, and Next generates size-adjusted `Archivo Fallback` / `IBM Plex Mono
-Fallback` metrics, which is why CLS measured 0.
-
-> **Known issue.** No `<link rel="preload" as="font">` is emitted. The display text is the likely LCP
-> element, so preloading should be forced in Sprint 2. Recorded in `docs/NEEDS_VERIFICATION.md`.
+**Self-hosted since Sprint 4.** The faces were moved off `next/font`, which emits no
+`<link rel="preload" as="font">` (register V41), to `public/fonts/`. `app/globals.css` declares eight
+woff2 files as unicode-range subsets; an English or Kiswahili page fetches exactly **2**, Archivo
+latin (90,096 B) and IBM Plex Mono latin (10,060 B), and `app/layout.tsx` preloads exactly those
+two. `font-display: swap` is set, and the metric-matched `Archivo Fallback` / `IBM Plex Mono
+Fallback` faces (values copied from what `next/font` computed) are why the swap does not shift the
+layout.
 
 ### 4.1 Type scale
 
@@ -301,6 +320,6 @@ columns.
 | Item | Register |
 |---|---|
 | SVG logo plus horizontal, stacked, mono-white, mono-dark and favicon source | **V37** |
-| Force `<link rel="preload">` on the two fetched font files | **V41** |
+| Font preload: built in Sprint 4 (`app/layout.tsx`); the register row still reads OPEN | **V41** |
 | Mobile navigation — the prototype hides nav below `md` with no menu yet | **V42** |
 | Disabled control tokens instead of an opacity multiplier | Sprint 2 |
