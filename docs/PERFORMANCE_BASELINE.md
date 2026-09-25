@@ -197,3 +197,61 @@ site, for an effect below the noise floor. Not done, deliberately.
 
 Raw JSON for every run in this document is archived outside the repo at
 `~/.claude/projects/C--Projects-nebsam-website/perf-2026-09-05/`.
+
+---
+
+## 9. Sprint 12b T0 baseline — 25 September 2026
+
+The reference every Sprint 12b task is compared against. **The app code is `7b7f1e7`**: every commit
+on `sprint/12b-motion-scroll` up to the end of T0 is docs or tooling.
+
+Method as §3, exactly. Production build with `.next/cache/fetch-cache` cleared first (V54b),
+`next start` on port 3000, each route warmed with five requests, Lighthouse **12.8.2** mobile preset
+with default simulated throttling, **9 runs per route**, the two routes interleaved (home, fuel,
+home, fuel…) so machine load falls on both equally. `benchmarkIndex` stayed at **2879–3518** across
+all 18 runs. The machine was quiet, which is why these ranges are narrow where §2's were not.
+
+### 9.1 Lighthouse
+
+| Route | n | Performance | Range | LCP | Range | FCP | TBT | CLS | Transfer |
+|---|---|---|---|---|---|---|---|---|---|
+| `/` | 9 | **97** | 97–97 | **2.561 s** | 2.559–2.585 | 0.935 s | 35 ms | 0.012 | 256 KB |
+| `/solutions/fuel-monitoring` | 9 | **97** | 97–98 | **2.561 s** | 2.489–2.568 | 0.912 s | 36 ms | 0.012 | 256 KB |
+
+Accessibility 100, Best Practices 96, SEO 100 on every run of both routes.
+
+**Not comparable with §2.** A different day under different load is exactly the unpaired comparison
+§3 rule 2 forbids, so home's 93 → 97 is not evidence of anything. LCP is still **~61 ms over the
+2.5 s budget** on both routes (V47 stands).
+
+**The LCP element is the paragraph under the H1, not the headline**, on both routes: home
+`<p class="mt-5 max-w-prose text-body-lg text-text-secondary-inverse">`, fuel
+`<p class="mt-4 text-body-lg text-text-primary">`. Two consequences for Sprint 12b: prompt §6's rule
+that the LCP element never animates in covers that paragraph, and a D3b hero rewrite that changes its
+length can move LCP. Why a text element paints at ~2.56 s after an FCP of ~0.91 s is not established
+here. V41 (fonts not preloaded) is the standing candidate.
+
+### 9.2 First Load JS (`next build`)
+
+| Route | First Load JS | Headroom to 180 KB |
+|---|---|---|
+| Shared by all | 103 kB (46.4 + 54.2 + 2) | — |
+| `/` | 105 kB | 75 kB |
+| `/solutions/[slug]` | 103 kB | 77 kB |
+| `/products/[slug]` | 104 kB | 76 kB |
+| `/cart` | 107 kB | 73 kB |
+| `/support/verify-installation` | 108 kB | 72 kB |
+| `/contact`, `/quote`, `/support/book-installation`, `/support/suggestions` | 131 kB | **49 kB** |
+| `/admin/*` | 103–112 kB | 68 kB or more |
+| Middleware | 93.6 kB | — |
+
+The four form routes are the tightest in the app, and all are Tier C (no scroll effects).
+
+### 9.3 How later tasks compare against this
+
+Paired, per §3 rule 2. The T0 arm is the app at `7b7f1e7`, served as a production build from a
+separate worktree on a second port. Runs interleave T0 and the task build against the same warm
+servers, and the reported figure is the median of the paired differences.
+
+Raw JSON for all 18 runs, the build log and the two scripts that produced and summarised them are
+archived outside the repo at `~/.claude/projects/C--Projects-nebsam-website/perf-2026-09-25-s12b-t0/`.
