@@ -61,3 +61,7 @@ media-inbox/
 # scroll-craft working files (builds, harness screenshots, contact sheets). Only a set
 # piece's BRIEF.md is copied into docs/design/; the workspace itself never ships.
 .scrollcraft/
+
+# Playwright MCP output (page snapshots, console logs, screenshots). Captures of third-party
+# sites land here during reference work and must never be committed.
+.playwright-mcp/
