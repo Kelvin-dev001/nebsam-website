@@ -204,9 +204,14 @@
     --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-in-out-quad: cubic-bezier(0.45, 0, 0.55, 1);
+    --dur-press: 120ms; /* Level 1 press feedback — mirrors DURATION.press */
     --dur-micro: 160ms;
     --dur-reveal: 420ms;
     --dur-data: 900ms;
+    /* Level 4 pinned stage: inactive-step dim. A dimmed step is still content,
+       so it must clear 4.5:1 — true on brand-navy only. See lib/motion.ts STAGE
+       and docs/DESIGN_SYSTEM.md §3.5. */
+    --stage-inactive: 0.6;
   }
 
   * {

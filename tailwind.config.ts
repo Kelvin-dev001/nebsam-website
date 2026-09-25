@@ -74,8 +74,12 @@ const config: Config = {
         'in-out-quad': 'var(--ease-in-out-quad)',
       },
       transitionDuration: {
+        press: 'var(--dur-press)',
         micro: 'var(--dur-micro)',
         reveal: 'var(--dur-reveal)',
+      },
+      opacity: {
+        'stage-inactive': 'var(--stage-inactive)',
       },
     },
   },
