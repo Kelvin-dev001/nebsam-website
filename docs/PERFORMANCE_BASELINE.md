@@ -255,3 +255,57 @@ servers, and the reported figure is the median of the paired differences.
 
 Raw JSON for all 18 runs, the build log and the two scripts that produced and summarised them are
 archived outside the repo at `~/.claude/projects/C--Projects-nebsam-website/perf-2026-09-25-s12b-t0/`.
+
+---
+
+## 10. Sprint 12b T2 against T0 — sizes solid, timing comparison inconclusive
+
+T2 added the motion tokens, ADR-0006 docs and the `/dev/motion` playground. Nine interleaved pairs
+per route (T0 arm then T2, back to back) on `/` and `/solutions/fuel-monitoring`, Lighthouse 12.8.2.
+The T0 arm was `7b7f1e7` in a separate git worktree on port 3002, sharing `node_modules` through a
+directory junction.
+
+### 10.1 What is solid: deterministic, and identical in every pair
+
+| | `/` | `/solutions/fuel-monitoring` |
+|---|---|---|
+| Transfer, paired delta | **+63 B** (every pair) | **+15 B** (every pair) |
+| First Load JS | 105 kB, unchanged | 103 kB, unchanged |
+| CLS | 0.012, unchanged | 0.012, unchanged |
+| Accessibility / Best Practices / SEO | 100 / 96 / 100, unchanged | 100 / 96 / 100, unchanged |
+
+Where the bytes come from: the global stylesheet grew **+17 B gzipped** (two custom properties;
+zero new rules once the playground was given its own stylesheet), and the home page chunk grew
+~60 B because `PIN_QUERY` and `STAGE` are not tree-shaken out of `lib/motion.ts`, which the home
+page already imports. The T4 set piece uses both on that page.
+
+### 10.2 What is not: the timing comparison
+
+| | T2 median | T0-arm median | Paired delta, median (range) |
+|---|---|---|---|
+| `/` Performance | 97 (94–97) | 97 | 0 (0 to +24) |
+| `/` LCP | 2.580 s | 2.518 s | −2 ms (−746 to +82) |
+| fuel Performance | 97 (78–97) | 82 | **+14** (+1 to +22) |
+| fuel TBT | 97 ms | 576 ms | **−475 ms** |
+
+**The fuel deltas are not a T2 effect and must not be read as one.** T2 changed 15 bytes on that
+page. Two faults in the measurement explain them instead:
+
+1. **The T0 arm does not reproduce the T0 baseline.** On the same app code, §9 measured fuel TBT at
+   31–44 ms in every run. The T0 arm split into two modes: 94–200 ms in three runs, 547–957 ms in
+   six, with a steady `benchmarkIndex` (2398–2609). Its shared chunk is also named differently
+   (`4454-…` against `1255-…`), so the worktree build is not byte-identical to the original. The
+   `node_modules` junction is the likely cause; it is **not established**.
+2. **The machine ran out of memory.** Claude Code stopped both servers and the run for memory
+   pressure just after the last pair completed; free RAM was 1.7 GB of 15.6 GB. Home's
+   `benchmarkIndex` fell to 604 in the worst pair.
+
+**For T3 and T4:** build the T0 arm with its own `npm ci`, not a junction; confirm it reproduces §9
+before pairing against it; measure with memory headroom. Better still, judge on Vercel preview
+deployments, as `PERFORMANCE_BUDGETS.md` §3 and the sprint prompt both prefer.
+
+Budgets on T2's own medians are unchanged from §9: Performance ≥ 90 met; **LCP still over 2.5 s**
+(V47, 2.580 / 2.517 s, not moved by T2: the home paired delta is −2 ms); everything else met.
+
+Raw JSON for all 36 runs and the scripts are archived at
+`~/.claude/projects/C--Projects-nebsam-website/perf-2026-09-25-s12b-t2/`.
