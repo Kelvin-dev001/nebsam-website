@@ -33,10 +33,10 @@ transitions are linear while the button hover is `inOutQuad`.
 
 | Level | Duration | Easing | Where it is used today |
 |---|---|---|---|
-| 1 — Micro | **160ms** | `inOutQuad` | Button hover and press, link colour, field border, signal bar opacity |
+| 1 — Micro | **160ms**; press **120ms** | `inOutQuad` | Button hover and press, link colour, field border, signal bar opacity |
 | 2 — Reveal | **420ms**, stagger **70ms**, cap **6**, travel **20px** | `outQuart` | `Reveal` on hero and "Complies." blocks |
 | 3 — Data | **900ms** | `linear` | Readout status colour, GSM/GPS bar state |
-| 4 — Cinematic | not used in Sprint 1 | `outExpo` | reserved — one per page maximum |
+| 4 — Cinematic | progress mapped 1:1 to scroll; step changes **420ms**; inactive steps at **0.6** opacity | `outQuart` for step changes | The pinned stage, **ADR-0006** — one per page, Tier A pages only. Built from Sprint 12b T3 |
 | 5 — Transition | not used in Sprint 1 | `outQuart` | reserved — must never delay content paint |
 
 ### Level 1 — Micro, 160ms
@@ -46,6 +46,11 @@ transitions are linear while the button hover is `inOutQuad`.
 Press scales via `active:translate-y-px`, disabled under reduced motion. **Focus rings appear
 instantly and are never animated in** — a delayed focus ring is a keyboard user watching the
 interface catch up.
+
+**Press has its own token, `DURATION.press` = 120ms** (`--dur-press`, `duration-press`), the floor of
+PART 17's Level 1 range, because a press answers the hand directly. It only takes effect where a
+component transitions `transform`: `Button` uses `transition-colors`, so its press is currently
+instant. Sprint 12b T5 decides per component whether that changes.
 
 ### Level 2 — Reveal, 420ms
 Fires **once**, never on re-scroll. `IntersectionObserver` at 0.15 threshold, disconnected on first
@@ -72,10 +77,29 @@ The brand's signature motion. Colour and bar-state transitions in the readout, `
 Counters, when they arrive, count to a **real** number. If a figure is unverified there is no
 counter.
 
-### Levels 4 and 5
-Reserved, not used in the prototype. Level 4 is capped at one per page and must never affect the LCP
-element. Level 5 must never delay content paint — a transition that holds the next page back to look
-smooth has traded the LCP budget for a flourish.
+### Level 4 — the pinned stage (ADR-0006)
+One per page, and only on Tier A pages (Home, `/solutions/vehicle-security`,
+`/solutions/fuel-monitoring`). A visual stage stays in view through native `position: sticky` while
+its steps scroll past. It must never affect the LCP element. ADR-0006 lists the conditions; the ones
+that shape every build:
+
+- **It pins only when `PIN_QUERY` matches** (`lib/motion.ts`): ≥ 768px, fine pointer, no reduced
+  motion. Otherwise the same markup is stacked flow with Level 2 reveals.
+- **Progress is mapped 1:1 to scroll** by CSS scroll-driven animation behind `@supports`, with
+  `IntersectionObserver` as the fallback. Step changes crossfade at `DURATION.reveal` with
+  `EASE.outQuart` — no separate Level 4 duration exists, deliberately.
+- **Inactive steps dim to `STAGE.inactiveOpacity` (0.6) with opacity only.** A dimmed step is still
+  content and must clear 4.5:1. On `brand-navy` it does: `#C3CEEA` 4.86, `#FFFFFF` 7.07. On paper it
+  does not (`text-secondary` would need 0.86), so **the stage sits on the dark ground**, and **state
+  colours appear only in the active step** (`state-warn` dimmed is 3.71). Full table:
+  `DESIGN_SYSTEM.md` §3.5.
+- **The progress rail** is a `border-hairline-inverse` track (decorative) with a
+  `text-secondary-inverse` fill (11.81:1) — an instrument scale. Not `brand-signal`, which means
+  "interactive", and not amber, which means "alarm".
+
+### Level 5
+Reserved, not used. It must never delay content paint — a transition that holds the next page back to
+look smooth has traded the LCP budget for a flourish.
 
 ---
 
@@ -135,7 +159,7 @@ it is a complete one that does not move.
 | 1 Micro | Colour and border changes retained; `active:translate-y-px` disabled via `motion-reduce:` |
 | 2 Reveal | **Content rendered complete, at full opacity, with no inline style.** No transform, no stagger |
 | 3 Data | The readout renders the resolved state and never runs the sequence |
-| 4 Cinematic | (reserved) static composition, parallax off |
+| 4 Cinematic | **No pin.** `data-pinned` is never set, so the pinned stage renders as stacked flow, every step at full opacity, with no inline style |
 | 5 Transition | (reserved) instant |
 
 **Two mechanisms, deliberately:**
@@ -157,10 +181,14 @@ whether or not the sequence ran — the argument survives without the motion.
 - Nothing animates purely because it can.
 - **Content is never gated behind an animation** (§2, Level 2).
 - **No infinite ambient motion.** The sequence runs once and stops. Nothing loops.
-- **No scroll-jacking.** The scrollbar always means what it says.
+- **No scroll-jacking.** The scrollbar always means what it says. **ADR-0006 permits native
+  `position: sticky` pinning** for one set piece per page, because sticky is a layout mode and scroll
+  still maps 1:1 to what moves. Still banned: wheel, touch or key interception; scroll smoothing;
+  forced snapping; scroll-linked layout properties.
 - **Animation never causes layout shift.** Measured CLS on the prototype: **0**, across 0 shifts.
 - **GPU-friendly properties only** — `transform` and `opacity`. No `will-change` was needed.
-- No layout-thrashing scroll handlers. `IntersectionObserver` only.
+- No JS `scroll` event handlers. `IntersectionObserver`, plus CSS scroll-driven animation
+  (`animation-timeline`) behind `@supports` for the ADR-0006 progress rail.
 - One animation library. Sprint 1 shipped with **none** — every level above is CSS transitions plus
   `setTimeout`, which is why the route costs 110 kB of JS rather than 110 kB plus a motion library.
 
@@ -184,7 +212,8 @@ whether or not the sequence ran — the argument survives without the motion.
 - [ ] Content present, server-rendered and visible regardless of animation state
 - [ ] `transform` / `opacity` only
 - [ ] Reveals fire once; stagger capped at 6; travel ≤ 24px
-- [ ] At most one Level 4 on the page
+- [ ] At most one Level 4 on the page; if it pins, every ADR-0006 condition holds
+- [ ] Dimmed or inactive text still clears 4.5:1 on its ground
 - [ ] Nothing loops
 - [ ] Reduced motion verified — content complete, meaning intact
 - [ ] CLS measured, not assumed
