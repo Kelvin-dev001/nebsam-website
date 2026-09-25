@@ -137,6 +137,21 @@ Both must be empty of blockers before launch. Part A is where the risk is.
 
 ---
 
+### New items raised preparing Sprint 12b (motion and scroll), 25 September 2026
+
+Raised in `docs/design/S12B_MOTION_DECISION_MEMO.md` D6 as NV-1 to NV-5 and logged at T0 per the D6
+answer. The sprint prompt refers to them by their NV label.
+
+| # | Question | Why it matters | Owner | Blocks | Status |
+|---|---|---|---|---|---|
+| **V71** (NV-1) | **"70+ corporate clients" — the list behind it counts 67.** `docs/CLIENT_PERMISSIONS.md` holds 63 companies named in the 2023 fuel monitoring proposal plus 4 repo logos whose relationships are unconfirmed — 67 rows, verified 25 Sep 2026 — yet its header says these "substantiate" the claim. The claim itself is client-approved (brief PART 1.5, and "Unpublishable claims" below) and the fuel proposal says "Trusted by 70+". **Confirm the basis for 70+** | The figure is already live in the home proof band as text. It must **never become an animated counter** or be restated as a count in any set piece until this is answered | Client | Any counter or numeric treatment of the figure | OPEN |
+| **V72** (NV-2) | **Provenance and licence of the legacy CRA imagery** that `ASSET_MAP.md` lists as reusable: the concept set (anti-hijack, theft-prevention, driver-safety, accident-prevention, fleet-optimization, compliance-management, smartphone-integration) and the old hero set | Stock or AI-generated imagery presented as Nebsam breaks brief PART 18 | Client | Use of any of these images in a set piece | OPEN |
+| **V73** (NV-3) | **Which branch each premises photo shows** — showroom, reception, main-entrance, service-bay, customer-care, customer-parking | Captions and alt text, and the rule that only Nairobi, Mombasa and Nakuru are branches | Client | Captioned use of premises photos | OPEN |
+| **V74** (NV-4) | **Does real Nebsam video footage exist** — an installation, a device demonstration? | Decides whether a poster-plus-play video facade exists on the site at all | Client | Any video facade | OPEN |
+| **V75** (NV-5) | **Sign-off on a new homepage headline** (D3b = b) | A headline is a public claim. Sprint 12b drafts three and ships none; the live headline stays until one is approved. The rejected Sprint 1 headline does not return in any form | Kelvin | Shipping a new home hero headline | OPEN — drafts due in the T4 report |
+
+---
+
 # PART B — SPECIFICATION GAPS
 
 **190 unique tokens, 219 occurrences.** These are hardware facts, not decisions. Most are answerable
