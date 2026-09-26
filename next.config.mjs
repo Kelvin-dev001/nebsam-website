@@ -70,6 +70,14 @@ const redirects = async () => [
  * styles because Tailwind and next/font emit inline style, and for scripts
  * because Next's bootstrap is inline — both are removed when the policy is
  * enforced and nonces are wired in.
+ *
+ * `upgrade-insecure-requests` is deliberately ABSENT while the policy is
+ * report-only. Browsers ignore that directive in a report-only policy and log
+ * a console error saying so on every page ("…is ignored when delivered in a
+ * report-only policy"), which broke the zero-console-errors rule site-wide
+ * from Sprint 2 to Sprint 12b. Add it back in the same change that enforces
+ * the policy, where it takes effect. Until then HSTS, below, already keeps
+ * every request on HTTPS.
  */
 const csp = [
   "default-src 'self'",
@@ -83,7 +91,6 @@ const csp = [
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
-  'upgrade-insecure-requests',
 ].join('; ');
 
 const headers = async () => [
