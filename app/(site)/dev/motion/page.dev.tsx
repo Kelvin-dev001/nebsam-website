@@ -16,18 +16,23 @@ import './playground.css';
  * /dev/motion — the Sprint 12b motion playground. DEVELOPMENT ONLY.
  *
  * Every motion token and level with the values the site ships, so a change to
- * lib/motion.ts can be felt before it reaches a public page. Three guards keep
+ * lib/motion.ts can be felt before it reaches a public page. Four guards keep
  * it out of the public site, and each is independent of the others:
  *
- *  1. It 404s in production unless MOTION_PLAYGROUND=1. Read per request
- *     (force-dynamic), so the same build can be measured locally with the
- *     flag and deployed without it.
- *  2. noindex, nofollow — for any environment where the flag is set.
- *  3. It is absent from app/sitemap.ts and app/llms.txt/route.ts, which are
+ *  1. It is NOT BUILT in production unless MOTION_PLAYGROUND=1 at build time:
+ *     the `.dev.tsx` extension is a page only in `next dev` or a flagged build
+ *     (next.config.mjs). A built route shapes the chunks of every route it
+ *     shares code with — this one once cost the homepage an extra request and
+ *     +74 ms LCP — so an unflagged production build must not contain it.
+ *  2. Even when built, it 404s in production unless MOTION_PLAYGROUND=1 at
+ *     runtime too (read per request, force-dynamic).
+ *  3. noindex, nofollow — for any environment where the flag is set.
+ *  4. It is absent from app/sitemap.ts and app/llms.txt/route.ts, which are
  *     explicit lists; nothing links to it.
  *
- * Its client components are imported only here, so none of their JavaScript
- * reaches the shared bundle or any public route.
+ * To measure it on a production build: MOTION_PLAYGROUND=1 for both
+ * `npm run build` and `npm start`. Never measure PUBLIC routes on that build —
+ * its chunking is not the chunking visitors get.
  */
 export const dynamic = 'force-dynamic';
 
