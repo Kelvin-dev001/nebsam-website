@@ -5,7 +5,7 @@ import { EasingDemo } from '@/components/dev/motion/easing-demo';
 import { MotionStatus } from '@/components/dev/motion/motion-status';
 import { PressDemo } from '@/components/dev/motion/press-demo';
 import { RevealDemo } from '@/components/dev/motion/reveal-demo';
-import { StageDimDemo } from '@/components/dev/motion/stage-dim-demo';
+import { PinnedDemo } from '@/components/dev/motion/pinned-demo';
 import { TokenTable } from '@/components/dev/motion/token-table';
 import { ROUTES } from '@/lib/constants';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -142,10 +142,13 @@ export default function MotionPlaygroundPage() {
         <Shell>
           <h2 className="font-display-tight text-h2 md:text-md-h2">Level 4 — the pinned stage</h2>
           <p className="mt-3 mb-8 max-w-prose text-body text-text-secondary-inverse">
-            The primitive arrives in Sprint 12b T3 (ADR-0006). What exists now is its dim: inactive
-            steps at the stage opacity, which must still clear 4.5:1.
+            The real primitive (ADR-0006). At 768 px and wider, with a fine pointer and no
+            reduced-motion preference, the stage pins while the steps scroll past it; the active
+            step is full strength and the rest dim. Anywhere else it is this same content as stacked
+            flow. It will not pin if it was already on screen when the page loaded — scroll up and
+            reload above it to see it pin.
           </p>
-          <StageDimDemo />
+          <PinnedDemo />
         </Shell>
       </Section>
 
