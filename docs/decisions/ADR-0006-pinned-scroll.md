@@ -112,5 +112,7 @@ at load stays unpinned (anchor landing checked: no layout shift from the act); s
 at 390; complete and still under reduced motion, enhancer never fetched; enhancer loaded only once
 the act approached; CLS 0.0011 across load plus a full scroll; zero console errors or warnings.
 Harness: no dead scroll in all three passes; contrast clean at 1440 and 390, and one known false
-positive under reduced motion (`ANIMATION_SYSTEM.md`, Level 4). **Still to verify on the homepage
-set piece in T4:** all of the above with real copy, and Lighthouse paired against T0.
+positive under reduced motion (`ANIMATION_SYSTEM.md`, Level 4). Lighthouse paired against T0: no
+effect on public routes once the playground stopped being built in production
+(`PERFORMANCE_BASELINE.md` §11). **Still to verify on the homepage set piece in T4:** all of the
+above with real copy, and Lighthouse paired against T0 with the set piece in place.

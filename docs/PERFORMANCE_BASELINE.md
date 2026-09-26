@@ -309,3 +309,54 @@ Budgets on T2's own medians are unchanged from §9: Performance ≥ 90 met; **LC
 
 Raw JSON for all 36 runs and the scripts are archived at
 `~/.claude/projects/C--Projects-nebsam-website/perf-2026-09-25-s12b-t2/`.
+
+---
+
+## 11. Sprint 12b T3 — a regression found, traced to a dev route, fixed, re-measured
+
+T3 added the pinned-stage primitive (ADR-0006) and demonstrated it on the `/dev/motion` playground.
+No public route uses the primitive yet.
+
+### 11.1 A trustworthy control, this time
+
+§10's T0 arm was unusable. This one was rebuilt the way §10 said it should be: a worktree at
+`bcab5d4` (the T0 app code plus the Next 15.5.26 security fix, so the arms differ only by Sprint 12b
+work), with its **own `npm ci`** instead of a junction. Its shared chunks carry **the same content
+hashes** as the sprint build, and it **reproduces §9**: home 97 / 2.561 s / TBT 33 ms, fuel 97 /
+2.561 s / 32 ms. Best Practices reads **100** on both arms, up from 96, because the CSP console error
+fixed on 25 September was the failing audit.
+
+### 11.2 First measurement: +74 ms LCP on the homepage
+
+Nine interleaved pairs per route: home paired LCP delta **+74 ms** (seven of nine pairs at +73 to
++76), transfer **+1,462 B**; fuel flat. The homepage made **one more request**: its motion code had
+been moved out of its page chunk into a shared chunk (`1566-…`), which the homepage then had to
+fetch separately. A rebuild with the playground moved out of `app/` put the homepage back to one
+page chunk, which proved the cause: **the dev-only playground, because it imports the same Reveal
+and readout as the homepage, was shaping the homepage's chunking.** A runtime 404 did not stop that;
+a built route participates in code splitting whether or not it is ever served.
+
+### 11.3 The fix, and the re-measurement
+
+Development-only pages are now `page.dev.tsx`, and `next.config.mjs` treats `.dev.tsx` as a page
+only in `next dev` or a build made with `MOTION_PLAYGROUND=1`. An ordinary production build does not
+contain `/dev/motion` at all.
+
+| Paired against T0, n = 9 | Home | Fuel |
+|---|---|---|
+| Performance | 97, delta **0** | 97, delta **0** |
+| LCP | 2.562 s, delta **0 ms** (−7 to +2) | 2.561 s, delta **−1 ms** |
+| TBT | 30 ms, delta −2 ms | 32 ms, delta +1 ms |
+| Transfer | delta **+171 B** | delta **+43 B** |
+| Requests | 15 vs 15 | unchanged |
+| CLS · A11y / BP / SEO | 0.012 · 100 / 100 / 100 | 0.012 · 100 / 100 / 100 |
+
+`benchmarkIndex` 3349–3622 across all 36 runs. The +171 B on home is the T2 constants and `willPin`
+in its page chunk; the T4 set piece uses all of them there. **LCP is unchanged and still ~60 ms over
+budget (V47).**
+
+**Rule that follows:** measure public routes only on an **unflagged** build. A build made with
+`MOTION_PLAYGROUND=1` chunks differently, by design of the bug above.
+
+Raw JSON, scripts and build logs: `perf-2026-09-26-s12b-t3/` (the regression) and
+`perf-2026-09-26-s12b-t3-fixed/` (the fix), under `~/.claude/projects/C--Projects-nebsam-website/`.
