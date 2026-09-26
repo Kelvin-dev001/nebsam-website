@@ -99,7 +99,18 @@ this implementation emitting the harness's markup contract.
 ## Verification required before the set piece ships (T3, T4)
 
 - `curl` of the production HTML contains every step's text exactly once.
-- Reduced motion: complete and static, no inline hide styles, `data-pinned` never set.
+- Reduced motion: complete and static, no inline hide styles, `data-pinned` stays `off`.
 - Keyboard: visible focus, focus never lands in an invisible step, anchors land correctly.
 - The scroll-craft harness at 1440×900, at 390×844 and with `--reduced-motion`, contrast graded.
 - Lighthouse mobile, paired against the T0 baseline (`PERFORMANCE_BASELINE.md` §9).
+
+**Primitive verified in T3 (26 September 2026), on `/dev/motion` with placeholder content:** server
+HTML complete with `data-pinned="off"` and each step once; pins at 1440 and releases after its
+travel, stage held at `top: 0` throughout; rail mapped 1:1 to travel by the browser's scroll
+timeline; active step and frame advance 1 → 5; focus inside a step activates it; an act on screen
+at load stays unpinned (anchor landing checked: no layout shift from the act); stacked with reveals
+at 390; complete and still under reduced motion, enhancer never fetched; enhancer loaded only once
+the act approached; CLS 0.0011 across load plus a full scroll; zero console errors or warnings.
+Harness: no dead scroll in all three passes; contrast clean at 1440 and 390, and one known false
+positive under reduced motion (`ANIMATION_SYSTEM.md`, Level 4). **Still to verify on the homepage
+set piece in T4:** all of the above with real copy, and Lighthouse paired against T0.

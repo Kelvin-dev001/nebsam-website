@@ -99,6 +99,37 @@ that shape every build:
   `text-secondary-inverse` fill (11.81:1) — an instrument scale. Not `brand-signal`, which means
   "interactive", and not amber, which means "alarm".
 
+#### Building one: `PinnedSequence` (built in Sprint 12b T3)
+
+`components/motion/pinned-sequence.tsx`, a server component:
+`<PinnedSequence id steps frames caption restingFrame? />`. **Steps carry the argument; frames are
+illustration of it** (aria-hidden, caption excepted), so nothing a reader needs may live only in a
+frame.
+
+| Piece | File | What it does |
+|---|---|---|
+| Markup | `pinned-sequence.tsx` | Stage, then an ordinary `<ol>` of steps, all visible. `data-pinned="off"` in the server HTML |
+| Styles | `pinned-sequence.module.css` | A CSS module, so it loads only where used. Everything pinned is under `[data-pinned='on']` |
+| Loader | `pinned-sequence-loader.tsx` | The only initial JS. Decides with `willPin`, sets `data-pinned`, adds `html.sc-ready`, then — after load and idle — imports the enhancer when the act is within a viewport |
+| Enhancer | `pinned-enhancer.ts` | Its own async chunk (595 B gzipped). Sets `data-active` from IntersectionObserver on a centre line, and on `focusin` |
+| Decision | `will-pin.ts` | `PIN_QUERY` matches **and** the act is not already on screen — shared with `Reveal` so the two cannot disagree |
+
+- **It never pins an act that is on screen at the moment of deciding.** The pinned layout changes the
+  act's geometry, so switching under the reader's eyes would be a layout shift. A reader who
+  reloads mid-sequence gets stacked flow, which is complete.
+- **Stacked flow reveals its steps with `Reveal skipWhenPinned`.** When the act pins, `Reveal` stands
+  aside, because an inline `opacity: 1` left by a reveal would override the dim.
+- **Frames crossfade asymmetrically:** the leaving frame snaps out at `micro`, the arriving one eases
+  in at `reveal`. Symmetric fades left both half-visible at once.
+- **Smooth scrolling: none.** No library, no global `scroll-behavior: smooth` (memo D4). Checked in
+  T3: nothing in the codebase sets it.
+
+**One known harness false positive.** Under `--reduced-motion`, scroll-craft's `shoot.mjs` can
+report a contrast failure on a step that sits behind the fixed cookie bar. The harness hides fixed
+elements and screenshots the frame in the same instant, before the bar has repainted hidden, so it
+grades the step against the bar's own text. Replayed with a 300 ms settle, the frame is plain navy.
+The step's real contrast is the §3.5 table in `DESIGN_SYSTEM.md`.
+
 ### Level 5
 Reserved, not used. It must never delay content paint — a transition that holds the next page back to
 look smooth has traded the LCP budget for a flourish.

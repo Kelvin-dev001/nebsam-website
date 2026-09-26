@@ -267,6 +267,7 @@ reads as smudge. The prototype uses no shadow at all.
 | `Reveal` | `components/motion/reveal.tsx` | Level 2 |
 | `useReducedMotion` | `components/motion/use-reduced-motion.ts` | defaults to reduced |
 | `SignalReadout` | `components/telemetry/signal-readout.tsx` | the signature element |
+| `PinnedSequence` | `components/motion/pinned-sequence.tsx` | Level 4 pinned stage, ADR-0006. Sprint 12b T3 |
 
 **No `Card` was built.** Brief 6.6 prohibits uniform rounded-card grids as the default answer, and
 the layout does not need one. A card will be added when a surface genuinely requires it, not
