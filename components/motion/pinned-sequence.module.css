@@ -1,0 +1,158 @@
+/*
+ * The pinned stage, ADR-0006. A CSS module, so it loads only on routes that
+ * render a pinned sequence — never in the global stylesheet every page pays for.
+ *
+ * DEFAULT = STACKED FLOW. Everything below `[data-pinned='on']` is progressive
+ * enhancement. The server HTML, a no-JS visitor, a reduced-motion visitor and a
+ * phone all get the rules outside it: the stage on top, then every step, in
+ * order, at full opacity, with no inline style anywhere.
+ *
+ * transform and opacity are the only animated properties. Nothing here sets
+ * display:none, visibility:hidden, content-visibility or inert on a step.
+ */
+
+.act {
+  position: relative;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step + .step {
+  margin-top: 3rem;
+}
+
+.stage {
+  margin-bottom: 3rem;
+}
+
+/* The frames sit in one grid cell, so the stage is always as tall as its
+   tallest frame and a frame change can never shift layout. */
+.frames {
+  display: grid;
+}
+
+/* Asymmetric on purpose (review-animations, standards 9 and 10). A frame that
+   is LEAVING snaps out at micro speed; the one ARRIVING eases in at reveal
+   speed. Symmetric 420ms fades left both frames half-visible at once for a
+   couple of hundred milliseconds — a double exposure. A blur would also mask
+   it, but filter is not a property this system animates. */
+.frame {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-out-quart);
+}
+
+.frame[data-active] {
+  transition: opacity var(--dur-reveal) var(--ease-out-quart);
+}
+
+/* Stacked flow shows the resting frame — by default the last, the resolved
+   state, the same contract as the hero readout. */
+.act:not([data-pinned='on']) .frame[data-resting] {
+  opacity: 1;
+}
+
+/* The rail only means something while the stage is pinned. It is decorative
+   and aria-hidden, so it is simply not drawn otherwise. */
+.rail {
+  display: none;
+}
+
+/* ── Pinned ──────────────────────────────────────────────────────────────── */
+
+.act[data-pinned='on'] {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  column-gap: 4rem;
+}
+
+.act[data-pinned='on'] .steps {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.act[data-pinned='on'] .step {
+  min-height: 100vh;
+  min-height: 100svh;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* A dimmed step is still content: 0.6 keeps body text at 4.86:1 on navy. */
+  opacity: var(--stage-inactive);
+  transition: opacity var(--dur-reveal) var(--ease-out-quart);
+}
+
+.act[data-pinned='on'] .step[data-active] {
+  opacity: 1;
+}
+
+.act[data-pinned='on'] .stage {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  margin-bottom: 0;
+  display: grid;
+  grid-template-columns: 2px minmax(0, 1fr);
+  column-gap: 2rem;
+  align-items: center;
+}
+
+.act[data-pinned='on'] .frame[data-active] {
+  opacity: 1;
+}
+
+.act[data-pinned='on'] .rail {
+  display: block;
+  position: relative;
+  height: 60%;
+  width: 2px;
+  align-self: center;
+  background: var(--border-hairline-inverse);
+}
+
+/* Fallback: the rail steps with the active step (--rail-p, set on this element
+   by the enhancer). */
+.railFill {
+  position: absolute;
+  inset: 0;
+  background: var(--text-secondary-inverse);
+  transform-origin: top;
+  transform: scaleY(var(--rail-p, 0));
+  transition: transform var(--dur-reveal) var(--ease-out-quart);
+}
+
+/* Where supported, the rail is mapped 1:1 to the act's pinned travel by the
+   browser itself — CSS scroll-driven animation on the act's own view
+   timeline. `contain` is exactly the stretch in which the act fills the
+   viewport, which is the stretch in which the stage is pinned. */
+@supports (animation-timeline: view()) {
+  .act[data-pinned='on'] {
+    view-timeline-name: --pinned-act;
+    view-timeline-axis: block;
+  }
+
+  .act[data-pinned='on'] .railFill {
+    transition: none;
+    animation: rail-fill linear both;
+    animation-timeline: --pinned-act;
+    animation-range: contain 0% contain 100%;
+  }
+}
+
+@keyframes rail-fill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
