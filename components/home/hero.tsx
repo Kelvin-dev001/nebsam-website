@@ -1,7 +1,6 @@
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { ButtonLink } from '@/components/ui/button';
 import { Reveal } from '@/components/motion/reveal';
-import { SignalReadout } from '@/components/telemetry/signal-readout';
 import { BRANCHES, SHORT_DESCRIPTION, whatsappUrl } from '@/lib/company';
 
 /**
@@ -23,9 +22,15 @@ import { BRANCHES, SHORT_DESCRIPTION, whatsappUrl } from '@/lib/company';
  * national homepage, which only makes sense to someone who already knows the
  * business. It now names the branch it dials.
  *
- * The signature element holds section 4 rather than getting its own band. It
- * is the argument the headline makes, and separating the claim from its
- * demonstration by a section boundary weakens both.
+ * SPRINT 12b T4: THE READOUT MOVED OUT (memo D3b = b). The jamming readout
+ * now peaks the "One vehicle, instrumented" set piece (components/home/
+ * one-vehicle.tsx), where it arrives with context. A page with two jamming
+ * moments has two peaks, and a page with two peaks has none. ADR-0002 already
+ * said the production hero must carry the whole company; the headline below
+ * changes only when Kelvin approves a new one (register V75 / NV-5) — three
+ * drafts are in the T4 report and none ships. Until then the headline and
+ * sub-line stay exactly as they were, and the hero paragraph stays the LCP
+ * element, as server-rendered text.
  */
 export function Hero() {
   const nairobi = BRANCHES.find((b) => b.slug === 'nairobi') ?? BRANCHES[0];
@@ -54,12 +59,6 @@ export function Hero() {
           </Reveal>
 
           <Reveal index={3}>
-            <div className="mt-8">
-              <SignalReadout />
-            </div>
-          </Reveal>
-
-          <Reveal index={4}>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
               <ButtonLink
                 href={whatsappUrl(
@@ -85,7 +84,7 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <Reveal index={5}>
+          <Reveal index={4}>
             {/*
               Who Nebsam is and where it operates, stated plainly in the first
               screen. The SEO skill is explicit that LLMs quote what is
