@@ -31,10 +31,25 @@ export interface PinnedSequenceProps {
   caption?: React.ReactNode;
   /** The frame shown when not pinned. Defaults to the last, the resolved state. */
   restingFrame?: number;
+  /**
+   * Scroll room per step while pinned, in viewport heights (default 1 each).
+   * The peak gets the largest span by a visible margin (scroll-craft feel §2):
+   * scroll distance is the only clock this medium has.
+   */
+  spans?: number[];
 }
 
-export function PinnedSequence({ id, steps, frames, caption, restingFrame }: PinnedSequenceProps) {
+export function PinnedSequence({
+  id,
+  steps,
+  frames,
+  caption,
+  restingFrame,
+  spans,
+}: PinnedSequenceProps) {
   const resting = restingFrame ?? frames.length - 1;
+  const spanOf = (i: number) => spans?.[i] ?? 1;
+  const totalSpan = steps.reduce<number>((sum, _step, i) => sum + spanOf(i), 0);
 
   return (
     <>
@@ -42,7 +57,7 @@ export function PinnedSequence({ id, steps, frames, caption, restingFrame }: Pin
         id={id}
         className={styles.act}
         data-sc-act="pin"
-        data-sc-span={steps.length}
+        data-sc-span={Number(totalSpan.toFixed(2))}
         data-pinned="off"
       >
         <div className={styles.stage} data-sc-stage>
@@ -79,6 +94,8 @@ export function PinnedSequence({ id, steps, frames, caption, restingFrame }: Pin
               data-pinned-step
               data-sc-cue=""
               data-active={i === 0 ? '' : undefined}
+              // Read only by the pinned layout; stacked flow ignores it.
+              style={{ '--step-span': spanOf(i) } as React.CSSProperties}
             >
               <Reveal skipWhenPinned>{step}</Reveal>
             </li>
