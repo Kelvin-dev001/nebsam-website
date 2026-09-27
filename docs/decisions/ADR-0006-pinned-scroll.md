@@ -114,5 +114,22 @@ the act approached; CLS 0.0011 across load plus a full scroll; zero console erro
 Harness: no dead scroll in all three passes; contrast clean at 1440 and 390, and one known false
 positive under reduced motion (`ANIMATION_SYSTEM.md`, Level 4). Lighthouse paired against T0: no
 effect on public routes once the playground stopped being built in production
-(`PERFORMANCE_BASELINE.md` §11). **Still to verify on the homepage set piece in T4:** all of the
-above with real copy, and Lighthouse paired against T0 with the set piece in place.
+(`PERFORMANCE_BASELINE.md` §11).
+
+**Homepage set piece verified in T4 (27 September 2026)**, "One vehicle, instrumented", on the
+unflagged production build: every step, hedge, the KEBS reference and the illustration caption appear
+exactly once in the rendered server HTML, with `data-pinned="off"`; pins at 1440 with spans
+`[1, 1, 1, 1, 1.8]`, each frame matching its step, and the peak's sequence playing once when beat 5
+becomes active; the peak's words hold beside the frame through its whole span; focus in each step's
+link activates that step; stacked at 390 with only the resting frame in layout, the sequence playing
+once when seen, no horizontal overflow; complete and still under reduced motion (no inline hide
+styles, enhancer never fetched, sequence never runs); zero console errors or warnings. The only
+layout shift on the page is the floating WhatsApp button making room for the cookie bar at load,
+which predates Sprint 12b. Harness: no dead scroll in all three passes; contrast clean at 1440 and
+390; under reduced motion the known cookie-bar false positive again (beat 3 at 2.02:1 and beat 5 at
+4.41:1 only in the shot where each sits under the bar, 18.69:1 once clear). Lighthouse paired
+against T0: `PERFORMANCE_BASELINE.md` §12.
+
+**What T4 added to the primitive**, all found by looking at the real page: `spans` (per-step scroll
+room); step content sticky at the top of its step, so a long span is a hold rather than a gap; only
+the resting frame takes space in stacked flow; the stacked stage capped at 42rem.

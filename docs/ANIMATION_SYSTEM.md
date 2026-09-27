@@ -34,9 +34,9 @@ transitions are linear while the button hover is `inOutQuad`.
 | Level | Duration | Easing | Where it is used today |
 |---|---|---|---|
 | 1 — Micro | **160ms**; press **120ms** | `inOutQuad` | Button hover and press, link colour, field border, signal bar opacity |
-| 2 — Reveal | **420ms**, stagger **70ms**, cap **6**, travel **20px** | `outQuart` | `Reveal` on hero and "Complies." blocks |
-| 3 — Data | **900ms** | `linear` | Readout status colour, GSM/GPS bar state |
-| 4 — Cinematic | progress mapped 1:1 to scroll; step changes **420ms**; inactive steps at **0.6** opacity | `outQuart` for step changes | The pinned stage, **ADR-0006** — one per page, Tier A pages only. Built from Sprint 12b T3 |
+| 2 — Reveal | **420ms**, stagger **70ms**, cap **6**, travel **20px** | `outQuart` | `Reveal` on hero and "Complies." blocks; the home set piece's steps in stacked flow |
+| 3 — Data | **900ms** | `linear` | Readout status colour, GSM/GPS bar state — since T4 in the home set piece's peak frame (beat 5), no longer in the hero. **Asymmetric since T4:** into `state-warn` at `micro` (the alarm snaps), back to `state-ok` at `data` (relief settles) |
+| 4 — Cinematic | progress mapped 1:1 to scroll; step changes **420ms**; inactive steps at **0.6** opacity | `outQuart` for step changes | The pinned stage, **ADR-0006** — one per page, Tier A pages only. Built in Sprint 12b T3; first used on Home, "One vehicle, instrumented" (T4, `components/home/one-vehicle.tsx`) |
 | 5 — Transition | not used in Sprint 1 | `outQuart` | reserved — must never delay content paint |
 
 ### Level 1 — Micro, 160ms
@@ -102,9 +102,14 @@ that shape every build:
 #### Building one: `PinnedSequence` (built in Sprint 12b T3)
 
 `components/motion/pinned-sequence.tsx`, a server component:
-`<PinnedSequence id steps frames caption restingFrame? />`. **Steps carry the argument; frames are
-illustration of it** (aria-hidden, caption excepted), so nothing a reader needs may live only in a
+`<PinnedSequence id steps frames caption restingFrame? spans? />`. **Steps carry the argument; frames
+are illustration of it** (aria-hidden, caption excepted), so nothing a reader needs may live only in a
 frame.
+
+**`spans`** (added in T4) gives each step its scroll room in viewport heights, default 1. The peak
+gets the most by a visible margin; the home set piece uses `[1, 1, 1, 1, 1.8]`. A step's content is
+one viewport tall and **sticky at the top of its step**, so extra span is a hold with the words
+beside the frame, never a gap before they arrive. At span 1 that rule changes nothing.
 
 | Piece | File | What it does |
 |---|---|---|
@@ -121,6 +126,12 @@ frame.
   aside, because an inline `opacity: 1` left by a reveal would override the dim.
 - **Frames crossfade asymmetrically:** the leaving frame snaps out at `micro`, the arriving one eases
   in at `reveal`. Symmetric fades left both half-visible at once.
+- **Stacked, only the resting frame takes space**, and the stage is capped at 42rem. The frame never
+  changes there, so reserving the tallest frame's height only left a hole under a shorter resting
+  frame, and an uncapped stage stretched the frame across a wide screen (both found in T4).
+- **A frame that animates picks its own moment.** The home peak (`components/home/peak-readout.tsx`)
+  plays the Level 3 sequence once: pinned, when its frame becomes active; stacked, when it is 60% in
+  view. Never under reduced motion, never on a loop.
 - **Smooth scrolling: none.** No library, no global `scroll-behavior: smooth` (memo D4). Checked in
   T3: nothing in the codebase sets it.
 
@@ -178,7 +189,15 @@ it. It is not what produces it.
 | Crawler / LLM retrieval | Resolved state in the server HTML |
 
 `useState<Phase>('resolved')` is the initial value, so SSR emits it. The effect returns to
-`'resolved'` at the end, so the DOM is never left altered.
+`'resolved'` at the end, so the DOM is never left altered. Since T4 the phase clock lives in
+`components/telemetry/use-jam-sequence.ts`, and `SignalReadout` takes `autoplay` (off when a parent
+picks the moment), `showCaption` (off only where the parent prints the same caption) and `variant`
+(`inline`, or `stage` for the home peak frame: plate row like the other frames, status on its own
+line at `h3` size from `lg`).
+
+**Where it plays since T4:** beat 5 of the home set piece, not the hero (memo D3b = b). The argument
+table above still holds — the story lands at 3.8s — but the clock now starts when the reader reaches
+the peak, not at page load.
 
 ---
 

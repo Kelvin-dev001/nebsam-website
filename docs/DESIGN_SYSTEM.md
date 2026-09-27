@@ -266,8 +266,9 @@ reads as smudge. The prototype uses no shadow at all.
 | `Badge` | `components/ui/badge.tsx` | factual marker only |
 | `Reveal` | `components/motion/reveal.tsx` | Level 2 |
 | `useReducedMotion` | `components/motion/use-reduced-motion.ts` | defaults to reduced |
-| `SignalReadout` | `components/telemetry/signal-readout.tsx` | the signature element |
-| `PinnedSequence` | `components/motion/pinned-sequence.tsx` | Level 4 pinned stage, ADR-0006. Sprint 12b T3 |
+| `SignalReadout` | `components/telemetry/signal-readout.tsx` | the signature element; `inline` or `stage` variant (T4) |
+| `PinnedSequence` | `components/motion/pinned-sequence.tsx` | Level 4 pinned stage, ADR-0006. Sprint 12b T3; `spans` added in T4 |
+| `TelemetryPanel` | `components/home/telemetry-panel.tsx` | static instrument face for the home set piece's frames 1–4; same panel, plate and mono rows as the readout; no amber |
 
 **No `Card` was built.** Brief 6.6 prohibits uniform rounded-card grids as the default answer, and
 the layout does not need one. A card will be added when a surface genuinely requires it, not
@@ -285,7 +286,14 @@ it is on.
 
 **"Jamming"** — `components/telemetry/signal-readout.tsx`. Full rationale in ADR-0002.
 
-The readout runs a four-phase sequence on load: healthy → degrading → jammed → **anti-jammer armed**.
+The readout runs a four-phase sequence: healthy → degrading → jammed → **anti-jammer armed**. Since
+Sprint 12b T4 it is the **peak of the homepage set piece** ("One vehicle, instrumented", beat 5), not
+the hero, and plays once when the reader reaches it (memo D3b = b; `ANIMATION_SYSTEM.md` §3).
+
+**Panel label contrast, measured in T4** (computed colour at `opacity: 0.7` composited over the
+panel's `brand-navy-raised/70` on `brand-navy`): mono labels **6.22:1**, values **18.6:1**,
+`state-ok` ("Complies", the resolved status) **10.1:1**, `state-warn` **8.62:1**; the stage caption on
+navy **11.81:1**.
 
 **The resolved state is the default rendered DOM.** It is what the server sends, what a crawler
 reads, what renders with JS disabled, what a reduced-motion visitor sees, and where the sequence
