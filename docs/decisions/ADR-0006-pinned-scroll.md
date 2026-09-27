@@ -128,7 +128,9 @@ layout shift on the page is the floating WhatsApp button making room for the coo
 which predates Sprint 12b. Harness: no dead scroll in all three passes; contrast clean at 1440 and
 390; under reduced motion the known cookie-bar false positive again (beat 3 at 2.02:1 and beat 5 at
 4.41:1 only in the shot where each sits under the bar, 18.69:1 once clear). Lighthouse paired
-against T0: `PERFORMANCE_BASELINE.md` §12.
+against T0 (`PERFORMANCE_BASELINE.md` §12): no change to CLS, TBT or the 100s, but **the stage's CSS
+module is a second render-blocking stylesheet on Home** and LCP moved +5 ms and +150 ms in two runs.
+The fix trades against this ADR's CSS-module choice, so it is a decision: **V77**.
 
 **What T4 added to the primitive**, all found by looking at the real page: `spans` (per-step scroll
 room); step content sticky at the top of its step, so a long span is a hold rather than a gap; only

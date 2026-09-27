@@ -360,3 +360,54 @@ budget (V47).**
 
 Raw JSON, scripts and build logs: `perf-2026-09-26-s12b-t3/` (the regression) and
 `perf-2026-09-26-s12b-t3-fixed/` (the fix), under `~/.claude/projects/C--Projects-nebsam-website/`.
+
+## 12. Sprint 12b T4 — the homepage set piece, paired against T0
+
+T4 put the pinned stage on a public route for the first time: "One vehicle, instrumented" on Home.
+Two nine-pair runs, both against the §11 T0 arm (`bcab5d4`, own `npm ci`) on :3002, with T4
+**unflagged** on :3000, Lighthouse 12.8.2. Run 1 measured the build before the last three changes
+(the asymmetric alarm colour, the readout file split, beat 2's route strip); run 2 measured the final
+build. **The machine was busier than in T3:** `benchmarkIndex` about 2,000–2,700 against 3,349–3,622,
+and round 1 of each run was heavily loaded on both arms (503–991).
+
+| Home, paired against T0, n = 9 | Run 1 | Run 2 (final build) |
+|---|---|---|
+| Performance | 97, delta **0** | 95, delta **+1** |
+| LCP | 2.568 s, delta **+5 ms** (−1 to +82) | 2.717 s, delta **+150 ms** (−121 to +519) |
+| TBT | 65 ms, delta +4 ms | 126 ms, delta −50 ms |
+| CLS | 0.012, delta 0 | 0.012, delta 0 |
+| Transfer | delta **+6,917 B** | delta **+6,954 B** |
+| Requests | **16** vs 15 | **16** vs 15 |
+| A11y / BP / SEO | 100 / 100 / 100 | 100 / 100 / 100 |
+
+Fuel, which T4 does not touch, moved only by **+275 B** (the new Tailwind utilities in the global
+stylesheet); its LCP deltas were −75 and −37 ms, and both arms were erratic there (TBT up to about
+1 s on T0).
+
+### 12.1 Where Home's extra cost comes from
+
+Both runs show **one more request, and it is render-blocking**: the pinned stage's CSS module
+(`pinned-sequence.module.css`, 2,803 B raw, **855 B gzipped**) is a second stylesheet in Home's
+`<head>`. Lighthouse's render-blocking audit prices potential savings at **198 ms on T4 against
+57 ms on T0**, and the LCP element is the same hero paragraph on both arms. The rest of the +6.95 KB
+is the set piece's server-rendered copy and its RSC payload (HTML **+3.7 KB**) and the page chunk
+(**+1.1 KB**, the peak's client code); the shared chunks are unchanged.
+
+The two runs disagree on the size (+5 vs +150 ms), not the direction or the cause. Lantern scales
+CPU work to the machine's measured speed, and run 2's machine was slower. **Home LCP was already over
+budget at T0 (V47), and on this rig T4 adds to it.**
+
+### 12.2 Not fixed in T4 — a decision (V77)
+
+Each fix has a cost, and one of them reverses a T3 decision, so this is Kelvin's call:
+
+- **(a) Move the stage's rules into the global stylesheet.** Home returns to one stylesheet; every
+  route's CSS grows by about 0.85 KB gzipped. Reverses T3's "a CSS module, so it loads only where
+  used".
+- **(b) `experimental.inlineCss` in `next.config.mjs`.** No render-blocking stylesheet on any route,
+  but every navigation carries its CSS in the HTML, with no cross-page cache. A config change.
+- **(c) Leave it until a preview measurement.** The local rig serves HTTP/1.1. V47 already records
+  that this rig cannot resolve LCP differences of this size, and previews are blocked on V76.
+
+Raw JSON and scripts: `perf-2026-09-27-s12b-t4/` (run 1) and `perf-2026-09-27-s12b-t4-final/`
+(run 2), under `~/.claude/projects/C--Projects-nebsam-website/`.
