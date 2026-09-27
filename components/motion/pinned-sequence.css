@@ -1,6 +1,13 @@
 /*
- * The pinned stage, ADR-0006. A CSS module, so it loads only on routes that
- * render a pinned sequence — never in the global stylesheet every page pays for.
+ * The pinned stage, ADR-0006. Global classes, `pinned-` prefixed, pulled into
+ * the ONE global stylesheet by an @import at the top of app/globals.css.
+ *
+ * It was a CSS module until Sprint 12b T4 measured what that cost: on Home the
+ * module became a second render-blocking stylesheet, and Lighthouse priced it
+ * at about 200 ms of render-blocking time against 57 ms without it (register
+ * V77, PERFORMANCE_BASELINE.md §12). Kelvin chose option (a): every route now
+ * carries these rules, about 0.85 KB gzipped, so no route pays a request for
+ * them. Do not turn this back into a module or import it from the component.
  *
  * DEFAULT = STACKED FLOW. Everything below `[data-pinned='on']` is progressive
  * enhancement. The server HTML, a no-JS visitor, a reduced-motion visitor and a
@@ -11,31 +18,31 @@
  * display:none, visibility:hidden, content-visibility or inert on a step.
  */
 
-.act {
+.pinned-act {
   position: relative;
 }
 
-.steps {
+.pinned-steps {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.step + .step {
+.pinned-step + .pinned-step {
   margin-top: 3rem;
 }
 
 /* Stacked, the stage is capped near the width a frame gets beside the steps
    when pinned. Uncapped, a reduced-motion or touch visitor on a wide screen got
    the resting frame stretched across the whole shell (T4, 1440px). */
-.stage {
+.pinned-stage {
   margin-bottom: 3rem;
   max-width: 42rem;
 }
 
 /* The frames sit in one grid cell, so the stage is always as tall as its
    tallest frame and a frame change can never shift layout. */
-.frames {
+.pinned-frames {
   display: grid;
 }
 
@@ -44,19 +51,19 @@
    speed. Symmetric 420ms fades left both frames half-visible at once for a
    couple of hundred milliseconds — a double exposure. A blur would also mask
    it, but filter is not a property this system animates. */
-.frame {
+.pinned-frame {
   grid-area: 1 / 1;
   opacity: 0;
   transition: opacity var(--dur-micro) var(--ease-out-quart);
 }
 
-.frame[data-active] {
+.pinned-frame[data-active] {
   transition: opacity var(--dur-reveal) var(--ease-out-quart);
 }
 
 /* Stacked flow shows the resting frame — by default the last, the resolved
    state, the same contract as the hero readout. */
-.act:not([data-pinned='on']) .frame[data-resting] {
+.pinned-act:not([data-pinned='on']) .pinned-frame[data-resting] {
   opacity: 1;
 }
 
@@ -65,30 +72,30 @@
    hole under a resting frame shorter than the tallest one (seen at 390px in
    T4). Frames are aria-hidden illustration, never steps, so this hides no
    content; the markup is unchanged for crawlers. */
-.act:not([data-pinned='on']) .frame:not([data-resting]) {
+.pinned-act:not([data-pinned='on']) .pinned-frame:not([data-resting]) {
   display: none;
 }
 
 /* The rail only means something while the stage is pinned. It is decorative
    and aria-hidden, so it is simply not drawn otherwise. */
-.rail {
+.pinned-rail {
   display: none;
 }
 
 /* ── Pinned ──────────────────────────────────────────────────────────────── */
 
-.act[data-pinned='on'] {
+.pinned-act[data-pinned='on'] {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   column-gap: 4rem;
 }
 
-.act[data-pinned='on'] .steps {
+.pinned-act[data-pinned='on'] .pinned-steps {
   grid-column: 1;
   grid-row: 1;
 }
 
-.act[data-pinned='on'] .step {
+.pinned-act[data-pinned='on'] .pinned-step {
   /* --step-span is set per step from the `spans` prop; the peak gets most. */
   min-height: calc(var(--step-span, 1) * 100vh);
   min-height: calc(var(--step-span, 1) * 100svh);
@@ -105,7 +112,7 @@
    switched to the peak frame and played while the peak's own words were still
    below the fold (T4). Now the words arrive like every other step's and stay
    beside the frame for the whole hold, then leave with the step. */
-.act[data-pinned='on'] .step > * {
+.pinned-act[data-pinned='on'] .pinned-step > * {
   position: sticky;
   top: 0;
   min-height: 100vh;
@@ -115,11 +122,11 @@
   justify-content: center;
 }
 
-.act[data-pinned='on'] .step[data-active] {
+.pinned-act[data-pinned='on'] .pinned-step[data-active] {
   opacity: 1;
 }
 
-.act[data-pinned='on'] .stage {
+.pinned-act[data-pinned='on'] .pinned-stage {
   grid-column: 2;
   grid-row: 1;
   align-self: start;
@@ -135,11 +142,11 @@
   align-items: center;
 }
 
-.act[data-pinned='on'] .frame[data-active] {
+.pinned-act[data-pinned='on'] .pinned-frame[data-active] {
   opacity: 1;
 }
 
-.act[data-pinned='on'] .rail {
+.pinned-act[data-pinned='on'] .pinned-rail {
   display: block;
   position: relative;
   height: 60%;
@@ -150,7 +157,7 @@
 
 /* Fallback: the rail steps with the active step (--rail-p, set on this element
    by the enhancer). */
-.railFill {
+.pinned-rail-fill {
   position: absolute;
   inset: 0;
   background: var(--text-secondary-inverse);
@@ -164,12 +171,12 @@
    timeline. `contain` is exactly the stretch in which the act fills the
    viewport, which is the stretch in which the stage is pinned. */
 @supports (animation-timeline: view()) {
-  .act[data-pinned='on'] {
+  .pinned-act[data-pinned='on'] {
     view-timeline-name: --pinned-act;
     view-timeline-axis: block;
   }
 
-  .act[data-pinned='on'] .railFill {
+  .pinned-act[data-pinned='on'] .pinned-rail-fill {
     transition: none;
     animation: rail-fill linear both;
     animation-timeline: --pinned-act;

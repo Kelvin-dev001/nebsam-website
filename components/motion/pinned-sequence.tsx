@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Reveal } from './reveal';
 import { PinnedSequenceLoader } from './pinned-sequence-loader';
-import styles from './pinned-sequence.module.css';
 
 /**
  * The pinned stage — ADR-0006, Level 4, at most one per page, Tier A pages only.
@@ -55,21 +54,21 @@ export function PinnedSequence({
     <>
       <div
         id={id}
-        className={styles.act}
+        className="pinned-act"
         data-sc-act="pin"
         data-sc-span={Number(totalSpan.toFixed(2))}
         data-pinned="off"
       >
-        <div className={styles.stage} data-sc-stage>
-          <div className={styles.rail} aria-hidden="true">
-            <span className={styles.railFill} data-pinned-rail-fill />
+        <div className="pinned-stage" data-sc-stage>
+          <div className="pinned-rail" aria-hidden="true">
+            <span className="pinned-rail-fill" data-pinned-rail-fill />
           </div>
           <div>
-            <div className={styles.frames} aria-hidden="true">
+            <div className="pinned-frames" aria-hidden="true">
               {frames.map((frame, i) => (
                 <div
                   key={i}
-                  className={styles.frame}
+                  className="pinned-frame"
                   data-pinned-frame
                   data-active={i === 0 ? '' : undefined}
                   data-resting={i === resting ? '' : undefined}
@@ -86,11 +85,11 @@ export function PinnedSequence({
           </div>
         </div>
 
-        <ol className={styles.steps}>
+        <ol className="pinned-steps">
           {steps.map((step, i) => (
             <li
               key={i}
-              className={styles.step}
+              className="pinned-step"
               data-pinned-step
               data-sc-cue=""
               data-active={i === 0 ? '' : undefined}

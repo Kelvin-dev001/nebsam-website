@@ -5,7 +5,8 @@
  * with LCP.
  *
  * It only ever sets ATTRIBUTES; every visual consequence is CSS keyed off them
- * (pinned-sequence.module.css). No scroll event handler exists anywhere in it:
+ * (pinned-sequence.css, bundled into the global stylesheet). No scroll event
+ * handler exists anywhere in it:
  *
  *  - Which step is active comes from IntersectionObserver, with the root
  *    shrunk to a line across the middle of the viewport. Steps are contiguous,

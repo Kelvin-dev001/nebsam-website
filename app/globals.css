@@ -1,3 +1,8 @@
+/* The pinned stage (ADR-0006). An @import, so it is bundled INTO this file:
+   one stylesheet per route, never a second render-blocking request (V77).
+   It must stay the first statement — CSS ignores an @import after any rule. */
+@import '../components/motion/pinned-sequence.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
