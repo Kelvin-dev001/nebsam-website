@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { useReducedMotion } from '@/components/motion/use-reduced-motion';
-import { DURATION, EASE, JAM_SEQUENCE } from '@/lib/motion';
+import { DURATION, EASE } from '@/lib/motion';
+import { useJamSequence, type JamPhase } from './use-jam-sequence';
+import { Bars, Field, Status } from './readout-parts';
 
 /**
  * THE SIGNATURE ELEMENT — "Jamming". Brief 6.4, direction B.
@@ -27,9 +28,13 @@ import { DURATION, EASE, JAM_SEQUENCE } from '@/lib/motion';
  * A GSM jammer blocks the uplink, not GPS reception — so GPS stays healthy
  * while GSM collapses. That asymmetry is the honest picture and it is why the
  * device can still know where it is while it cannot report.
+ *
+ * ── Variants (Sprint 12b T4) ────────────────────────────────────────────────
+ * `inline` is the original strip. `stage` is the same instrument drawn as the
+ * home set piece's PEAK frame: the plate row matches the other frames, and the
+ * status gets its own line, set larger from `lg` — so the one change the
+ * reader should watch is the largest thing on the stage.
  */
-
-type Phase = 'resolved' | 'healthy' | 'degrading' | 'jammed';
 
 const PLATE = 'KXX 000X'; // illustrative — not a valid Kenyan registration
 
@@ -41,136 +46,85 @@ interface PhaseView {
   tone: 'ok' | 'warn';
 }
 
-const VIEW: Record<Phase, PhaseView> = {
+const VIEW: Record<JamPhase, PhaseView> = {
   healthy: { gsm: 4, gps: 3, fix: '0:02', status: 'Link OK', tone: 'ok' },
   degrading: { gsm: 2, gps: 3, fix: '0:09', status: 'Signal degrading', tone: 'warn' },
   jammed: { gsm: 0, gps: 3, fix: '1:47', status: 'Signal jammed', tone: 'warn' },
   resolved: { gsm: 0, gps: 3, fix: '1:47', status: 'Anti-jammer armed · Alert sent', tone: 'ok' },
 };
 
-function Bars({ value, max, label }: { value: number; max: number; label: string }) {
-  return (
-    <span className="inline-flex items-end gap-[2px]" role="img" aria-label={`${label}: ${value} of ${max}`}>
-      {Array.from({ length: max }).map((_, i) => (
-        <span
-          key={i}
-          aria-hidden="true"
-          className="w-[3.5px] rounded-[1px] bg-current"
-          style={{
-            height: `${6 + i * 3.5}px`,
-            opacity: i < value ? 1 : 0.22,
-            transition: `opacity ${DURATION.micro}ms ${EASE.linear}`,
-          }}
-        />
-      ))}
-    </span>
-  );
-}
-
-export function SignalReadout() {
-  const reduced = useReducedMotion();
-  // Default = resolved. This is what SSR emits.
-  const [phase, setPhase] = React.useState<Phase>('resolved');
-
-  React.useEffect(() => {
-    if (reduced) return;
-
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    let idle: number | undefined;
-    const at = (ms: number, p: Phase) => timers.push(setTimeout(() => setPhase(p), ms));
-
-    const run = () => {
-      const t0 = 0;
-      const t1 = JAM_SEQUENCE.hold;
-      const t2 = t1 + JAM_SEQUENCE.degrade;
-      const t3 = t2 + JAM_SEQUENCE.jammed;
-
-      at(t0, 'healthy');
-      at(t1, 'degrading');
-      at(t2, 'jammed');
-      at(t3, 'resolved'); // ends where it started — the DOM is never left altered
-    };
-
-    /**
-     * THE SEQUENCE WAITS FOR THE PAGE TO SETTLE. This is a performance fix, and
-     * a measured one.
-     *
-     * Started eagerly, the four phase changes land at 0, 700, 1600 and 2700ms,
-     * and each is a React state update that re-renders on the main thread.
-     * Lighthouse mobile reported time-to-interactive and LCP at 2.9s in every
-     * run — the last beat at 2700ms plus its render. A decorative animation was
-     * setting the page's interactivity metric.
-     *
-     * Brief PART 14 is blunt about the audience: a mid-range Android on mobile
-     * data the reader pays for by the megabyte. An illustration must not
-     * compete with first paint on that device. So the sequence starts once the
-     * browser is idle after load, which costs it nothing — the resolved state is
-     * the default rendered DOM, so a visitor who never reaches idle still sees
-     * the finished, meaningful readout rather than a blank panel.
-     */
-    const start = () => {
-      if ('requestIdleCallback' in window) {
-        idle = window.requestIdleCallback(run, { timeout: 3000 });
-      } else {
-        timers.push(setTimeout(run, 200));
-      }
-    };
-
-    if (document.readyState === 'complete') {
-      start();
-    } else {
-      window.addEventListener('load', start, { once: true });
-    }
-
-    return () => {
-      window.removeEventListener('load', start);
-      if (idle !== undefined && 'cancelIdleCallback' in window) window.cancelIdleCallback(idle);
-      timers.forEach(clearTimeout);
-    };
-  }, [reduced]);
-
+export function SignalReadout({
+  autoplay = true,
+  showCaption = true,
+  variant = 'inline',
+}: {
+  /** False when a parent picks the moment (the home set piece's PeakReadout). */
+  autoplay?: boolean;
+  /** False ONLY where the parent shows the same caption itself (brief 6.5). */
+  showCaption?: boolean;
+  variant?: 'inline' | 'stage';
+} = {}) {
+  const phase = useJamSequence(autoplay);
   const v = VIEW[phase];
   const toneClass = v.tone === 'warn' ? 'text-state-warn' : 'text-state-ok';
+  // ASYMMETRIC, from the T4 review-animations gate. The alarm is a system
+  // response, so it snaps: into warn at micro. At 900ms the words "Signal
+  // degrading" sat in the OK colour for half a second, which the stage
+  // variant's larger type made plain. Relief settles: back to OK at data speed.
+  // The new style's duration governs a transition, so each direction gets its own.
+  const toneMs = v.tone === 'warn' ? DURATION.micro : DURATION.data;
+  const stage = variant === 'stage';
+  const status = <Status text={v.status} toneClass={toneClass} toneMs={toneMs} large={stage} />;
 
   return (
-    <div className="max-w-[42rem]">
+    <div className={stage ? undefined : 'max-w-[42rem]'}>
       <div
         className="rounded-data border border-border-hairline-inverse bg-brand-navy-raised/70 p-3 font-mono text-mono tabular sm:p-4"
         // The live region announces only the resolved status, not each tick —
         // a screen reader must not be narrated at by a decorative sequence.
         aria-live="off"
       >
+        {stage ? (
+          <p className="mb-3 flex flex-wrap items-baseline gap-x-3 text-text-secondary-inverse">
+            <span className="text-text-inverse">{PLATE}</span>
+            <span className="uppercase tracking-[0.06em] opacity-70">Signal</span>
+          </p>
+        ) : null}
+
         {/* Field row wraps rather than scrolls. A permanent scrollbar across an
             instrument panel reads as broken chrome, and it was the first thing
             wrong in the 1440px screenshot. */}
-        <div>
-          <dl className="flex flex-wrap items-baseline gap-x-4 gap-y-1.5 text-text-secondary-inverse">
+        <dl className="flex flex-wrap items-baseline gap-x-4 gap-y-1.5 text-text-secondary-inverse">
+          {stage ? null : (
             <div className="flex items-baseline gap-1.5">
               <dt className="sr-only">Vehicle</dt>
               <dd className="text-text-inverse">{PLATE}</dd>
             </div>
-            <Field label="Ign" value="On" />
-            <Field label="Speed" value="62 km/h" />
-            <Field label="Head" value="NNE" />
-            <Field label="Fuel" value="71%" />
-            <div className="flex items-baseline gap-1.5">
-              <dt className="uppercase tracking-[0.06em] opacity-70">Fix</dt>
-              <dd
-                className={phase === 'jammed' || phase === 'resolved' ? 'text-state-warn' : 'text-text-inverse'}
-                style={{ transition: `color ${DURATION.micro}ms ${EASE.linear}` }}
-              >
-                {v.fix}
-              </dd>
-            </div>
-          </dl>
-        </div>
+          )}
+          <Field label="Ign" value="On" />
+          <Field label="Speed" value="62 km/h" />
+          <Field label="Head" value="NNE" />
+          <Field label="Fuel" value="71%" />
+          <div className="flex items-baseline gap-1.5">
+            <dt className="uppercase tracking-[0.06em] opacity-70">Fix</dt>
+            <dd
+              className={
+                phase === 'jammed' || phase === 'resolved' ? 'text-state-warn' : 'text-text-inverse'
+              }
+              style={{ transition: `color ${DURATION.micro}ms ${EASE.linear}` }}
+            >
+              {v.fix}
+            </dd>
+          </div>
+        </dl>
 
         <hr className="my-3 border-t border-border-hairline-inverse" />
 
-        {/* Status row */}
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <span className={`inline-flex items-center gap-2 ${toneClass}`}
-            style={{ transition: `color ${DURATION.data}ms ${EASE.linear}` }}>
+          <span
+            className={`inline-flex items-center gap-2 ${toneClass}`}
+            style={{ transition: `color ${toneMs}ms ${EASE.linear}` }}
+          >
             <span className="uppercase tracking-[0.06em] opacity-70">GSM</span>
             <Bars value={v.gsm} max={4} label="GSM signal" />
           </span>
@@ -180,49 +134,19 @@ export function SignalReadout() {
             <Bars value={v.gps} max={3} label="GPS signal" />
           </span>
 
-          <span
-            className={`inline-flex items-center gap-2 ${toneClass}`}
-            style={{ transition: `color ${DURATION.data}ms ${EASE.linear}` }}
-          >
-            <span
-              aria-hidden="true"
-              className="inline-block h-1.5 w-1.5 rounded-full bg-current"
-            />
-            {/*
-              WIDTH IS RESERVED FOR THE LONGEST STATE, and this is a layout
-              correctness fix rather than a cosmetic one.
-
-              The four status strings run from "Link OK" (7 characters) to
-              "Anti-jammer armed · Alert sent" (29). Sitting in a `flex-wrap`
-              row, that swing changes where the row breaks, which changes the
-              container height, which is cumulative layout shift — on a mobile
-              viewport, where the row wraps at all. Lighthouse measured CLS
-              0.116 against a budget of 0.05 and attributed it to no element,
-              because the shifting thing is a wrap point rather than a box.
-
-              30ch is exact here: the readout is set in IBM Plex Mono, so one
-              `ch` is one glyph and the longest string fits precisely. Bars
-              already render a fixed count and vary only opacity, so this is
-              the last variable-width thing in the component.
-            */}
-            <span className="inline-block min-w-[30ch]">{v.status}</span>
-          </span>
+          {stage ? null : status}
         </div>
+
+        {stage ? <p className="mt-4 lg:text-h3">{status}</p> : null}
       </div>
 
-      {/* Required by brief 6.5. Not optional, not small print. */}
-      <p className="mt-2 font-mono text-label uppercase tracking-[0.08em] text-text-secondary-inverse">
-        Illustration — not live customer data
-      </p>
-    </div>
-  );
-}
-
-function Field({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline gap-1.5">
-      <dt className="uppercase tracking-[0.06em] opacity-70">{label}</dt>
-      <dd className="text-text-inverse">{value}</dd>
+      {/* Required by brief 6.5. Not optional, not small print. Suppressed only
+          where the surrounding component prints the same caption itself. */}
+      {showCaption ? (
+        <p className="mt-2 font-mono text-label uppercase tracking-[0.08em] text-text-secondary-inverse">
+          Illustration — not live customer data
+        </p>
+      ) : null}
     </div>
   );
 }
