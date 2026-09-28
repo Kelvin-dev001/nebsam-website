@@ -4,7 +4,12 @@ import { serviceClient } from '@/lib/supabase/server';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 import { z } from 'zod';
 import { clientIp, recordAttempt } from './rate-limit';
-import { SUBMISSION_SCHEMAS, type SubmissionKind, type SubmissionResult } from './types';
+import {
+  SUBMISSION_FIELDS,
+  SUBMISSION_SCHEMAS,
+  type SubmissionKind,
+  type SubmissionResult,
+} from './types';
 
 /**
  * THE ENQUIRY INBOX — one action for all four public forms.
@@ -31,6 +36,25 @@ function reference(): string {
   const bytes = new Uint32Array(6);
   crypto.getRandomValues(bytes);
   return `NBS-${Array.from(bytes, (b) => alphabet[b % alphabet.length]).join('')}`;
+}
+
+/**
+ * WHAT THE PERSON TYPED, handed back with a refusal (register V81).
+ *
+ * React resets a form after every action, failed ones included, so a refusal
+ * that returns only a message wipes the form: "please tell us a little more",
+ * and nothing left to add to. Only the form's own fields go back, read by name
+ * from SUBMISSION_FIELDS — never the honeypot, the kind or the Turnstile token —
+ * and only to the browser that has just sent them. Never with a success.
+ */
+function typed(kind: SubmissionKind, formData: FormData): Record<string, string> {
+  const values: Record<string, string> = {};
+  for (const { name } of SUBMISSION_FIELDS[kind]) {
+    const value = formData.get(name);
+    // 4000: the longest any field accepts (the message).
+    if (typeof value === 'string') values[name] = value.slice(0, 4000);
+  }
+  return values;
 }
 
 /**
@@ -75,6 +99,7 @@ export async function submitEnquiry(
       ok: false,
       message: issue?.message ?? 'Please check the form.',
       field: typeof issue?.path[0] === 'string' ? issue.path[0] : undefined,
+      values: typed(kind, formData),
     };
   }
 
@@ -107,6 +132,7 @@ export async function submitEnquiry(
       ok: false,
       message:
         'We have already received several messages from this connection. Please give us a little time to reply, or send us a WhatsApp message.',
+      values: typed(kind, formData),
     };
   }
 
@@ -125,6 +151,7 @@ export async function submitEnquiry(
       ok: false,
       message:
         'We could not confirm you are not a bot. Please try again, or message us on WhatsApp.',
+      values: typed(kind, formData),
     };
   }
 
@@ -149,6 +176,7 @@ export async function submitEnquiry(
       ok: false,
       message:
         'We could not record your message just now. Please try again, or message us on WhatsApp.',
+      values: typed(kind, formData),
     };
   }
 
