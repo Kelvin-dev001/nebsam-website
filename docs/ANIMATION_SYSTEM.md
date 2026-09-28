@@ -33,7 +33,7 @@ transitions are linear while the button hover is `inOutQuad`.
 
 | Level | Duration | Easing | Where it is used today |
 |---|---|---|---|
-| 1 — Micro | **160ms**; press **120ms** | `inOutQuad` | Button hover and press, link colour, field border, signal bar opacity |
+| 1 — Micro | **160ms**; press **120ms** | `inOutQuad` for colour; `outQuart` for press, lifts and entrances | Button hover and press, link colour, field border, signal bar opacity; since T5 the WhatsApp button's lift and three entrances (below) |
 | 2 — Reveal | **420ms**, stagger **70ms**, cap **6**, travel **20px** | `outQuart` | `Reveal` on hero and "Complies." blocks; the home set piece's steps in stacked flow |
 | 3 — Data | **900ms** | `linear` | Readout status colour, GSM/GPS bar state — since T4 in the home set piece's peak frame (beat 5), no longer in the hero. **Asymmetric since T4:** into `state-warn` at `micro` (the alarm snaps), back to `state-ok` at `data` (relief settles) |
 | 4 — Cinematic | progress mapped 1:1 to scroll; step changes **420ms**; inactive steps at **0.6** opacity | `outQuart` for step changes | The pinned stage, **ADR-0006** — one per page, Tier A pages only. Built in Sprint 12b T3; first used on Home, "One vehicle, instrumented" (T4, `components/home/one-vehicle.tsx`) |
@@ -48,11 +48,34 @@ instantly and are never animated in** — a delayed focus ring is a keyboard use
 interface catch up.
 
 **Press has its own token, `DURATION.press` = 120ms** (`--dur-press`, `duration-press`), the floor of
-PART 17's Level 1 range, because a press answers the hand directly. It only takes effect where a
-component transitions `transform`: `Button` uses `transition-colors`, so its press is currently
-instant. Sprint 12b T5 decides per component whether that changes. **Where press is transitioned it
-uses `EASE.outQuart`**, not the `inOutQuad` Level 1 uses for colour: press feedback is ease-out,
-because an in-out curve starts slow at the moment the finger lands.
+PART 17's Level 1 range, because a press answers the hand directly. **Since Sprint 12b T5 every
+`Button` and `ButtonLink` transitions it**, through `press-feedback`: colour at `micro` on `inOutQuad`,
+the 1px press at `press` on **`EASE.outQuart`** — ease-out, because an in-out curve starts slow at the
+moment the finger lands. Measured: 0.74px at 31ms, the full 1px by ~100ms. Before T5,
+`transition-colors` did not cover transform and the press was instant.
+
+#### The T5 micro-interactions (approved by Kelvin, 28 September 2026)
+
+All in `components/motion/micro-interactions.css`, pulled into the one global stylesheet by an
+`@import` at the top of `app/globals.css` — **never a CSS module**, which on Home became a second
+render-blocking request (V77). Transform and opacity only; existing tokens only.
+
+| Class | Used on | What moves | Why |
+|---|---|---|---|
+| `press-feedback` | `Button`, `ButtonLink` | 1px press at 120ms `outQuart` | Feedback |
+| `fab-lift` | the floating WhatsApp button | lifts clear of the cookie bar by **transform** (−108px, −76px from `md`), 160ms `outQuart` | It used to change `bottom`, and its transition was overridden, so it jumped: **the site's only layout shift**. A transform is not a layout shift |
+| `enter-from-right` + `enter-fade` | the mobile menu panel and its backdrop | panel from `translateX(100%)` at `reveal`; backdrop fades at `micro` | Shows where the panel comes from. **Closes instantly** by design: a link tap loads the next page, and Close and Escape should snap |
+| `enter-rise` | the enquiry confirmation (`components/forms/enquiry-success.tsx`) | fades and settles 8px at `reveal` | The form it replaces vanishes in a frame; the change needs a bridge |
+| `enter-fade` | "Added — view cart" (`components/cart/add-to-cart.tsx`) | fades at `micro` | Confirms the tap |
+
+**Entrances use `@starting-style`**, so an inserted element transitions in with no JavaScript, and a
+browser without it renders the final state at once. Reduced motion needs no rule of its own: the
+backstop below makes every transition 0.01ms, so each entrance lands in under a frame.
+
+Rejected in the T5 gate, and why: desktop nav hover (core navigation, tens of times a visit), form
+errors and focus rings (must be instant), the menu's exit (delays navigation), hiding the anonymous
+suggestion's contact fields (user-caused, and height is layout), an animated "Sending…" (decoration
+over a short wait).
 
 ### Level 2 — Reveal, 420ms
 Fires **once**, never on re-scroll. `IntersectionObserver` at 0.15 threshold, disconnected on first

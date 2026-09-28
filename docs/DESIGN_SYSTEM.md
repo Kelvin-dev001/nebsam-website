@@ -258,7 +258,7 @@ reads as smudge. The prototype uses no shadow at all.
 
 | Primitive | File | Notes |
 |---|---|---|
-| `Button` / `ButtonLink` | `components/ui/button.tsx` | primary / secondary / ghost, md / lg, 44px min target |
+| `Button` / `ButtonLink` | `components/ui/button.tsx` | primary / secondary / ghost, md / lg, 44px min target; 1px press eased at the 120ms press token since T5 (`press-feedback`) |
 | `Section` | `components/layout/section.tsx` | light / paper / dark; sets `data-section` |
 | `Shell` | same | the measure, `max-w-shell` |
 | `Eyebrow` | same | mono structural label |
@@ -269,6 +269,7 @@ reads as smudge. The prototype uses no shadow at all.
 | `SignalReadout` | `components/telemetry/signal-readout.tsx` | the signature element; `inline` or `stage` variant (T4) |
 | `PinnedSequence` | `components/motion/pinned-sequence.tsx` | Level 4 pinned stage, ADR-0006. Sprint 12b T3; `spans` added in T4 |
 | `TelemetryPanel` | `components/home/telemetry-panel.tsx` | static instrument face for the home set piece's frames 1–4; same panel, plate and mono rows as the readout; no amber |
+| `EnquirySuccess` | `components/forms/enquiry-success.tsx` | the confirmation that replaces an enquiry form; takes focus on its heading so it is read out, and settles in (`enter-rise`). T5 |
 
 **No `Card` was built.** Brief 6.6 prohibits uniform rounded-card grids as the default answer, and
 the layout does not need one. A card will be added when a surface genuinely requires it, not

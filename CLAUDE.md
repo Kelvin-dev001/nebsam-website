@@ -162,6 +162,12 @@ fake-broadsheet hairline columns). Those are defaults, not decisions.
 registration plates, be labelled as illustration where it could be mistaken for live data, and never
 be described as real customer data.
 
+**Motion (Sprint 12b).** Tokens in `lib/motion.ts`, mirrored as CSS variables; system in
+`docs/ANIMATION_SYSTEM.md`. At most one pinned stage per page, Tier A only (ADR-0006). Reduced motion
+is complete and static. **Shared motion CSS goes into the one global stylesheet** by an `@import` at
+the top of `app/globals.css` (`pinned-sequence.css`, `micro-interactions.css`) — **never a CSS
+module**: on Home a module became a second render-blocking stylesheet (V77).
+
 ## 7. SEO / LLM checklist per page type
 
 Use the **`nebsam-seo`** skill. Full plan: `docs/SEO_LLM_STRATEGY.md`.
@@ -259,6 +265,8 @@ npm run seed:certs                  # illustrative certificates for testing veri
 npm run seed:certs -- --remove      # and their teardown
 npm run pentest:verify              # the Sprint 11 gate — 37 checks over HTTP
 
+MOTION_PLAYGROUND=1 npm run build   # a production build WITH the /dev/motion playground  (Sprint 12b)
+
 npm run verify:roles                # the Sprint 12 gate — 47 RLS checks, per role  (from Sprint 12)
 npm run db:apply -- --status        # which migrations are applied, which are pending
 npm run db:apply -- --pending       # apply every pending migration, in order
@@ -284,7 +292,13 @@ It asserts against the POLICIES, not the screens — the admin runs under the se
 bypasses RLS entirely, so clicking around the admin proves nothing about the database boundary.
 
 **Measure on the production build (`npm run build && npm start`), never on `next dev`** — dev builds
-are not production builds and the budget numbers will lie.
+are not production builds and the budget numbers will lie. **Never measure a `MOTION_PLAYGROUND=1`
+build either**: development-only pages are `page.dev.tsx`, built only in `next dev` or a flagged
+build, and a built dev route changes how public routes are chunked (PERFORMANCE_BASELINE §11).
+
+**Vercel previews.** `vercel.json` on `develop` and the branches cut from it builds them as Next.js
+(V76); `main` does not carry it and keeps serving the CRA site until the Sprint 15 cutover. Previews
+have no environment variables and sit behind Vercel Authentication.
 
 **ESLint + Prettier + `tsc --noEmit` must pass before any commit.**
 
