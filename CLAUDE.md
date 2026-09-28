@@ -267,8 +267,8 @@ MOTION_PLAYGROUND=1 npm run build   # a production build WITH the /dev/motion pl
 
 npm run verify:roles                # the Sprint 12 gate — 38 RLS checks, per role (47 before ADR-0007)
 npm run db:apply -- --status        # which migrations are applied, which are pending
-npm run db:apply -- 0044_name.sql   # apply ONE migration by name — the only safe form until V80
-npm run db:apply -- --pending       # NOT SAFE until V80: would re-run 0001–0040 (see below)
+npm run db:apply -- 0045_name.sql   # apply ONE migration by name
+npm run db:apply -- --pending       # apply every pending migration, in order (safe since V80)
 npm run storage:init                # create/repair the PRIVATE uploads bucket, and assert it is private
 ```
 
@@ -280,11 +280,11 @@ database.
 that is local-development only. It was renewed on 28 September 2026 (V61 resolved), and 0041–0044
 were applied that day, one at a time by name.
 
-**The migration ledger starts at 0041 (V80).** 0001–0040 were pasted into the dashboard SQL editor
-before `apply-migration.mjs` existed, so its `schema_migrations` table has never heard of them:
-`--status` lists them as pending and **`--pending` would re-run all forty against the live
-database.** Until the ledger is reconciled, apply migrations one at a time by name, after a
-read-only check that the migration's objects are not already there.
+**The migration ledger is complete (V80, reconciled 28 September 2026).** 0001–0040 had been pasted
+into the dashboard SQL editor before `apply-migration.mjs` existed, so its `schema_migrations` table
+had never heard of them and `--pending` would have re-run all forty. They were recorded after
+read-only checks of their effects; `--status` now reads 44 applied, 0 pending. **Anything applied
+outside this script must be recorded in the ledger the same day**, or the trap comes back.
 
 **`npm run verify:roles` creates four throwaway auth accounts, runs the matrix and deletes them.**
 It asserts against the POLICIES, not the screens — the admin runs under the service-role key and
