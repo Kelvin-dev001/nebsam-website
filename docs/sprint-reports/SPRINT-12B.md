@@ -1,6 +1,6 @@
 # SPRINT 12b — MOTION & SCROLL
 
-**Branch** `sprint/12b-motion-scroll` · 52 commits · 25–28 September 2026
+**Branch** `sprint/12b-motion-scroll` · 57 commits · 25–28 September 2026
 **Delivers** Motion tokens, an SSR-safe pinned-stage primitive, the homepage set piece "One vehicle,
 instrumented", the approved hero headline, and a micro-interaction pass. None of it may cost
 crawlability, accessibility or the Kenyan mobile budget.
@@ -139,8 +139,8 @@ four animation skills at project scope in `.claude/skills/`.
     its heading.
   - **B.** "Added to cart" was never announced. It now renders in a `role="status"` region that
     exists before the click.
-- **Found, not fixed** (outside this sprint's scope): the cookie bar draws over the open mobile menu
-  (both `z-40`) and hides its WhatsApp action while the bar is up.
+  - The cookie bar drew over the open mobile menu (both `z-40`) and hid its WhatsApp action. The menu
+    is now `z-50`; a hit test at that action lands on it with the bar open (fixed 28 Sep, before the PR).
 
 ---
 
@@ -150,8 +150,10 @@ V71 (70+ clients basis), V72 (legacy imagery licence), V73 (premises photo branc
 footage), V75 (headline sign-off, **closed**), V76 (previews, **closed**), V77 (render-blocking stage
 CSS, **closed**).
 
-Also closed this sprint: V41, V50, V01, V02. Answered and awaiting their pages: V13, V17, V18, V20–V23.
-Recorded but held: V15's seed data, and "publish this" on two never-publish claims.
+Also closed this sprint: V41, V50, V01, V02, V24 (school bus is enquiry-only). Answered and awaiting their
+pages: V13, V17, V18, V20–V23 (St. Augustine PCEA only with written permission), the KIPI scan, and the
+radio prices in Part B (VAT basis still to confirm). V15: real testimonials with permission, nothing
+seeded. Held: "publish this" on two never-publish claims.
 
 ---
 
@@ -159,14 +161,10 @@ Recorded but held: V15's seed data, and "publish this" on two never-publish clai
 
 - **Home LCP ~63 ms over budget** (V47, pre-existing). A preview measurement (V53) is still blocked:
   previews have no environment variables and no protection bypass.
-- **The menu and footer link to `/solutions/school-bus-management`, which returns 404.** The page is a
-  draft, but `lib/constants.ts:62` lists it.
-- **The cookie bar covers the open mobile menu** (both `z-40`).
-- **Product page, pre-existing content:**
-  - It says "Installation and delivery terms are confirmed when you order", though V05 was answered on
-    4 Sep (prices include installation).
-  - "Reviewed annually.." has a double full stop (`product-price.tsx:52` adds "." after a note that
-    already ends with one).
+- **Four found in testing were fixed before the PR** (28 Sep, at Kelvin's request): links to the draft
+  school bus page (navigation, footer, 404 page, `llms.txt`) now skip it; the open mobile menu sits above
+  the cookie bar; the product page renders its installation terms (V05) instead of a placeholder; and
+  the recurring-fee sentence no longer ends in "..".
 - **The T0 worktree `C:\Projects\nebsam-t0` still exists and holds a copy of `.env.local`.** It was kept
   for the paired runs, which are complete; remove it at merge.
 - **The harness flags a reduced-motion contrast false positive** when a step sits under the fixed
@@ -176,21 +174,19 @@ Recorded but held: V15's seed data, and "publish this" on two never-publish clai
 
 ## DECISIONS NEEDED FROM THE HUMAN
 
-1. **Certificate verification removal (V03/V04):** which sprint? It is about 60 files plus a database
-   migration, and applying migrations needs the renewed access token (V61).
-2. **V15:** real testimonials with permission, or admin-only test entries that can never be published?
-3. **"#1 vehicle theft prevention…" and "No way a thief…":** amend the brief, or keep them unpublished
+1. **"#1 vehicle theft prevention…" and "No way a thief…":** amend the brief, or keep them unpublished
    (recommended).
-4. **V24:** is the school bus solution enquiry-only? **V23:** written permission from St. Augustine
-   PCEA before it is named.
-5. **V76 (2) and (3):** preview environment variables and a protection bypass, if preview measurement
+2. **V76 (2) and (3):** preview environment variables and a protection bypass, if preview measurement
    (V53, V47) is wanted before Sprint 14.
-6. **The brief's "It's the site where ___" sentence and references** (asked 26 Sep), still open.
-7. **Merging `sprint/12b-motion-scroll` into `develop`,** by PR with this report as its description.
+3. **The brief's "It's the site where ___" sentence and references** (asked 26 Sep), still open.
+4. **The radio prices:** excluding VAT, as every price on the site is shown?
+
+Decided on 28 Sep: remove certificate verification (V03/V04, its own branch after this one); real
+testimonials only (V15); school bus enquiry-only (V24); merge this branch by PR.
 
 ## RECOMMENDED NEXT STEP
 
-Review this report and the preview, then open the PR into `develop`. Before Sprint 13, fix the
-school bus 404 link and the cookie bar's stacking over the menu. Both are small and user-visible.
+Merge this PR into `develop` after review. Then the certificate-verification removal, on its own
+branch: a written plan first, because it drops a route, an API, admin screens and database tables.
 
 **STOPPING HERE FOR REVIEW.**
