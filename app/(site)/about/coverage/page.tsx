@@ -160,7 +160,10 @@ export default async function CoveragePage() {
                 <ul className="mt-4 flex flex-col gap-1 font-mono text-body-sm">
                   {branch.phones.map((phone) => (
                     <li key={phone.e164}>
-                      <a className="text-brand-signal-ink underline underline-offset-4" href={`tel:${phone.e164}`}>
+                      <a
+                        className="text-brand-signal-ink underline underline-offset-4"
+                        href={`tel:${phone.e164}`}
+                      >
                         {phone.display}
                       </a>
                     </li>

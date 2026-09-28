@@ -38,8 +38,7 @@ import { checkUpload, storagePath, imageDimensions } from '@/lib/admin/uploads';
 const BUCKET = 'uploads';
 
 export type MediaResult =
-  | { ok: true; id: string; message: string }
-  | { ok: false; message: string };
+  { ok: true; id: string; message: string } | { ok: false; message: string };
 
 const metaSchema = z.object({
   alt_text: z
@@ -92,15 +91,13 @@ export async function uploadMedia(
   const path = storagePath(file.name, check.kind);
   const bytes = new Uint8Array(await file.arrayBuffer());
 
-  const { error: uploadError } = await serviceClient()
-    .storage.from(BUCKET)
-    .upload(path, bytes, {
-      // The SNIFFED type, never the browser's claim. Storing the client's
-      // Content-Type would let an uploader control the type the file is later
-      // served with, which is most of what makes a malicious upload work.
-      contentType: check.kind.mime,
-      upsert: false,
-    });
+  const { error: uploadError } = await serviceClient().storage.from(BUCKET).upload(path, bytes, {
+    // The SNIFFED type, never the browser's claim. Storing the client's
+    // Content-Type would let an uploader control the type the file is later
+    // served with, which is most of what makes a malicious upload work.
+    contentType: check.kind.mime,
+    upsert: false,
+  });
 
   if (uploadError) {
     return { ok: false, message: `The file could not be stored: ${uploadError.message}` };
@@ -228,7 +225,11 @@ export async function deleteMedia(
   }
 
   const db = serviceClient();
-  const { data: row } = await db.from('media').select('path').eq('id', id as string).maybeSingle();
+  const { data: row } = await db
+    .from('media')
+    .select('path')
+    .eq('id', id as string)
+    .maybeSingle();
   if (!row) return { ok: false, message: 'That file no longer exists.' };
 
   const usage = await findUsage(row.path);
@@ -239,7 +240,10 @@ export async function deleteMedia(
     };
   }
 
-  const { error } = await db.from('media').delete().eq('id', id as string);
+  const { error } = await db
+    .from('media')
+    .delete()
+    .eq('id', id as string);
   if (error) return { ok: false, message: 'That could not be deleted. Try again.' };
 
   await db.storage.from(BUCKET).remove([row.path]);

@@ -65,13 +65,16 @@ export default function QuotePage() {
               What a quote from us includes
             </h2>
             <p className="mt-4 text-body text-text-secondary">
-              The hardware, the installation, and any recurring fee stated separately with the period
-              it covers. Published prices on this site are {VAT_LABEL}, and a written quote states
-              VAT as its own line rather than folding it in.
+              The hardware, the installation, and any recurring fee stated separately with the
+              period it covers. Published prices on this site are {VAT_LABEL}, and a written quote
+              states VAT as its own line rather than folding it in.
             </p>
             <p className="mt-4 text-body text-text-secondary">
               If you already know exactly what you want and it has a published price, the{' '}
-              <a className="text-brand-signal-ink underline underline-offset-4" href={ROUTES.products}>
+              <a
+                className="text-brand-signal-ink underline underline-offset-4"
+                href={ROUTES.products}
+              >
                 product pages
               </a>{' '}
               are faster — you can order straight through WhatsApp.

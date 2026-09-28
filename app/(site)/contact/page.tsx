@@ -5,7 +5,14 @@ import { EnquiryForm } from '@/components/forms/enquiry-form';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, jsonLdGraph, localBusinessSchemas } from '@/lib/seo/schema';
 import { ROUTES } from '@/lib/constants';
-import { BRANCHES, CANONICAL_DESCRIPTION, COMPANY, CONTACT, SITE_URL, whatsappUrl } from '@/lib/company';
+import {
+  BRANCHES,
+  CANONICAL_DESCRIPTION,
+  COMPANY,
+  CONTACT,
+  SITE_URL,
+  whatsappUrl,
+} from '@/lib/company';
 
 /**
  * CONTACT.
@@ -53,7 +60,9 @@ export default function ContactPage() {
 
   return (
     <main id="main">
-      <JsonLd json={jsonLdGraph([contactPage, breadcrumbSchema(trail), ...localBusinessSchemas()])} />
+      <JsonLd
+        json={jsonLdGraph([contactPage, breadcrumbSchema(trail), ...localBusinessSchemas()])}
+      />
 
       <Section tone="dark" bleed>
         <Shell className="pb-12 pt-10 md:pb-16 md:pt-14">
@@ -72,10 +81,16 @@ export default function ContactPage() {
             >
               WhatsApp {CONTACT.whatsapp.display}
             </a>
-            <a className="text-brand-signal underline underline-offset-4" href={`mailto:${CONTACT.generalEmail}`}>
+            <a
+              className="text-brand-signal underline underline-offset-4"
+              href={`mailto:${CONTACT.generalEmail}`}
+            >
               {CONTACT.generalEmail}
             </a>
-            <a className="text-brand-signal underline underline-offset-4" href={`mailto:${CONTACT.salesEmail}`}>
+            <a
+              className="text-brand-signal underline underline-offset-4"
+              href={`mailto:${CONTACT.salesEmail}`}
+            >
               {CONTACT.salesEmail}
             </a>
           </p>
@@ -93,7 +108,10 @@ export default function ContactPage() {
           <p className="mt-4 max-w-prose text-body text-text-secondary">
             These are the offices. Everywhere else in Kenya is served by agents and technicians
             working from them — see{' '}
-            <a className="text-brand-signal-ink underline underline-offset-4" href={ROUTES.coverage}>
+            <a
+              className="text-brand-signal-ink underline underline-offset-4"
+              href={ROUTES.coverage}
+            >
               coverage
             </a>
             .
@@ -111,7 +129,10 @@ export default function ContactPage() {
                 <ul className="mt-4 flex flex-col gap-1 font-mono text-body-sm">
                   {branch.phones.map((phone) => (
                     <li key={phone.e164}>
-                      <a className="text-brand-signal-ink underline underline-offset-4" href={`tel:${phone.e164}`}>
+                      <a
+                        className="text-brand-signal-ink underline underline-offset-4"
+                        href={`tel:${phone.e164}`}
+                      >
                         {phone.display}
                       </a>
                     </li>

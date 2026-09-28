@@ -69,8 +69,8 @@ export default async function AdminBlogListPage() {
           <h2 className="font-display-tight text-h3">No authors yet</h2>
           <p className="mt-2 text-body text-text-secondary">
             Posts can be written, reviewed and previewed, but none can be published until at least
-            one author exists. A post carries a real byline or none at all — there is deliberately no
-            &ldquo;Nebsam Team&rdquo; fallback.
+            one author exists. A post carries a real byline or none at all — there is deliberately
+            no &ldquo;Nebsam Team&rdquo; fallback.
           </p>
         </div>
       ) : null}
@@ -92,9 +92,7 @@ export default async function AdminBlogListPage() {
                   {STATUS_LABEL[p.status] ?? p.status}
                 </span>
                 <span className="font-mono text-mono text-text-secondary">
-                  {p.published_at
-                    ? new Date(p.published_at).toLocaleDateString('en-GB')
-                    : '—'}
+                  {p.published_at ? new Date(p.published_at).toLocaleDateString('en-GB') : '—'}
                 </span>
               </a>
             </li>

@@ -103,7 +103,10 @@ export async function saveOrderNote(
     notes: formData.get('notes'),
   });
   if (!parsed.success) {
-    return { ok: false, message: parsed.error.issues[0]?.message ?? 'That note could not be saved.' };
+    return {
+      ok: false,
+      message: parsed.error.issues[0]?.message ?? 'That note could not be saved.',
+    };
   }
 
   const { error } = await serviceClient()

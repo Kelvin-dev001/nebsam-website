@@ -84,7 +84,8 @@ const productSchema = z
    * as its own failure mode. Belt and braces where the braces are legible.
    */
   .refine((data) => data.recurring_fee_kes === null || Boolean(data.recurring_fee_period), {
-    message: 'A recurring fee needs a period — “year” or “month”. A figure alone means nothing to a reader.',
+    message:
+      'A recurring fee needs a period — “year” or “month”. A figure alone means nothing to a reader.',
     path: ['recurring_fee_period'],
   });
 
@@ -221,7 +222,10 @@ export async function saveProduct(
     );
   }
 
-  const { error } = await db.from('products').update(row).eq('id', input.id as string);
+  const { error } = await db
+    .from('products')
+    .update(row)
+    .eq('id', input.id as string);
   if (error) return { ok: false, message: friendly(error.message) };
 
   /**

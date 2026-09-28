@@ -64,7 +64,9 @@ export default async function ResourcesPage() {
       href: ROUTES.faqs,
       name: 'Questions',
       count:
-        faqs.length > 0 ? `${faqs.length} question${faqs.length === 1 ? '' : 's'}` : 'Being written',
+        faqs.length > 0
+          ? `${faqs.length} question${faqs.length === 1 ? '' : 's'}`
+          : 'Being written',
       description:
         'The questions we are actually asked before an installation — where we install, what the price includes, VAT and ongoing costs, and what a tracker can and cannot do.',
     },

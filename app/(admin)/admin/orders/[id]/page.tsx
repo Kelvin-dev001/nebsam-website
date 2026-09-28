@@ -74,10 +74,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
   ]);
 
   const lines = items ?? [];
-  const itemsSubtotal = lines.reduce(
-    (sum, line) => sum + line.unit_price_snapshot * line.qty,
-    0,
-  );
+  const itemsSubtotal = lines.reduce((sum, line) => sum + line.unit_price_snapshot * line.qty, 0);
   const rate = order.vat_rate_snapshot ?? 0;
   const vat = Math.round(order.subtotal_kes * rate);
   const total = order.subtotal_kes + vat;

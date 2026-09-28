@@ -122,7 +122,9 @@ export default async function AdminInboxPage({
     serviceClient().from('profiles').select('id, full_name, email'),
   ]);
 
-  const staffById = new Map((staff ?? []).map((row) => [row.id, row.full_name || row.email || '—']));
+  const staffById = new Map(
+    (staff ?? []).map((row) => [row.id, row.full_name || row.email || '—']),
+  );
 
   const href = (next: { status?: string; type?: string }) => {
     const search = new URLSearchParams();
@@ -202,9 +204,7 @@ export default async function AdminInboxPage({
             {rows.map((row) => {
               const name = displayName(row.payload, row.is_anonymous);
               const rowStatus = (
-                (SUBMISSION_STATUSES as readonly string[]).includes(row.status)
-                  ? row.status
-                  : 'new'
+                (SUBMISSION_STATUSES as readonly string[]).includes(row.status) ? row.status : 'new'
               ) as SubmissionStatus;
               return (
                 <tr key={row.id}>

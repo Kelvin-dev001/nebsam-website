@@ -33,11 +33,7 @@ const EMPTY = {
   category_id: '',
 };
 
-export default async function AdminPostEditorPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function AdminPostEditorPage({ params }: { params: Promise<{ id: string }> }) {
   /**
    * Authorisation, not just authentication. The middleware only proves
    * somebody is signed in; the service role used below bypasses RLS, so
@@ -59,7 +55,9 @@ export default async function AdminPostEditorPage({
   if (id !== 'new') {
     const { data } = await db
       .from('blog_posts')
-      .select('id, title, slug, excerpt, body, seo_title, seo_description, status, published_at, author_id, category_id')
+      .select(
+        'id, title, slug, excerpt, body, seo_title, seo_description, status, published_at, author_id, category_id',
+      )
       .eq('id', id)
       .maybeSingle();
     if (!data) notFound();
@@ -90,8 +88,12 @@ export default async function AdminPostEditorPage({
 
       <PostEditor
         post={post}
-        authors={(authors ?? []).flatMap((a) => (a.id && a.name ? [{ id: a.id, name: a.name }] : []))}
-        categories={(categories ?? []).flatMap((c) => (c.id && c.name ? [{ id: c.id, name: c.name }] : []))}
+        authors={(authors ?? []).flatMap((a) =>
+          a.id && a.name ? [{ id: a.id, name: a.name }] : [],
+        )}
+        categories={(categories ?? []).flatMap((c) =>
+          c.id && c.name ? [{ id: c.id, name: c.name }] : [],
+        )}
       />
     </div>
   );

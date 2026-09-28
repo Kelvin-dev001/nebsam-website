@@ -81,8 +81,8 @@ export default async function FaqsPage() {
               <p className="mt-4 text-body text-text-secondary">
                 Every solution page already carries its own questions and answers — what a speed
                 limiter has to report, how an anti-jamming tracker behaves when the network drops,
-                what fuel monitoring measures. If yours is not answered there, ask us on WhatsApp and
-                we will answer it and add it here.
+                what fuel monitoring measures. If yours is not answered there, ask us on WhatsApp
+                and we will answer it and add it here.
               </p>
             </div>
           ) : (

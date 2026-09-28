@@ -152,7 +152,10 @@ export default function AboutPage() {
           <ul className="border-t border-border-hairline">
             {children.map((child) => (
               <li key={child.href} className="border-b border-border-hairline">
-                <a href={child.href} className="group grid gap-x-10 gap-y-2 py-7 md:grid-cols-[22rem_1fr]">
+                <a
+                  href={child.href}
+                  className="group grid gap-x-10 gap-y-2 py-7 md:grid-cols-[22rem_1fr]"
+                >
                   <h2 className="font-display-tight text-h3 text-text-primary underline-offset-4 group-hover:underline">
                     {child.name}
                   </h2>
