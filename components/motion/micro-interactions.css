@@ -1,0 +1,92 @@
+/*
+ * Micro-interactions — Sprint 12b T5, the five items Kelvin approved on 28
+ * September 2026. Level 1 of docs/ANIMATION_SYSTEM.md, plus entrances for
+ * things that APPEAR once.
+ *
+ * Global classes, pulled into the ONE global stylesheet by an @import at the
+ * top of app/globals.css, like pinned-sequence.css: no route pays a request
+ * for them (V77).
+ *
+ * Every value is an existing token (lib/motion.ts, mirrored as CSS variables
+ * in app/globals.css). transform and opacity are the only properties that
+ * move; colour transitions are paint-only.
+ *
+ * REDUCED MOTION needs nothing here. The backstop at the end of globals.css
+ * sets every transition to 0.01ms, so each entrance below lands instantly
+ * in its final state — complete and static, which is this project's rule.
+ */
+
+/* ── Press (item 5) ─────────────────────────────────────────────────────────
+   The 1px press (`active:translate-y-px`) used to be instant because
+   `transition-colors` does not cover transform. Colour keeps its micro
+   in-out; the press gets its own token, 120ms, ease-out (ANIMATION_SYSTEM
+   Level 1: an in-out curve starts slow at the moment the finger lands). */
+.press-feedback {
+  transition-property: color, background-color, border-color, text-decoration-color, transform;
+  transition-duration:
+    var(--dur-micro), var(--dur-micro), var(--dur-micro), var(--dur-micro), var(--dur-press);
+  transition-timing-function:
+    var(--ease-in-out-quad), var(--ease-in-out-quad), var(--ease-in-out-quad),
+    var(--ease-in-out-quad), var(--ease-out-quart);
+}
+
+/* ── The floating WhatsApp button (item 1) ──────────────────────────────────
+   It lifts clear of the cookie bar while that is open. It used to lift by
+   changing `bottom` — a layout property — and a second `transition-colors`
+   class overrode the transition, so it JUMPED 108px after hydration. That
+   jump was the site's only layout shift (CLS 0.012 on every first visit).
+   A transform moves it without moving layout, so it is no longer a shift.
+   Distances are the old bottom-32 / md:bottom-24 minus bottom-5. */
+.fab-lift {
+  transition-property: background-color, transform;
+  transition-duration: var(--dur-micro), var(--dur-micro);
+  transition-timing-function: var(--ease-in-out-quad), var(--ease-out-quart);
+}
+
+html[data-consent='open'] .fab-lift {
+  transform: translateY(-108px);
+}
+
+@media (min-width: 768px) {
+  html[data-consent='open'] .fab-lift {
+    transform: translateY(-76px);
+  }
+}
+
+/* ── Entrances (items 2, 3, 4) ───────────────────────────────────────────────
+   For elements that are INSERTED — a panel opening, a confirmation replacing
+   a form. @starting-style gives the first frame a starting value, so the
+   element transitions in with no JavaScript. Browsers without it render the
+   final state at once: nothing is hidden, nothing depends on it. */
+
+/* A small confirmation appearing beside the control that caused it. */
+.enter-fade {
+  transition: opacity var(--dur-micro) var(--ease-out-quart);
+}
+
+/* A message replacing what was there: fade and settle 8px. */
+.enter-rise {
+  transition:
+    opacity var(--dur-reveal) var(--ease-out-quart),
+    transform var(--dur-reveal) var(--ease-out-quart);
+}
+
+/* A panel arriving from the right edge — the edge it is anchored to. */
+.enter-from-right {
+  transition: transform var(--dur-reveal) var(--ease-out-quart);
+}
+
+@starting-style {
+  .enter-fade {
+    opacity: 0;
+  }
+
+  .enter-rise {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .enter-from-right {
+    transform: translateX(100%);
+  }
+}
