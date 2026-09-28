@@ -1,6 +1,6 @@
 # SPRINT 12b — MOTION & SCROLL
 
-**Branch** `sprint/12b-motion-scroll` · 50 commits · 25–28 September 2026
+**Branch** `sprint/12b-motion-scroll` · 52 commits · 25–28 September 2026
 **Delivers** Motion tokens, an SSR-safe pinned-stage primitive, the homepage set piece "One vehicle,
 instrumented", the approved hero headline, and a micro-interaction pass. None of it may cost
 crawlability, accessibility or the Kenyan mobile budget.
