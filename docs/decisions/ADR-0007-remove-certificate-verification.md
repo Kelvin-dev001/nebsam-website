@@ -1,6 +1,7 @@
 # ADR-0007 — Remove installation-certificate verification
 
-**Status:** Proposed — awaiting Kelvin's approval of the plan below. No code has been changed.
+**Status:** Accepted — Kelvin approved the plan on 28 September 2026 ("proceed"). Implemented on
+this branch; the migration is written and waits on V61 to be applied.
 **Date:** 28 September 2026
 **Deciders:** Client (Kelvin) decided the removal on 28 September 2026 ("remove this feature
 completely", register V03/V04); this ADR proposes how.
@@ -23,8 +24,9 @@ Two facts make the removal low-risk, and one makes it less simple than it looks:
   is not among the 13 legacy redirects in `ROUTE_MAP.md`), and the new route is `noindex`. Removing
   it needs **no 301**; it will simply 404.
 - **The enquiry forms depend on one of its secrets.** `lib/submissions/actions.ts:51` hashes client
-  IPs for form rate limiting with `CERT_PLATE_HMAC_SECRET`. Deleting the certificate secrets along
-  with the feature would silently break that rate limiter.
+  IPs for form rate limiting with `CERT_PLATE_HMAC_SECRET`. Without a secret the digest is empty and
+  rate limiting is skipped (the forms fail open by design), so deleting the certificate secrets
+  along with the feature would **switch the forms' rate limiting off without a sound**.
 
 ## Decision (proposed)
 
@@ -60,9 +62,10 @@ Remove the feature end to end, in small commits, keeping only what other feature
 - Form rate limiting moves to a new **`SUBMISSION_IP_HMAC_SECRET`**, reading the old
   `CERT_PLATE_HMAC_SECRET` as a fallback for one release so nothing breaks while environments are
   updated.
-- Also tighten a pre-existing weakness this exposes: the code falls back to an **empty** HMAC key
-  (`?? ''`) when the secret is missing, which would make the IP digests unkeyed. It should fail
-  closed instead.
+- **Correction (implementation):** the proposal said the code falls back to an empty HMAC key. It does
+  not — with no secret it returns no digest and skips rate limiting, which is the forms' deliberate
+  fail-open design and stays. What changed is that it is no longer silent: a missing secret now logs
+  one server warning (no IP, no payload).
 - `.env.example`: remove `CERT_QR_TOKEN_SECRET` and the two `CERT_VERIFY_RATE_LIMIT_*` values, and
   document `SUBMISSION_IP_HMAC_SECRET`. After deployment, the old variables can be deleted from
   `.env.local` and any Vercel environment.
@@ -111,3 +114,47 @@ Typecheck, lint and build; the retired-strings check; `verify:roles` against the
 browser pass over the support pages, the admin navigation and the enquiry forms (including a
 rate-limit hash computed under the new secret name); `curl` confirming `/support/verify-installation`
 is 404 and absent from `llms.txt`, the sitemap and robots.
+
+## Result — 28 September 2026
+
+**Done, on `sprint/12c-remove-certificate-verification`**, in eight scoped commits: the secret rename,
+the public surface and legal copy, the admin, the library and scripts, migration 0044, and the docs.
+
+**Verified:**
+- Typecheck, lint and build all clean; the retired-strings check clean on 399 build artefacts.
+  `check-migrations` clean.
+- **`verify:db` clean** on 28 tables. **`verify:roles` passed 38 of 38** against the live policies
+  (47 before; the nine certificate checks went with the tables).
+- **Over HTTP, on a clean production build:**
+  - `/support/verify-installation`, with or without a token, returns **404**, and the 404 page renders.
+  - `/admin/certificates` and `/admin/security` redirect to sign-in, like every signed-out admin path.
+  - Every public page, legal page and form route returns 200.
+  - **No mention of verification remains** in the rendered homepage, support pages, legal pages,
+    `llms.txt`, `robots.txt` or the sitemap.
+- **In a browser at 390px:**
+  - the support hub shows its two remaining rows
+  - the footer reads "Support | Book installation | Suggestions"
+  - the enquiry forms render
+  - every changed page's meta description is within 140–155 characters
+  - zero console errors or warnings
+
+**Not verified, and why:**
+- **A rate-limit hash under the new secret name.** Checking it end to end means submitting a real
+  enquiry, which writes a row that staff see. By reading the code instead: the fallback reads the same
+  secret value with the same `submission-ip:` prefix, so digests are unchanged.
+- **A signed-in pass of the admin navigation.** There was no staff session. The admin routes are
+  absent from the build, and `verify:roles` passed.
+- **Migration 0044 is not applied** (V61).
+
+**Found along the way:**
+- **V78.** The only Turnstile widget was in the deleted verification form. The enquiry forms check a
+  token but never render a widget, so **setting the Turnstile keys would reject every enquiry.** This
+  predates the removal. Logged, and flagged in `lib/turnstile.ts` and CLAUDE.md.
+- **The privacy notice promises a 24-hour deletion** that only migration 0041 delivers. 0041 is
+  unapplied (V61), so today the forms keep the IP fingerprint inside each enquiry record.
+- **The forms' Zod validation logs a report-only CSP notice** when it probes whether `eval` is allowed.
+  It is info-level, and Zod falls back when eval is refused, so it is harmless.
+
+**Still Kelvin's:** a dated amendment to brief PART 9.2, which still describes the feature. Also, once
+every environment has `SUBMISSION_IP_HMAC_SECRET`, delete `CERT_PLATE_HMAC_SECRET`,
+`CERT_QR_TOKEN_SECRET` and the `CERT_VERIFY_*` values from `.env.local` and Vercel.
