@@ -1,6 +1,6 @@
 # SPRINT 12b — MOTION & SCROLL
 
-**Branch** `sprint/12b-motion-scroll` · 49 commits · 25–28 September 2026
+**Branch** `sprint/12b-motion-scroll` · 50 commits · 25–28 September 2026
 **Delivers** Motion tokens, an SSR-safe pinned-stage primitive, the homepage set piece "One vehicle,
 instrumented", the approved hero headline, and a micro-interaction pass. None of it may cost
 crawlability, accessibility or the Kenyan mobile budget.
@@ -110,20 +110,21 @@ four animation skills at project scope in `.claude/skills/`.
 
 ## PERFORMANCE
 
-| Home, paired against T0 | T0 baseline (§9) | After V77 (§12.3, n = 9) | After T5 (§13, n = 5) |
+| Home, paired against T0 | T0 baseline (§9) | After V77 (§12.3, n = 9) | After T5 (§13, n = 9) |
 |---|---|---|---|
 | Performance | 97 | 97, delta 0 | 97, delta 0 |
-| LCP | 2.561 s | 2.567 s, delta −2 ms | 2.576 s, delta −56 ms |
+| LCP | 2.561 s | 2.567 s, delta −2 ms | 2.563 s, delta −8 ms |
 | CLS | 0.012 | 0.012 | **0.000** |
 | Requests | 15 | 15 | 15 |
-| Transfer | 256 KB | +5,211 B | +5,307 B |
+| Transfer | 256 KB | +5,211 B | +5,305 B |
 | First Load JS | 105 kB | 106 kB | 106 kB |
 
 - **Product pages:** first-load JS is +0.4 kB; `AddToCart` now uses the shared `Button`.
 - **Every route:** +836 B for the stage rules, plus about 118 B gzipped of T5 CSS.
 - **INP:** not measured; Lighthouse lab runs report TBT. TBT on Home is unchanged within noise.
-- **LCP is still ~67 ms over budget on Home, exactly as on T0** (V47, open since Sprint 4).
-- **The T5 run is five pairs,** stopped by Claude Code for low memory.
+- **LCP is still ~63 ms over budget on Home, as on T0** (V47, open since Sprint 4).
+- **The T5 run took two sittings.** Claude Code stopped the servers for low memory during round 6;
+  rounds 6–9 were re-run with a script that rejects failed reports (§13).
 
 ---
 
@@ -156,7 +157,7 @@ Recorded but held: V15's seed data, and "publish this" on two never-publish clai
 
 ## KNOWN ISSUES / RISKS
 
-- **Home LCP ~67 ms over budget** (V47, pre-existing). A preview measurement (V53) is still blocked:
+- **Home LCP ~63 ms over budget** (V47, pre-existing). A preview measurement (V53) is still blocked:
   previews have no environment variables and no protection bypass.
 - **The menu and footer link to `/solutions/school-bus-management`, which returns 404.** The page is a
   draft, but `lib/constants.ts:62` lists it.
@@ -166,10 +167,8 @@ Recorded but held: V15's seed data, and "publish this" on two never-publish clai
     4 Sep (prices include installation).
   - "Reviewed annually.." has a double full stop (`product-price.tsx:52` adds "." after a note that
     already ends with one).
-- **The T5 easing fix (`0eb772a`) is committed but not yet rebuilt or checked in a browser.** The
-  servers were stopped for low memory first.
-- **The T0 worktree `C:\Projects\nebsam-t0` still exists and holds a copy of `.env.local`.** It is kept
-  only in case the T5 run's missing four pairs are wanted; remove it at merge.
+- **The T0 worktree `C:\Projects\nebsam-t0` still exists and holds a copy of `.env.local`.** It was kept
+  for the paired runs, which are complete; remove it at merge.
 - **The harness flags a reduced-motion contrast false positive** when a step sits under the fixed
   cookie bar.
 
@@ -187,9 +186,7 @@ Recorded but held: V15's seed data, and "publish this" on two never-publish clai
 5. **V76 (2) and (3):** preview environment variables and a protection bypass, if preview measurement
    (V53, V47) is wanted before Sprint 14.
 6. **The brief's "It's the site where ___" sentence and references** (asked 26 Sep), still open.
-7. **Whether to finish the T5 Lighthouse run** (four pairs) and verify the easing fix, once memory
-   allows.
-8. **Merging `sprint/12b-motion-scroll` into `develop`,** by PR with this report as its description.
+7. **Merging `sprint/12b-motion-scroll` into `develop`,** by PR with this report as its description.
 
 ## RECOMMENDED NEXT STEP
 

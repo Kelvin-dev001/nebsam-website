@@ -443,28 +443,30 @@ Raw JSON: `perf-2026-09-28-s12b-t4-v77/`, under `~/.claude/projects/C--Projects-
 ## 13. Sprint 12b T5 — the micro-interaction pass, paired against T0
 
 T5 shipped five micro-interactions and two accessibility fixes (`ANIMATION_SYSTEM.md`, Level 1).
-**The run is five pairs, not nine.** Claude Code stopped the Lighthouse loop and both servers at
-round 6 because the machine ran critically low on memory; round 6's T5 report is incomplete and is
-excluded. `benchmarkIndex` 2,392–2,673, except home round 1's T0 run (999).
+Nine pairs, in two sittings. Claude Code stopped both servers during round 6 of the first run because
+the machine ran critically low on memory; the loop ran on against nothing, so rounds 6–9 came back
+`runtimeError` and were discarded. Rounds 6–9 were re-run on 28 September with a script that rejects
+a `runtimeError` report. Rounds 1–5 measured the T5 build before the easing fix (`0eb772a`), rounds
+6–9 the build after it; that fix changes an easing curve only, with no layout or load effect.
+`benchmarkIndex` 2,392–2,734, except home round 1's T0 run (999).
 
-| Paired against T0, n = 5 | Home | Fuel |
+| Paired against T0, n = 9 | Home | Fuel |
 |---|---|---|
-| Performance | 97 (95–98), delta **0** | 95 (82–97), delta +8 |
-| LCP | 2.576 s (2.497–2.619), delta **−56 ms** (−351 to +71) | 2.530 s, delta +9 ms |
-| TBT | 77 ms, delta −3 ms | 167 ms, delta −348 ms |
-| **CLS** | **0.000 in every run; T0 0.012 in every run** | **0.000 in every run; T0 0.012** |
-| Transfer | delta +5,307 B | delta +855 B |
+| Performance | 97 (95–98), delta **0** | 95 (82–98), delta +1 |
+| LCP | 2.563 s (2.497–2.619), delta **−8 ms** (−351 to +71) | 2.527 s, delta +1 ms |
+| TBT | 61 ms, delta −3 ms | 96 ms, delta −44 ms |
+| **CLS** | **0.000 in every run; T0 0.012 in every run** | **0.000** (max 0.004); T0 0.012 |
+| Transfer | delta +5,305 B | delta +854 B |
 | A11y / BP / SEO | 100 / 100 / 100 | 100 / 100 / 100 |
 
-**The one result that does not depend on the sample size: CLS is gone.** Every page's only layout
-shift was the floating WhatsApp button jumping clear of the cookie bar by changing `bottom`; it now
-lifts by a transform, which is not a layout shift. Five pairs are enough for a result that is
-0.012 in every T0 run and 0.000 in every T5 run. The timing columns are not: fuel's T0 arm was
-erratic again (TBT up to 1 s, as in §10 and §12), and home's LCP delta is inside the spread.
+**CLS is gone.** Every page's only layout shift was the floating WhatsApp button jumping clear of the
+cookie bar by changing `bottom`; it now lifts by a transform, which is not a layout shift. The timing
+columns are unchanged within noise. **Home LCP stays ~63 ms over budget, as on T0 (V47).**
 
 Transfer: the T5 stylesheet added about 118 B gzipped to every route; the floating button's class
 list, sent in every page's HTML, got shorter. Product pages grew 0.4 kB of first-load JS because
 `AddToCart` now uses the shared `Button`.
 
-Raw JSON: `perf-2026-09-28-s12b-t5/` (rounds 1–5 valid), under
-`~/.claude/projects/C--Projects-nebsam-website/`.
+Raw JSON: `perf-2026-09-28-s12b-t5/`, under `~/.claude/projects/C--Projects-nebsam-website/`.
+**Lesson for the scripts:** checking only that a report file exists lets a dead server produce "ok".
+Reject any report that carries `runtimeError`.
