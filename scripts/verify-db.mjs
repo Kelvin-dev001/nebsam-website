@@ -35,7 +35,9 @@ let raw;
 try {
   raw = readFileSync('.env.local', 'utf8');
 } catch {
-  console.error('\n  verify-db: no .env.local — copy .env.example and fill in the Supabase keys.\n');
+  console.error(
+    '\n  verify-db: no .env.local — copy .env.example and fill in the Supabase keys.\n',
+  );
   process.exit(1);
 }
 
@@ -68,24 +70,66 @@ if (missing.length) {
 
 // ── Expected shape, derived from the migrations. ─────────────────────────────
 const TABLES = [
-  'audit_log', 'authors', 'blog_categories', 'blog_post_revisions', 'blog_posts',
-  'branches', 'certifications', 'client_logos', 'coverage_locations', 'downloads',
-  'faqs', 'industries', 'media', 'order_items', 'orders', 'payment_intents', 'payments', 'product_categories',
-  'product_industries', 'product_solutions', 'products', 'profiles', 'redirects', 'shipments',
-  'solution_industries', 'solutions', 'submission_attempts', 'submissions', 'testimonials',
+  'audit_log',
+  'authors',
+  'blog_categories',
+  'blog_post_revisions',
+  'blog_posts',
+  'branches',
+  'certifications',
+  'client_logos',
+  'coverage_locations',
+  'downloads',
+  'faqs',
+  'industries',
+  'media',
+  'order_items',
+  'orders',
+  'payment_intents',
+  'payments',
+  'product_categories',
+  'product_industries',
+  'product_solutions',
+  'products',
+  'profiles',
+  'redirects',
+  'shipments',
+  'solution_industries',
+  'solutions',
+  'submission_attempts',
+  'submissions',
+  'testimonials',
 ];
 
 const VIEWS = [
-  'public_authors', 'public_blog_categories', 'public_blog_posts', 'public_branches',
-  'public_certifications', 'public_client_logos', 'public_coverage_locations',
-  'public_downloads', 'public_faqs', 'public_industries', 'public_product_categories',
-  'public_product_industries', 'public_product_solutions', 'public_products',
-  'public_solution_industries', 'public_solutions', 'public_testimonials',
+  'public_authors',
+  'public_blog_categories',
+  'public_blog_posts',
+  'public_branches',
+  'public_certifications',
+  'public_client_logos',
+  'public_coverage_locations',
+  'public_downloads',
+  'public_faqs',
+  'public_industries',
+  'public_product_categories',
+  'public_product_industries',
+  'public_product_solutions',
+  'public_products',
+  'public_solution_industries',
+  'public_solutions',
+  'public_testimonials',
 ];
 
 /** Tables that must never hold data outside production operations. */
 const MUST_BE_EMPTY = [
-  'orders', 'order_items', 'submissions', 'testimonials', 'client_logos', 'payments', 'profiles',
+  'orders',
+  'order_items',
+  'submissions',
+  'testimonials',
+  'client_logos',
+  'payments',
+  'profiles',
 ];
 
 const service = createClient(URL_, SERVICE, { auth: { persistSession: false } });
@@ -138,7 +182,10 @@ for (const t of TABLES) {
   const { error } = await anon.from(t).insert({}).select();
   if (!error) {
     anonWrote.push(t);
-  } else if (error.code === '42501' || /row-level security|permission denied/i.test(error.message)) {
+  } else if (
+    error.code === '42501' ||
+    /row-level security|permission denied/i.test(error.message)
+  ) {
     denied += 1;
   } else {
     inconclusive.push(`${t} (${error.code ?? '?'}: ${error.message.slice(0, 90)})`);
@@ -148,7 +195,9 @@ if (anonWrote.length) {
   problems.push(`CRITICAL — anon WROTE to: ${anonWrote.join(', ')}`);
 }
 if (inconclusive.length) {
-  problems.push(`${inconclusive.length} table(s) blocked a write, but NOT by RLS — verify by hand:`);
+  problems.push(
+    `${inconclusive.length} table(s) blocked a write, but NOT by RLS — verify by hand:`,
+  );
   inconclusive.forEach((t) => problems.push(`    ${t}`));
 }
 

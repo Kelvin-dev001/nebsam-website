@@ -45,7 +45,9 @@ export default async function AdminMediaPage() {
 
   const { data: rows, error } = await serviceClient()
     .from('media')
-    .select('id, path, alt_text, width, height, bytes, mime, privacy_checked, privacy_check_note, created_at')
+    .select(
+      'id, path, alt_text, width, height, bytes, mime, privacy_checked, privacy_check_note, created_at',
+    )
     .order('privacy_checked', { ascending: true })
     .order('created_at', { ascending: false })
     .limit(120);
@@ -78,7 +80,9 @@ export default async function AdminMediaPage() {
 
       {error ? (
         <EmptyState title="The library could not be read">
-          <p>The database refused the query. That is a fault to fix rather than an empty library.</p>
+          <p>
+            The database refused the query. That is a fault to fix rather than an empty library.
+          </p>
         </EmptyState>
       ) : !rows || rows.length === 0 ? (
         <EmptyState title="Nothing uploaded yet">

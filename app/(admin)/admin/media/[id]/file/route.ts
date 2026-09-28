@@ -32,10 +32,7 @@ export const dynamic = 'force-dynamic';
 const BUCKET = 'uploads';
 const EXPIRES_SECONDS = 60;
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   // `viewer` is enough to LOOK at a file. Uploading needs `editor` and deleting
   // needs `admin`; reading is the one operation everyone with an account may do,
   // and a viewer who cannot open an image cannot review anything.

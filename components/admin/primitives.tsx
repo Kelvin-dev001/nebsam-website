@@ -53,7 +53,13 @@ const PILL_TONES: Record<PillTone, string> = {
   live: 'border-brand-signal-ink text-brand-signal-ink',
 };
 
-export function StatusPill({ tone = 'neutral', children }: { tone?: PillTone; children: React.ReactNode }) {
+export function StatusPill({
+  tone = 'neutral',
+  children,
+}: {
+  tone?: PillTone;
+  children: React.ReactNode;
+}) {
   return (
     <span
       className={[
@@ -131,7 +137,13 @@ export function ScrollTable({ label, children }: { label: string; children: Reac
   );
 }
 
-export function Th({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function Th({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <th
       scope="col"

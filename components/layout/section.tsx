@@ -73,7 +73,11 @@ function overrides(className: string, prefix: string): boolean {
  * If several components later need real merging, revisit it then — with the
  * evidence to justify the bytes.
  */
-export function Shell({ className = '', children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function Shell({
+  className = '',
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   const classes = ['mx-auto w-full'];
   if (!overrides(className, 'max-w-')) classes.push('max-w-shell');
   if (!overrides(className, 'px-')) classes.push('px-5', 'md:px-8');

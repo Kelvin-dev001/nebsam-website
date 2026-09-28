@@ -62,17 +62,15 @@ function formatKes(n: number): string {
   return `KES ${n.toLocaleString('en-KE')}`;
 }
 
-export default async function OrderPage({
-  params,
-}: {
-  params: Promise<{ orderNumber: string }>;
-}) {
+export default async function OrderPage({ params }: { params: Promise<{ orderNumber: string }> }) {
   const { orderNumber } = await params;
 
   // Exact match only. No pattern, no prefix, no listing.
   const { data: order } = await serviceClient()
     .from('orders')
-    .select('id, order_number, status, customer_name, customer_town, fulfilment_type, subtotal_kes, vat_rate_snapshot, created_at')
+    .select(
+      'id, order_number, status, customer_name, customer_town, fulfilment_type, subtotal_kes, vat_rate_snapshot, created_at',
+    )
     .eq('order_number', orderNumber)
     .maybeSingle();
 

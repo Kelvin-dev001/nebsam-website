@@ -30,7 +30,9 @@ export const metadata = buildMetadata({
 
 export default async function BlogIndexPage() {
   const { data } = await getBlogPosts();
-  const posts = data.flatMap((p) => (p.slug && p.title ? [{ ...p, slug: p.slug, title: p.title }] : []));
+  const posts = data.flatMap((p) =>
+    p.slug && p.title ? [{ ...p, slug: p.slug, title: p.title }] : [],
+  );
 
   const trail = [
     { name: 'Home', path: ROUTES.home },
@@ -60,7 +62,9 @@ export default async function BlogIndexPage() {
         <Shell>
           {posts.length === 0 ? (
             <div className="max-w-prose">
-              <p className="text-body-lg text-text-primary">The first articles are being written.</p>
+              <p className="text-body-lg text-text-primary">
+                The first articles are being written.
+              </p>
               <p className="mt-4 text-body text-text-secondary">
                 In the meantime, the solution pages carry the detail — how jamming defeats an
                 ordinary tracker, what fuel monitoring actually measures, and what a speed limiter

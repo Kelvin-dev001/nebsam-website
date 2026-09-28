@@ -124,10 +124,7 @@ export function AdminChrome({
         <nav
           id="admin-nav"
           aria-label="Admin sections"
-          className={[
-            'shrink-0 py-6 lg:block lg:w-56',
-            open ? 'block w-full' : 'hidden',
-          ].join(' ')}
+          className={['shrink-0 py-6 lg:block lg:w-56', open ? 'block w-full' : 'hidden'].join(' ')}
         >
           {groups.map((group) => (
             <div key={group.heading} className="mb-6">
@@ -139,9 +136,7 @@ export function AdminChrome({
                   // Exact match for the dashboard, prefix match for the rest —
                   // otherwise `/admin` is marked current on every page.
                   const current =
-                    item.href === '/admin'
-                      ? pathname === '/admin'
-                      : pathname.startsWith(item.href);
+                    item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href);
                   return (
                     <li key={item.href}>
                       <Link

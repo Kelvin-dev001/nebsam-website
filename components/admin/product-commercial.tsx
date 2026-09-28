@@ -211,8 +211,8 @@ export function ProductCommercial({
             className="min-h-11 rounded-control border border-border-strong bg-surface px-3 text-body"
           />
           <span className="text-body-sm text-text-secondary">
-            Confirmed 4 September 2026: prices are inclusive of installation by a Nebsam
-            technician. State it per product rather than leaving a customer to assume.
+            Confirmed 4 September 2026: prices are inclusive of installation by a Nebsam technician.
+            State it per product rather than leaving a customer to assume.
           </span>
         </label>
 

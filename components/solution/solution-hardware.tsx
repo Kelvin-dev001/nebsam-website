@@ -24,7 +24,9 @@ function formatKes(amount: number): string {
 }
 
 export function SolutionHardware({ products }: { products: PublicProduct[] }) {
-  const items = products.flatMap((p) => (p.slug && p.name ? [{ ...p, slug: p.slug, name: p.name }] : []));
+  const items = products.flatMap((p) =>
+    p.slug && p.name ? [{ ...p, slug: p.slug, name: p.name }] : [],
+  );
   if (items.length === 0) return null;
 
   return (

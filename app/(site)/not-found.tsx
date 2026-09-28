@@ -25,8 +25,8 @@ export default function SiteNotFound() {
             That page is not here.
           </h1>
           <p className="mt-5 max-w-prose text-body-lg text-text-secondary-inverse">
-            The link may be old, or the page may have moved. The solutions and products are the
-            best place to start.
+            The link may be old, or the page may have moved. The solutions and products are the best
+            place to start.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
             <ButtonLink href={ROUTES.solutions} variant="primary" size="lg">

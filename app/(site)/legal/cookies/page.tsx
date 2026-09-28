@@ -56,7 +56,11 @@ export default function CookieNoticePage() {
           <p>
             It does not cover the vehicle tracking platform you sign in to as a customer, which is a
             separate system with its own login. It does not cover WhatsApp, which has its own
-            policies — see <Link href={ROUTES.privacy} className="underline underline-offset-4">our privacy notice</Link>.
+            policies — see{' '}
+            <Link href={ROUTES.privacy} className="underline underline-offset-4">
+              our privacy notice
+            </Link>
+            .
           </p>
         </>
       }

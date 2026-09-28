@@ -139,19 +139,27 @@ const controlChrome = [
 ].join(' ');
 
 function describedBy(fieldId: string, hint?: string, error?: string) {
-  return [hint ? `${fieldId}-hint` : null, error ? `${fieldId}-error` : null]
-    .filter(Boolean)
-    .join(' ') || undefined;
+  return (
+    [hint ? `${fieldId}-hint` : null, error ? `${fieldId}-error` : null]
+      .filter(Boolean)
+      .join(' ') || undefined
+  );
 }
 
-export interface TextareaFieldProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TextareaFieldProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   hint?: string;
   error?: string;
 }
 
-export function TextareaField({ label, hint, error, id, className = '', ...props }: TextareaFieldProps) {
+export function TextareaField({
+  label,
+  hint,
+  error,
+  id,
+  className = '',
+  ...props
+}: TextareaFieldProps) {
   const autoId = React.useId();
   const fieldId = id ?? autoId;
   return (
@@ -246,7 +254,10 @@ export function CheckboxField({ label, hint, id, className = '', ...props }: Che
   const fieldId = id ?? autoId;
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={fieldId} className="flex min-h-[44px] items-center gap-3 text-body-sm font-medium">
+      <label
+        htmlFor={fieldId}
+        className="flex min-h-[44px] items-center gap-3 text-body-sm font-medium"
+      >
         <input
           id={fieldId}
           type="checkbox"

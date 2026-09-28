@@ -47,15 +47,12 @@ try {
   // Windows and spawning it directly fails with EINVAL; passing an args array
   // alongside `shell: true` works but is deprecated (DEP0190). Every component
   // here is a constant in this file, so there is nothing to escape.
-  out = execSync(
-    `npx supabase gen types typescript --project-id ${PROJECT_ID}`,
-    {
-      env: { ...process.env, SUPABASE_ACCESS_TOKEN: token },
-      encoding: 'utf8',
-      maxBuffer: 64 * 1024 * 1024,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    },
-  );
+  out = execSync(`npx supabase gen types typescript --project-id ${PROJECT_ID}`, {
+    env: { ...process.env, SUPABASE_ACCESS_TOKEN: token },
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
 } catch (err) {
   console.error('\n  db:types: generation failed. Existing types left untouched.\n');
   console.error('  ' + String(err.stderr || err.message).split('\n')[0] + '\n');

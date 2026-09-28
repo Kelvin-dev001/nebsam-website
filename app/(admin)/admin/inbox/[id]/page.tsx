@@ -5,11 +5,7 @@ import { serviceClient } from '@/lib/supabase/server';
 import { SUBMISSION_STATUSES, type SubmissionStatus } from '@/lib/constants';
 import { SUBMISSION_FIELDS, type SubmissionKind } from '@/lib/submissions/types';
 import { PageHeader, StatusPill } from '@/components/admin/primitives';
-import {
-  StatusControl,
-  AssignControl,
-  NoteControl,
-} from '@/components/admin/submission-controls';
+import { StatusControl, AssignControl, NoteControl } from '@/components/admin/submission-controls';
 
 /**
  * ONE ENQUIRY.
@@ -66,11 +62,7 @@ function payloadValue(payload: unknown, key: string): string | null {
   return null;
 }
 
-export default async function AdminSubmissionPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function AdminSubmissionPage({ params }: { params: Promise<{ id: string }> }) {
   const actor = await requireStaff('sales');
   if (!actor) redirect('/admin/login?reason=forbidden');
 

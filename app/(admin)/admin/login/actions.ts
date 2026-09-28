@@ -55,7 +55,10 @@ export async function signIn(_previous: LoginResult, formData: FormData): Promis
   });
 
   if (!parsed.success) {
-    return { ok: false, message: parsed.error.issues[0]?.message ?? 'Check the form and try again.' };
+    return {
+      ok: false,
+      message: parsed.error.issues[0]?.message ?? 'Check the form and try again.',
+    };
   }
 
   const cookieStore = await cookies();
@@ -84,7 +87,10 @@ export async function signIn(_previous: LoginResult, formData: FormData): Promis
 
   if (!profile?.role) {
     await supabase.auth.signOut();
-    return { ok: false, message: 'That account has no staff role. Ask an administrator for access.' };
+    return {
+      ok: false,
+      message: 'That account has no staff role. Ask an administrator for access.',
+    };
   }
 
   redirect(parsed.data.next);

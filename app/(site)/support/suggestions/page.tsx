@@ -75,10 +75,7 @@ export default function SuggestionsPage() {
           </div>
 
           <div className="mt-10">
-            <EnquiryForm
-              kind="suggestion"
-              whatsappMessage="Hello Nebsam — I have a suggestion."
-            />
+            <EnquiryForm kind="suggestion" whatsappMessage="Hello Nebsam — I have a suggestion." />
           </div>
         </Shell>
       </Section>

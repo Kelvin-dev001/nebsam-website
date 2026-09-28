@@ -100,15 +100,7 @@ export function localBusinessSchemas(): Json[] {
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
-        dayOfWeek: [
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday',
-          'Saturday',
-          'Sunday',
-        ],
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
         opens: '00:00',
         closes: '23:59',
       },
@@ -129,11 +121,7 @@ export function breadcrumbSchema(trail: { name: string; path: string }[]): Json 
   };
 }
 
-export function serviceSchema(input: {
-  name: string;
-  description: string;
-  path: string;
-}): Json {
+export function serviceSchema(input: { name: string; description: string; path: string }): Json {
   return {
     '@type': 'Service',
     name: input.name,

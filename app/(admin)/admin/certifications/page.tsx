@@ -81,7 +81,9 @@ export default async function AdminCertificationsPage() {
 
   const { data: rows, error } = await serviceClient()
     .from('certifications')
-    .select('id, name, issuer, reference_number, effective_on, expires_on, scope_note, image, sort_order')
+    .select(
+      'id, name, issuer, reference_number, effective_on, expires_on, scope_note, image, sort_order',
+    )
     // Nulls last, then soonest expiry first — the order somebody chasing
     // renewals wants to read.
     .order('expires_on', { ascending: true, nullsFirst: false })

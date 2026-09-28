@@ -15,7 +15,9 @@ import type { PublicIndustry } from '@/types/content';
  * conversion block that follows it.
  */
 export function SolutionIndustries({ industries }: { industries: PublicIndustry[] }) {
-  const items = industries.flatMap((i) => (i.slug && i.name ? [{ ...i, slug: i.slug, name: i.name }] : []));
+  const items = industries.flatMap((i) =>
+    i.slug && i.name ? [{ ...i, slug: i.slug, name: i.name }] : [],
+  );
   if (items.length === 0) return null;
 
   return (

@@ -182,9 +182,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <Section tone="light">
         <Shell>
           <div className="max-w-prose">
-            {post.excerpt ? (
-              <p className="text-body-lg text-text-primary">{post.excerpt}</p>
-            ) : null}
+            {post.excerpt ? <p className="text-body-lg text-text-primary">{post.excerpt}</p> : null}
             {paragraphs.map((para, i) => (
               <p key={i} className="mt-4 text-body text-text-secondary">
                 {para}

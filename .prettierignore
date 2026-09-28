@@ -1,0 +1,16 @@
+# Prettier also skips everything in .gitignore (node_modules, .next, .env*).
+
+# Authoritative source material: read-only, rewritten out of and never into.
+content-source/
+
+# Prose and registers. Markdown reflow would churn every table and list in the
+# docs for no gain; the Prettier rule in CLAUDE.md §11 is about code.
+*.md
+
+# Generated. Formatting either would be undone the next time it is written.
+types/database.ts
+package-lock.json
+
+# A Create React App leftover, proposed for deletion (register V83). Not formatted,
+# because formatting a file that should not exist is churn.
+public/index.html

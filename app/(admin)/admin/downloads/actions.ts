@@ -60,7 +60,10 @@ const attachInput = z.object({
     .string()
     .trim()
     .max(300)
-    .regex(/^$|^\d{4}-\d{2}\/[0-9a-f]{16}(?:-[a-z0-9-]+)?\.[a-z0-9]+$/, 'That is not a media path.'),
+    .regex(
+      /^$|^\d{4}-\d{2}\/[0-9a-f]{16}(?:-[a-z0-9-]+)?\.[a-z0-9]+$/,
+      'That is not a media path.',
+    ),
 });
 
 export async function attachDownloadFile(
@@ -94,7 +97,10 @@ export async function attachDownloadFile(
       .maybeSingle();
 
     if (!media) {
-      return { ok: false, message: 'No uploaded file has that path. Copy it from the Media screen.' };
+      return {
+        ok: false,
+        message: 'No uploaded file has that path. Copy it from the Media screen.',
+      };
     }
     if (!media.privacy_checked) {
       return {

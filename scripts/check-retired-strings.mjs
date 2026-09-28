@@ -95,7 +95,10 @@ function walk(dir, out = []) {
 
 function excerpt(text, index) {
   const start = Math.max(0, index - 60);
-  return text.slice(start, index + 80).replace(/\s+/g, ' ').trim();
+  return text
+    .slice(start, index + 80)
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 const files = walk(BUILD_DIR);

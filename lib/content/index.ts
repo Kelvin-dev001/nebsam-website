@@ -43,7 +43,10 @@ import type {
 
 type Result<T> = { data: T; configured: boolean };
 
-async function query<T>(fn: (db: ReturnType<typeof publicClient>) => Promise<T>, fallback: T): Promise<Result<T>> {
+async function query<T>(
+  fn: (db: ReturnType<typeof publicClient>) => Promise<T>,
+  fallback: T,
+): Promise<Result<T>> {
   if (!isDatabaseConfigured()) return { data: fallback, configured: false };
   try {
     return { data: await fn(publicClient()), configured: true };
@@ -156,10 +159,7 @@ export async function getBlogPosts(options?: {
   limit?: number;
 }): Promise<Result<PublicBlogPost[]>> {
   return query(async (db) => {
-    let q = db
-      .from('public_blog_posts')
-      .select('*')
-      .order('published_at', { ascending: false });
+    let q = db.from('public_blog_posts').select('*').order('published_at', { ascending: false });
     if (options?.categorySlug) q = q.eq('category_slug', options.categorySlug);
     if (options?.limit) q = q.limit(options.limit);
     const { data, error } = await q;
@@ -240,7 +240,9 @@ export async function getProductsForSolution(solutionId: string): Promise<Result
  * cannot produce a link to a 404. That is load-bearing here: the school bus
  * solution and four products are currently drafts.
  */
-export async function getIndustriesForSolution(solutionId: string): Promise<Result<PublicIndustry[]>> {
+export async function getIndustriesForSolution(
+  solutionId: string,
+): Promise<Result<PublicIndustry[]>> {
   return query(async (db) => {
     const { data: links, error: linkError } = await db
       .from('public_solution_industries')
@@ -259,7 +261,9 @@ export async function getIndustriesForSolution(solutionId: string): Promise<Resu
   }, []);
 }
 
-export async function getSolutionsForIndustry(industryId: string): Promise<Result<PublicSolution[]>> {
+export async function getSolutionsForIndustry(
+  industryId: string,
+): Promise<Result<PublicSolution[]>> {
   return query(async (db) => {
     const { data: links, error: linkError } = await db
       .from('public_solution_industries')

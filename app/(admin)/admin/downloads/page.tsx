@@ -157,8 +157,12 @@ export default async function AdminDownloadsPage() {
 
                 {row.cleared_for_publication && row.cleared_by ? (
                   <p className="mt-3 text-body-sm text-text-secondary">
-                    Cleared by <strong>{staffById.get(row.cleared_by) ?? 'a former account'}</strong>{' '}
-                    on {row.cleared_at ? new Date(row.cleared_at).toLocaleString('en-GB') : 'an unrecorded date'}.
+                    Cleared by{' '}
+                    <strong>{staffById.get(row.cleared_by) ?? 'a former account'}</strong> on{' '}
+                    {row.cleared_at
+                      ? new Date(row.cleared_at).toLocaleString('en-GB')
+                      : 'an unrecorded date'}
+                    .
                   </p>
                 ) : null}
 

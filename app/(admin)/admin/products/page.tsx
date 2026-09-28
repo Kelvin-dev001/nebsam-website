@@ -103,7 +103,9 @@ export default async function AdminProductsPage({
 
       {error ? (
         <EmptyState title="Products could not be read">
-          <p>The database refused the query. That is a fault to fix rather than an empty catalogue.</p>
+          <p>
+            The database refused the query. That is a fault to fix rather than an empty catalogue.
+          </p>
         </EmptyState>
       ) : !rows || rows.length === 0 ? (
         <EmptyState title="No products match">

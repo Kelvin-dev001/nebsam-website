@@ -23,14 +23,26 @@ const redirects = async () => [
   // ─── From the live sitemap (docs/ROUTE_MAP.md §2.1) ──────────────────────
   { source: '/services', destination: '/solutions', permanent: true },
   { source: '/services/car-tracking', destination: '/solutions/vehicle-tracking', permanent: true },
-  { source: '/services/fuel-monitoring', destination: '/solutions/fuel-monitoring', permanent: true },
-  { source: '/services/radio-calls', destination: '/solutions/radio-communication', permanent: true },
+  {
+    source: '/services/fuel-monitoring',
+    destination: '/solutions/fuel-monitoring',
+    permanent: true,
+  },
+  {
+    source: '/services/radio-calls',
+    destination: '/solutions/radio-communication',
+    permanent: true,
+  },
   {
     source: '/services/vehicle-video-telematics',
     destination: '/solutions/ai-video-telematics',
     permanent: true,
   },
-  { source: '/services/speed-governors', destination: '/solutions/speed-governors', permanent: true },
+  {
+    source: '/services/speed-governors',
+    destination: '/solutions/speed-governors',
+    permanent: true,
+  },
   { source: '/services/car-alarms', destination: '/solutions/vehicle-security', permanent: true },
 
   // ─── Found in Sprint 0, absent from every existing inventory (§2.2) ──────

@@ -83,13 +83,15 @@ async function audit(
   // satisfy. Round-tripping through JSON also guarantees the value is storable.
   diff: Record<string, string | boolean | null | undefined>,
 ) {
-  await serviceClient().from('audit_log').insert({
-    actor_id: actorId,
-    action,
-    entity: 'blog_post',
-    entity_id: entityId,
-    diff: JSON.parse(JSON.stringify(diff)),
-  });
+  await serviceClient()
+    .from('audit_log')
+    .insert({
+      actor_id: actorId,
+      action,
+      entity: 'blog_post',
+      entity_id: entityId,
+      diff: JSON.parse(JSON.stringify(diff)),
+    });
 }
 
 /**
@@ -214,7 +216,9 @@ export async function savePost(formData: FormData): Promise<ActionResult> {
   await audit(actor.id, 'update', input.id, {
     slug: row.slug,
     status: row.status,
-    ...(slugChanged ? { slug_was: existing.slug, redirect_created: existing.status === 'published' } : {}),
+    ...(slugChanged
+      ? { slug_was: existing.slug, redirect_created: existing.status === 'published' }
+      : {}),
   });
 
   // On-demand revalidation: publish, refresh, it is live. See V54 — the tag

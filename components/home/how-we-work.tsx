@@ -60,10 +60,7 @@ export function HowWeWork() {
               key={step.title}
               className="grid gap-x-10 gap-y-2 border-b border-border-hairline-inverse py-7 md:grid-cols-[3rem_14rem_1fr] md:py-8"
             >
-              <span
-                aria-hidden="true"
-                className="font-mono text-mono text-brand-signal"
-              >
+              <span aria-hidden="true" className="font-mono text-mono text-brand-signal">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 className="font-display-tight text-h3 text-text-inverse">{step.title}</h3>

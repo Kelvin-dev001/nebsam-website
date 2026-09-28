@@ -119,7 +119,12 @@ export function productFeatures(value: PublicProduct['features']): ProductFeatur
   if (!Array.isArray(value)) return [];
   return value.flatMap((f) =>
     f && typeof f === 'object' && !Array.isArray(f) && 'title' in f && 'detail' in f
-      ? [{ title: String((f as Record<string, unknown>).title), detail: String((f as Record<string, unknown>).detail) }]
+      ? [
+          {
+            title: String((f as Record<string, unknown>).title),
+            detail: String((f as Record<string, unknown>).detail),
+          },
+        ]
       : [],
   );
 }

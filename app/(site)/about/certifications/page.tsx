@@ -106,7 +106,10 @@ export default async function CertificationsPage() {
           ) : (
             <ul className="flex flex-col gap-14">
               {certifications.map((certification) => (
-                <li key={certification.id} className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+                <li
+                  key={certification.id}
+                  className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]"
+                >
                   <div>
                     <Eyebrow>{certification.issuer}</Eyebrow>
                     <h2 className="mt-3 font-display-tight text-h2 text-text-primary md:text-md-h2">
@@ -139,7 +142,9 @@ export default async function CertificationsPage() {
                         </>
                       ) : null}
                       <dt className="text-text-secondary">Effective</dt>
-                      <dd className="text-text-primary">{formatDate(certification.effective_on)}</dd>
+                      <dd className="text-text-primary">
+                        {formatDate(certification.effective_on)}
+                      </dd>
                       <dt className="text-text-secondary">Expires</dt>
                       <dd className="text-text-primary">{formatDate(certification.expires_on)}</dd>
                     </dl>
@@ -197,13 +202,17 @@ export default async function CertificationsPage() {
               <dd className="text-text-primary">Complies</dd>
             </dl>
 
-            <p className="mt-6 text-body text-text-secondary">Parameters tested, all recorded as complying:</p>
+            <p className="mt-6 text-body text-text-secondary">
+              Parameters tested, all recorded as complying:
+            </p>
             <ul className="mt-3 flex list-disc flex-col gap-1 pl-5 text-body text-text-secondary">
               <li>ADAS camera detection</li>
               <li>Driver alerts</li>
               <li>DSM camera detection</li>
               <li>G-sensor detection</li>
-              <li>Power supply — in-built battery sustaining the system for a minimum of 30 minutes</li>
+              <li>
+                Power supply — in-built battery sustaining the system for a minimum of 30 minutes
+              </li>
               <li>System tampering detection</li>
               <li>Ignition-triggered power-on</li>
             </ul>

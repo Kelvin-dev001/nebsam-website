@@ -24,7 +24,9 @@ export const metadata = buildMetadata({
 
 export default async function IndustriesIndexPage() {
   const { data } = await getIndustries();
-  const industries = data.flatMap((i) => (i.slug && i.name ? [{ ...i, slug: i.slug, name: i.name }] : []));
+  const industries = data.flatMap((i) =>
+    i.slug && i.name ? [{ ...i, slug: i.slug, name: i.name }] : [],
+  );
 
   const trail = [
     { name: 'Home', path: ROUTES.home },

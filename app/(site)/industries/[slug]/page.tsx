@@ -164,7 +164,9 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
                 <p
                   key={i}
                   className={
-                    i === 0 ? 'text-body-lg text-text-primary' : 'mt-4 text-body text-text-secondary'
+                    i === 0
+                      ? 'text-body-lg text-text-primary'
+                      : 'mt-4 text-body text-text-secondary'
                   }
                 >
                   {para}
