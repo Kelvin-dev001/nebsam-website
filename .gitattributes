@@ -1,0 +1,6 @@
+# Line endings: LF in the repository AND in every working copy, whatever a
+# machine's core.autocrlf says. Prettier expects LF (its default), Vercel builds
+# on Linux, and a Windows checkout in CRLF made `prettier --check` report every
+# file as unformatted when none of them were. Binary files are detected and left
+# alone by `text=auto`.
+* text=auto eol=lf
