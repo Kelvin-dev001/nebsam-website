@@ -10,3 +10,7 @@ content-source/
 # Generated. Formatting either would be undone the next time it is written.
 types/database.ts
 package-lock.json
+
+# A Create React App leftover, proposed for deletion (register V83). Not formatted,
+# because formatting a file that should not exist is churn.
+public/index.html
