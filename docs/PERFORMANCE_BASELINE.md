@@ -411,3 +411,31 @@ Each fix has a cost, and one of them reverses a T3 decision, so this is Kelvin's
 
 Raw JSON and scripts: `perf-2026-09-27-s12b-t4/` (run 1) and `perf-2026-09-27-s12b-t4-final/`
 (run 2), under `~/.claude/projects/C--Projects-nebsam-website/`.
+
+### 12.3 Kelvin chose (a) — re-measured, 28 September 2026
+
+The stage's rules became global `pinned-` classes pulled into `app/globals.css` by an `@import`, so
+they ship inside the one stylesheet (`37f2c65`). The same build also carries the approved hero
+headline (V75, `ba67ad4`). Nine pairs against the same T0 arm:
+
+| Paired against T0, n = 9 | Home | Fuel |
+|---|---|---|
+| Performance | 97 (88–97), delta **0** | 97 (82–98), delta −1 |
+| LCP | 2.567 s (2.496–2.600), delta **−2 ms** (−186 to +70) | 2.543 s, delta −1 ms |
+| TBT | 66 ms, delta −11 ms | 42 ms, delta −9 ms |
+| CLS | 0.012, delta 0 | 0.012, delta 0 |
+| Transfer | delta **+5,211 B** | delta **+836 B** |
+| Requests | **15 vs 15** | 14 vs 14 |
+| A11y / BP / SEO | 100 / 100 / 100 | 100 / 100 / 100 |
+
+`benchmarkIndex` 1,495–3,305. **Home is back to one stylesheet and one request fewer**, and
+Lighthouse's render-blocking savings read 94 ms against T0's 103 ms. The cost of (a) is the +836 B on
+Fuel and every other route: the stage's rules in the shared stylesheet. The rest of Home's +5.2 KB is
+the set piece's server-rendered copy and its client code.
+
+On mobile, the LCP element is now the hero **headline**: at five lines of display type it is a
+larger block than the paragraph, which was LCP before. It is server-rendered text in the same
+preloaded font, so what gates it is unchanged. **Home LCP still sits about 67 ms over budget, exactly where T0 does:
+that is V47, not T4.**
+
+Raw JSON: `perf-2026-09-28-s12b-t4-v77/`, under `~/.claude/projects/C--Projects-nebsam-website/`.
