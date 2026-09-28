@@ -72,7 +72,7 @@ const TABLES = [
   'branches', 'certifications', 'client_logos', 'coverage_locations', 'downloads',
   'faqs', 'industries', 'media', 'order_items', 'orders', 'payment_intents', 'payments', 'product_categories',
   'product_industries', 'product_solutions', 'products', 'profiles', 'redirects', 'shipments',
-  'solution_industries', 'solutions', 'submissions', 'testimonials',
+  'solution_industries', 'solutions', 'submission_attempts', 'submissions', 'testimonials',
 ];
 
 const VIEWS = [
