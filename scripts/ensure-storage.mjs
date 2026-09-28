@@ -63,7 +63,9 @@ const url = env('NEXT_PUBLIC_SUPABASE_URL');
 const key = env('SUPABASE_SERVICE_ROLE_KEY');
 
 if (!url || !key) {
-  console.error('\n  storage:init: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required.\n');
+  console.error(
+    '\n  storage:init: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required.\n',
+  );
   process.exit(1);
 }
 
@@ -71,7 +73,9 @@ const headers = { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': '
 
 const listed = await fetch(`${url}/storage/v1/bucket`, { headers });
 if (!listed.ok) {
-  console.error(`\n  storage:init: could not list buckets — ${listed.status} ${await listed.text()}\n`);
+  console.error(
+    `\n  storage:init: could not list buckets — ${listed.status} ${await listed.text()}\n`,
+  );
   process.exit(1);
 }
 const buckets = await listed.json();
@@ -91,7 +95,9 @@ if (existing) {
     }),
   });
   if (!updated.ok) {
-    console.error(`\n  storage:init: bucket exists but could not be updated — ${updated.status} ${await updated.text()}\n`);
+    console.error(
+      `\n  storage:init: bucket exists but could not be updated — ${updated.status} ${await updated.text()}\n`,
+    );
     process.exit(1);
   }
   console.log(`\n  storage:init: '${BUCKET}' already existed — configuration reapplied.`);
@@ -102,7 +108,9 @@ if (existing) {
     body: JSON.stringify(CONFIG),
   });
   if (!created.ok) {
-    console.error(`\n  storage:init: could not create bucket — ${created.status} ${await created.text()}\n`);
+    console.error(
+      `\n  storage:init: could not create bucket — ${created.status} ${await created.text()}\n`,
+    );
     process.exit(1);
   }
   console.log(`\n  storage:init: created private bucket '${BUCKET}'.`);
@@ -114,7 +122,9 @@ const verify = await fetch(`${url}/storage/v1/bucket/${BUCKET}`, { headers });
 const final = await verify.json();
 
 if (final.public !== false) {
-  console.error(`\n  storage:init: FAILED — '${BUCKET}' reports public=${final.public}. It must be private.\n`);
+  console.error(
+    `\n  storage:init: FAILED — '${BUCKET}' reports public=${final.public}. It must be private.\n`,
+  );
   process.exit(1);
 }
 

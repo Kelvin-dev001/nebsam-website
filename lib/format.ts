@@ -51,7 +51,7 @@ export function formatFileType(fileType: string | null | undefined): string | nu
   };
   if (known[t]) return known[t];
   // Fall back to the subtype or the bare extension, upper-cased.
-  const tail = t.includes('/') ? t.split('/').pop() ?? t : t;
+  const tail = t.includes('/') ? (t.split('/').pop() ?? t) : t;
   return tail.replace(/^[.]/, '').slice(0, 8).toUpperCase();
 }
 

@@ -38,7 +38,12 @@ export function readCart(): CartLine[] {
       typeof (l as CartLine).productId === 'string' &&
       Number.isInteger((l as CartLine).quantity) &&
       (l as CartLine).quantity > 0
-        ? [{ productId: (l as CartLine).productId, quantity: Math.min((l as CartLine).quantity, 99) }]
+        ? [
+            {
+              productId: (l as CartLine).productId,
+              quantity: Math.min((l as CartLine).quantity, 99),
+            },
+          ]
         : [],
     );
   } catch {
@@ -69,7 +74,11 @@ export function addToCart(productId: string, quantity = 1): void {
 
 export function setQuantity(productId: string, quantity: number): void {
   const lines = readCart().flatMap((l) =>
-    l.productId === productId ? (quantity > 0 ? [{ ...l, quantity: Math.min(quantity, 99) }] : []) : [l],
+    l.productId === productId
+      ? quantity > 0
+        ? [{ ...l, quantity: Math.min(quantity, 99) }]
+        : []
+      : [l],
   );
   writeCart(lines);
 }

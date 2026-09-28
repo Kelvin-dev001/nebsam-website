@@ -53,7 +53,9 @@ for (const file of files) {
   for (const m of code.matchAll(/create\s+table\s+(?:if\s+not\s+exists\s+)?([a-z_][a-z0-9_]*)/gi)) {
     tables.add(m[1].toLowerCase());
   }
-  for (const m of code.matchAll(/alter\s+table\s+([a-z_][a-z0-9_]*)\s+enable\s+row\s+level\s+security/gi)) {
+  for (const m of code.matchAll(
+    /alter\s+table\s+([a-z_][a-z0-9_]*)\s+enable\s+row\s+level\s+security/gi,
+  )) {
     rlsEnabled.add(m[1].toLowerCase());
   }
   for (const m of code.matchAll(/create\s+view\s+([a-z_][a-z0-9_]*)/gi)) {
@@ -139,5 +141,7 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
-console.log(`  check-migrations: clean — RLS on all ${tables.size} tables, ` +
-  `${views.size} views granted to anon, no base table exposed\n`);
+console.log(
+  `  check-migrations: clean — RLS on all ${tables.size} tables, ` +
+    `${views.size} views granted to anon, no base table exposed\n`,
+);

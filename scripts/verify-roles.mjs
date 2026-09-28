@@ -52,7 +52,9 @@ const ANON = env('NEXT_PUBLIC_SUPABASE_ANON_KEY');
 const SERVICE = env('SUPABASE_SERVICE_ROLE_KEY');
 
 if (!URL || !ANON || !SERVICE) {
-  console.error('\n  verify:roles: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY are all required.\n');
+  console.error(
+    '\n  verify:roles: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY are all required.\n',
+  );
   process.exit(1);
 }
 
@@ -105,7 +107,8 @@ async function createStaff(role) {
     method: 'POST',
     body: JSON.stringify({ email, password: PASSWORD, email_confirm: true }),
   });
-  if (!made.ok) throw new Error(`could not create ${role} user: ${made.status} ${await made.text()}`);
+  if (!made.ok)
+    throw new Error(`could not create ${role} user: ${made.status} ${await made.text()}`);
   const user = await made.json();
   created.push(user.id);
 
@@ -231,9 +234,9 @@ try {
     });
     const expected = role !== 'viewer';
     record(
-      (visible > 0) === expected,
+      visible > 0 === expected,
       `${role} ${expected ? 'can' : 'cannot'} read orders`,
-      (visible > 0) === expected ? '' : `saw ${visible} row(s)`,
+      visible > 0 === expected ? '' : `saw ${visible} row(s)`,
     );
   }
   for (const role of ROLES) {
@@ -369,9 +372,7 @@ try {
     const counted = await service('/rest/v1/audit_log?select=id&limit=1', {
       headers: { Prefer: 'count=exact' },
     });
-    const existing = Number(
-      (counted.headers.get('content-range') ?? '*/0').split('/')[1] ?? 0,
-    );
+    const existing = Number((counted.headers.get('content-range') ?? '*/0').split('/')[1] ?? 0);
 
     if (existing === 0) {
       console.log('    skip  audit_log read — the log is empty, so a read and a denial look alike');
@@ -394,7 +395,11 @@ try {
       } catch {
         rows = -1;
       }
-      record(!nonAdmin.ok || rows === 0, 'sales cannot read audit_log', rows > 0 ? `saw ${rows}` : '');
+      record(
+        !nonAdmin.ok || rows === 0,
+        'sales cannot read audit_log',
+        rows > 0 ? `saw ${rows}` : '',
+      );
     }
   }
 
@@ -412,8 +417,7 @@ try {
     if (role === 'admin') {
       record(Array.isArray(rows) && rows.length > 1, 'admin can read every profile');
     } else {
-      const onlySelf =
-        Array.isArray(rows) && rows.length === 1 && rows[0].id === staff[role].id;
+      const onlySelf = Array.isArray(rows) && rows.length === 1 && rows[0].id === staff[role].id;
       record(onlySelf, `${role} sees only their own profile`, onlySelf ? '' : `saw ${rows.length}`);
     }
   }
@@ -425,7 +429,11 @@ try {
     });
     const body = await escalate.text();
     const blocked = !escalate.ok || body.trim() === '[]';
-    record(blocked, 'a viewer CANNOT promote themselves to admin', blocked ? '' : body.slice(0, 160));
+    record(
+      blocked,
+      'a viewer CANNOT promote themselves to admin',
+      blocked ? '' : body.slice(0, 160),
+    );
   }
 
   // ── 7. The anon key, one more time ───────────────────────────────────────

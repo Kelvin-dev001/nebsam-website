@@ -1,5 +1,10 @@
 import 'server-only';
-import { UPLOAD_KINDS, MAX_IMAGE_BYTES, MAX_DOCUMENT_BYTES, type UploadKind } from './upload-limits';
+import {
+  UPLOAD_KINDS,
+  MAX_IMAGE_BYTES,
+  MAX_DOCUMENT_BYTES,
+  type UploadKind,
+} from './upload-limits';
 
 /**
  * UPLOAD VALIDATION.
@@ -30,9 +35,7 @@ import { UPLOAD_KINDS, MAX_IMAGE_BYTES, MAX_DOCUMENT_BYTES, type UploadKind } fr
  * a repository asset reviewed in a pull request, not an upload.
  */
 
-export type UploadCheck =
-  | { ok: true; kind: UploadKind }
-  | { ok: false; message: string };
+export type UploadCheck = { ok: true; kind: UploadKind } | { ok: false; message: string };
 
 function extensionOf(filename: string): string {
   const dot = filename.lastIndexOf('.');

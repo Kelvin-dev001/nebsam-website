@@ -27,7 +27,13 @@ export interface UploadKind {
 }
 
 export const UPLOAD_KINDS: UploadKind[] = [
-  { mime: 'image/jpeg', extensions: ['jpg', 'jpeg'], signature: [0xff, 0xd8, 0xff], label: 'JPEG image', image: true },
+  {
+    mime: 'image/jpeg',
+    extensions: ['jpg', 'jpeg'],
+    signature: [0xff, 0xd8, 0xff],
+    label: 'JPEG image',
+    image: true,
+  },
   {
     mime: 'image/png',
     extensions: ['png'],
@@ -56,7 +62,13 @@ export const UPLOAD_KINDS: UploadKind[] = [
     label: 'AVIF image',
     image: true,
   },
-  { mime: 'application/pdf', extensions: ['pdf'], signature: [0x25, 0x50, 0x44, 0x46], label: 'PDF document', image: false },
+  {
+    mime: 'application/pdf',
+    extensions: ['pdf'],
+    signature: [0x25, 0x50, 0x44, 0x46],
+    label: 'PDF document',
+    image: false,
+  },
 ];
 
 /**
