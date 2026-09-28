@@ -15,21 +15,27 @@ import { z } from 'zod';
  * them once makes both impossible.
  */
 
+/**
+ * Minimum lengths, read by the schemas below AND by the fields' `minLength`, so
+ * the browser refuses what the server would, before anything is sent (V81).
+ */
+const MIN = { name: 2, phone: 9, message: 10, interest: 3, product: 2, town: 2 } as const;
+
 /** Kenyan mobile numbers, loosely. */
 const phone = z
   .string()
-  .min(9, 'A phone number is needed so we can reply.')
+  .min(MIN.phone, 'A phone number is needed so we can reply.')
   .max(20)
   .regex(/^[0-9+\s()-]+$/, 'Use digits, spaces and + only.');
 
-const name = z.string().min(2, 'Please give a name we can use.').max(120);
+const name = z.string().min(MIN.name, 'Please give a name we can use.').max(120);
 const optionalEmail = z
   .string()
   .max(160)
   .email('That does not look like an email address.')
   .optional()
   .or(z.literal(''));
-const message = z.string().min(10, 'Please tell us a little more.').max(4000);
+const message = z.string().min(MIN.message, 'Please tell us a little more.').max(4000);
 
 /**
  * The honeypot, on every form.
@@ -57,7 +63,7 @@ export const SUBMISSION_SCHEMAS = {
     // Free text on purpose. A dropdown of products would go stale the moment
     // the catalogue changes, and a fleet manager describing "14 lorries and two
     // pickups" tells sales more than any select could.
-    interest: z.string().min(3, 'Tell us what you are looking for.').max(400),
+    interest: z.string().min(MIN.interest, 'Tell us what you are looking for.').max(400),
     vehicles: z.string().max(80).optional().or(z.literal('')),
     town: z.string().max(80).optional().or(z.literal('')),
     message: message.optional().or(z.literal('')),
@@ -68,8 +74,8 @@ export const SUBMISSION_SCHEMAS = {
     phone,
     email: optionalEmail,
     vehicle: z.string().max(160).optional().or(z.literal('')),
-    product: z.string().min(2, 'What is being installed?').max(200),
-    town: z.string().min(2, 'Where should we meet you?').max(80),
+    product: z.string().min(MIN.product, 'What is being installed?').max(200),
+    town: z.string().min(MIN.town, 'Where should we meet you?').max(80),
     preferred: z.string().max(120).optional().or(z.literal('')),
     message: message.optional().or(z.literal('')),
     company: honeypot,
@@ -97,6 +103,8 @@ export interface FieldSpec {
   label: string;
   type?: 'text' | 'tel' | 'email' | 'textarea' | 'checkbox' | 'select';
   required?: boolean;
+  /** From MIN, never a literal. Checked only once something is typed. */
+  minLength?: number;
   hint?: string;
   options?: string[];
   autoComplete?: string;
@@ -106,8 +114,16 @@ export interface FieldSpec {
 /** What each form renders. Ordered as it should be filled in. */
 export const SUBMISSION_FIELDS: Record<SubmissionKind, FieldSpec[]> = {
   contact: [
-    { name: 'name', label: 'Your name', required: true, autoComplete: 'name' },
-    { name: 'phone', label: 'Phone number', type: 'tel', required: true, autoComplete: 'tel', inputMode: 'tel' },
+    { name: 'name', minLength: MIN.name, label: 'Your name', required: true, autoComplete: 'name' },
+    {
+      name: 'phone',
+      minLength: MIN.phone,
+      label: 'Phone number',
+      type: 'tel',
+      required: true,
+      autoComplete: 'tel',
+      inputMode: 'tel',
+    },
     { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', hint: 'Optional.' },
     {
       name: 'branch',
@@ -116,36 +132,81 @@ export const SUBMISSION_FIELDS: Record<SubmissionKind, FieldSpec[]> = {
       options: ['No preference', 'Nairobi', 'Mombasa', 'Nakuru'],
       hint: 'Only three branches exist. Everywhere else is served by agents and technicians.',
     },
-    { name: 'message', label: 'How can we help?', type: 'textarea', required: true },
+    {
+      name: 'message',
+      minLength: MIN.message,
+      label: 'How can we help?',
+      type: 'textarea',
+      required: true,
+    },
   ],
   quote: [
-    { name: 'name', label: 'Your name', required: true, autoComplete: 'name' },
-    { name: 'phone', label: 'Phone number', type: 'tel', required: true, autoComplete: 'tel', inputMode: 'tel' },
+    { name: 'name', minLength: MIN.name, label: 'Your name', required: true, autoComplete: 'name' },
+    {
+      name: 'phone',
+      minLength: MIN.phone,
+      label: 'Phone number',
+      type: 'tel',
+      required: true,
+      autoComplete: 'tel',
+      inputMode: 'tel',
+    },
     { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', hint: 'Optional.' },
-    { name: 'organisation', label: 'Company or organisation', autoComplete: 'organization', hint: 'Optional.' },
+    {
+      name: 'organisation',
+      label: 'Company or organisation',
+      autoComplete: 'organization',
+      hint: 'Optional.',
+    },
     {
       name: 'interest',
+      minLength: MIN.interest,
       label: 'What do you need?',
       required: true,
       hint: 'For example: tracking for a delivery fleet, or a speed limiter for NTSA compliance.',
     },
     { name: 'vehicles', label: 'How many vehicles?', hint: 'A rough number is fine.' },
     { name: 'town', label: 'Town', hint: 'So we can say who would carry out the work.' },
-    { name: 'message', label: 'Anything else we should know?', type: 'textarea' },
+    {
+      name: 'message',
+      minLength: MIN.message,
+      label: 'Anything else we should know?',
+      type: 'textarea',
+    },
   ],
   installation: [
-    { name: 'name', label: 'Your name', required: true, autoComplete: 'name' },
-    { name: 'phone', label: 'Phone number', type: 'tel', required: true, autoComplete: 'tel', inputMode: 'tel' },
+    { name: 'name', minLength: MIN.name, label: 'Your name', required: true, autoComplete: 'name' },
+    {
+      name: 'phone',
+      minLength: MIN.phone,
+      label: 'Phone number',
+      type: 'tel',
+      required: true,
+      autoComplete: 'tel',
+      inputMode: 'tel',
+    },
     { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', hint: 'Optional.' },
-    { name: 'product', label: 'What is being installed?', required: true, hint: 'The product name, or describe it.' },
+    {
+      name: 'product',
+      minLength: MIN.product,
+      label: 'What is being installed?',
+      required: true,
+      hint: 'The product name, or describe it.',
+    },
     { name: 'vehicle', label: 'Vehicle', hint: 'Make and model. Optional.' },
-    { name: 'town', label: 'Town', required: true, hint: 'Where the vehicle will be.' },
+    {
+      name: 'town',
+      minLength: MIN.town,
+      label: 'Town',
+      required: true,
+      hint: 'Where the vehicle will be.',
+    },
     {
       name: 'preferred',
       label: 'Preferred day or time',
       hint: 'We will confirm before anyone travels — this is a request, not a booking.',
     },
-    { name: 'message', label: 'Anything else?', type: 'textarea' },
+    { name: 'message', minLength: MIN.message, label: 'Anything else?', type: 'textarea' },
   ],
   suggestion: [
     {
@@ -155,12 +216,35 @@ export const SUBMISSION_FIELDS: Record<SubmissionKind, FieldSpec[]> = {
       hint: 'We will not store your name, phone number or email with this suggestion.',
     },
     { name: 'name', label: 'Your name', autoComplete: 'name', hint: 'Optional.' },
-    { name: 'phone', label: 'Phone number', type: 'tel', autoComplete: 'tel', inputMode: 'tel', hint: 'Optional.' },
+    {
+      name: 'phone',
+      label: 'Phone number',
+      type: 'tel',
+      autoComplete: 'tel',
+      inputMode: 'tel',
+      hint: 'Optional.',
+    },
     { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', hint: 'Optional.' },
-    { name: 'message', label: 'Your suggestion', type: 'textarea', required: true },
+    {
+      name: 'message',
+      minLength: MIN.message,
+      label: 'Your suggestion',
+      type: 'textarea',
+      required: true,
+    },
   ],
 };
 
 export type SubmissionResult =
   | { ok: true; reference: string; kind: SubmissionKind }
-  | { ok: false; message: string; field?: string };
+  | {
+      ok: false;
+      message: string;
+      field?: string;
+      /**
+       * What the person typed, handed back so the form can put it back (V81).
+       * React resets a form after every action, failed ones included, so without
+       * this a refusal wipes the lot. Only ever on a refusal.
+       */
+      values?: Record<string, string>;
+    };

@@ -4,16 +4,12 @@ import * as React from 'react';
 import { useActionState } from 'react';
 import { submitEnquiry } from '@/lib/submissions/actions';
 import { Button } from '@/components/ui/button';
+import { EnquiryFields } from './enquiry-fields';
 import { EnquirySuccess } from './enquiry-success';
-import { CheckboxField, Field, SelectField, TextareaField } from '@/components/ui/field';
 import { track } from '@/lib/analytics';
 import { EVENTS, type EventName } from '@/lib/constants';
 import { CONTACT, DATA_PROTECTION_CONTACT, whatsappUrl } from '@/lib/company';
-import {
-  SUBMISSION_FIELDS,
-  type SubmissionKind,
-  type SubmissionResult,
-} from '@/lib/submissions/types';
+import type { SubmissionKind, SubmissionResult } from '@/lib/submissions/types';
 
 /**
  * THE ENQUIRY FORM — contact, quote, installation booking and suggestions.
@@ -59,7 +55,11 @@ export function EnquiryForm({
     submitEnquiry,
     null,
   );
-  const [anonymous, setAnonymous] = React.useState(false);
+  // From the refusal when there is one: without JavaScript every response is a
+  // fresh render, and an anonymous suggestion must come back still anonymous.
+  const [anonymous, setAnonymous] = React.useState(() =>
+    Boolean(result && !result.ok && result.values?.anonymous),
+  );
 
   React.useEffect(() => {
     if (result?.ok) track(EVENT_BY_KIND[kind], { kind });
@@ -71,8 +71,6 @@ export function EnquiryForm({
     );
   }
 
-  const fields = SUBMISSION_FIELDS[kind];
-
   return (
     <form action={formAction} className="flex max-w-prose flex-col gap-5">
       {/* Which form this is. A hidden field rather than a bound argument —
@@ -81,68 +79,12 @@ export function EnquiryForm({
           lib/submissions/actions.ts. */}
       <input type="hidden" name="kind" value={kind} />
 
-      {fields.map((field) => {
-        const error =
-          result && !result.ok && result.field === field.name ? result.message : undefined;
-
-        // A suggestion sent anonymously hides the contact fields rather than
-        // merely ignoring them. Leaving them on screen invites someone to fill
-        // in a name they have just asked us not to keep.
-        if (kind === 'suggestion' && anonymous && ['name', 'phone', 'email'].includes(field.name)) {
-          return null;
-        }
-
-        if (field.type === 'checkbox') {
-          return (
-            <CheckboxField
-              key={field.name}
-              name={field.name}
-              label={field.label}
-              hint={field.hint}
-              checked={anonymous}
-              onChange={(event) => setAnonymous(event.currentTarget.checked)}
-            />
-          );
-        }
-        if (field.type === 'select') {
-          return (
-            <SelectField
-              key={field.name}
-              name={field.name}
-              label={field.label}
-              hint={field.hint}
-              error={error}
-              required={field.required}
-              options={field.options ?? []}
-            />
-          );
-        }
-        if (field.type === 'textarea') {
-          return (
-            <TextareaField
-              key={field.name}
-              name={field.name}
-              label={field.label}
-              hint={field.hint}
-              error={error}
-              required={field.required}
-            />
-          );
-        }
-        return (
-          <Field
-            key={field.name}
-            name={field.name}
-            label={field.label}
-            hint={field.hint}
-            error={error}
-            required={field.required}
-            type={field.type ?? 'text'}
-            autoComplete={field.autoComplete}
-            inputMode={field.inputMode}
-          />
-        );
-      })}
+      <EnquiryFields
+        kind={kind}
+        result={result}
+        anonymous={anonymous}
+        onAnonymousChange={setAnonymous}
+      />
 
       {/* Honeypot. Off-screen rather than display:none, aria-hidden and out of
           the tab order, and checked on the server. */}
