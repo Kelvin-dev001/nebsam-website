@@ -81,8 +81,8 @@ export function MediaUpload() {
           className="min-h-11 rounded-control border border-border-strong bg-surface px-3 text-body"
         />
         <span className="text-body-sm text-text-secondary">
-          Describe what is in the file for someone who cannot see it. Not &ldquo;image&rdquo; and not
-          the filename — what it shows. For a PDF, what the document is.
+          Describe what is in the file for someone who cannot see it. Not &ldquo;image&rdquo; and
+          not the filename — what it shows. For a PDF, what the document is.
         </span>
       </label>
 
@@ -92,8 +92,8 @@ export function MediaUpload() {
         </legend>
         <p className="text-body-sm text-text-secondary">
           Look at the file before answering. Does it show a vehicle registration plate, an
-          identifiable face, a customer or staff name, GPS coordinates, a device ID, or a
-          third party&rsquo;s branding?
+          identifiable face, a customer or staff name, GPS coordinates, a device ID, or a third
+          party&rsquo;s branding?
         </p>
         <div className="mt-3 flex flex-col gap-2">
           <label className="flex min-h-11 items-center gap-3 text-body-sm">

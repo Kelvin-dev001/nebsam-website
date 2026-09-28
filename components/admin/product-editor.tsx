@@ -107,7 +107,9 @@ export function ProductEditor({
           <div
             className={[
               'rounded-panel border p-4 text-body-sm',
-              result.ok ? 'border-state-ok-ink/40 bg-surface' : 'border-state-alert-ink/40 bg-surface',
+              result.ok
+                ? 'border-state-ok-ink/40 bg-surface'
+                : 'border-state-alert-ink/40 bg-surface',
             ].join(' ')}
           >
             {result.message}
@@ -145,8 +147,8 @@ export function ProductEditor({
               className="min-h-11 rounded-control border border-border-strong bg-surface px-3 text-body"
             />
             <span className="text-body-sm text-text-secondary">
-              Use the confirmed name exactly — Standard Tracker, Hybrid Car Alarm, Hybrid ProMax
-              Car Alarm. Retired names must never appear.
+              Use the confirmed name exactly — Standard Tracker, Hybrid Car Alarm, Hybrid ProMax Car
+              Alarm. Retired names must never appear.
             </span>
             {error('name') ? (
               <span className="text-body-sm text-state-alert-ink">{error('name')}</span>
@@ -174,9 +176,10 @@ export function ProductEditor({
               className="min-h-11 rounded-control border border-border-strong bg-surface px-3 font-mono text-mono read-only:bg-surface-raised read-only:text-text-secondary"
             />
             <span className="text-body-sm text-text-secondary">
-              The page will be at <code className="font-mono">{ROUTES.product(form.slug || '…')}</code>.
-              Web addresses are permanent; renaming one leaves a redirect behind, which works but
-              costs a little of the page&rsquo;s standing in search.
+              The page will be at{' '}
+              <code className="font-mono">{ROUTES.product(form.slug || '…')}</code>. Web addresses
+              are permanent; renaming one leaves a redirect behind, which works but costs a little
+              of the page&rsquo;s standing in search.
             </span>
             {error('slug') ? (
               <span className="text-body-sm text-state-alert-ink">{error('slug')}</span>
@@ -290,8 +293,8 @@ export function ProductEditor({
             />
             <span className="text-body-sm text-text-secondary">
               One per line, as <code className="font-mono">Label: value</code> — for example{' '}
-              <code className="font-mono">Network: 4G LTE</code>. These are rendered as a real
-              table on the page, never behind a tab.{' '}
+              <code className="font-mono">Network: 4G LTE</code>. These are rendered as a real table
+              on the page, never behind a tab.{' '}
               <strong>Leave a specification out rather than guessing it.</strong>
             </span>
           </label>
@@ -307,9 +310,9 @@ export function ProductEditor({
             />
             <span className="text-body-sm text-text-secondary">
               One feature per block, separated by a blank line. The first line is the heading and
-              everything after it is the explanation. Keep any hedging exactly as written — “according
-              to the configured security logic”, “subject to network and GPS availability”, “where
-              supported by the vehicle”.
+              everything after it is the explanation. Keep any hedging exactly as written —
+              “according to the configured security logic”, “subject to network and GPS
+              availability”, “where supported by the vehicle”.
             </span>
           </label>
         </div>

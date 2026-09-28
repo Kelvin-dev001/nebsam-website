@@ -24,8 +24,7 @@ type BranchPhone = { display: string; e164: string };
 function phonesOf(value: PublicBranch['phones']): BranchPhone[] {
   if (!Array.isArray(value)) return [];
   return value.filter(
-    (p): p is BranchPhone =>
-      typeof p === 'object' && p !== null && 'display' in p && 'e164' in p,
+    (p): p is BranchPhone => typeof p === 'object' && p !== null && 'display' in p && 'e164' in p,
   );
 }
 

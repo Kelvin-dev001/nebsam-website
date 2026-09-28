@@ -40,13 +40,7 @@ export interface MapPlace {
   lng: number | null;
 }
 
-export function CoverageMap({
-  branches,
-  towns,
-}: {
-  branches: MapPlace[];
-  towns: MapPlace[];
-}) {
+export function CoverageMap({ branches, towns }: { branches: MapPlace[]; towns: MapPlace[] }) {
   /**
    * Coordinates come from the database where they exist, and from lib/geo.ts
    * where they do not.
@@ -58,7 +52,8 @@ export function CoverageMap({
    * anywhere is dropped from the drawing and still appears in the list.
    */
   const place = (p: MapPlace) => {
-    const fromDb = p.lat !== null && p.lng !== null ? { lat: Number(p.lat), lng: Number(p.lng) } : null;
+    const fromDb =
+      p.lat !== null && p.lng !== null ? { lat: Number(p.lat), lng: Number(p.lng) } : null;
     const coords = fromDb ?? coordinatesFor(p.name);
     return coords ? { name: p.name, ...project(coords) } : null;
   };
@@ -123,7 +118,13 @@ export function CoverageMap({
           </span>
           <span className="flex items-center gap-2">
             <svg width="14" height="14" aria-hidden="true" className="shrink-0">
-              <circle cx="7" cy="7" r="4.5" className="fill-surface stroke-state-warn-ink" strokeWidth="1.4" />
+              <circle
+                cx="7"
+                cy="7"
+                r="4.5"
+                className="fill-surface stroke-state-warn-ink"
+                strokeWidth="1.4"
+              />
             </svg>
             Served by agents and technicians
           </span>

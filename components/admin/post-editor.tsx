@@ -1,7 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { autosavePost, savePost, unpublishPost, type ActionResult } from '@/app/(admin)/admin/blog/actions';
+import {
+  autosavePost,
+  savePost,
+  unpublishPost,
+  type ActionResult,
+} from '@/app/(admin)/admin/blog/actions';
 import { ROUTES } from '@/lib/constants';
 
 /**

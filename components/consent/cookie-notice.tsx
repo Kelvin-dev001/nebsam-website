@@ -55,8 +55,8 @@ export function CookieNotice() {
       <div className="mx-auto flex w-full max-w-shell flex-col gap-3 px-5 py-4 md:flex-row md:items-center md:justify-between md:gap-6 md:px-8">
         <p className="max-w-prose text-body-sm text-text-secondary-inverse">
           <span className="font-medium text-text-inverse">Cookies.</span> We use analytics cookies
-          to understand which pages help people find what they need. Nothing loads until you
-          choose, and we never put personal details in analytics.{' '}
+          to understand which pages help people find what they need. Nothing loads until you choose,
+          and we never put personal details in analytics.{' '}
           <a
             href={ROUTES.cookies}
             className="text-brand-signal underline decoration-1 underline-offset-4 transition-all duration-micro ease-in-out-quad hover:decoration-2"

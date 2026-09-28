@@ -57,7 +57,10 @@ export function CartView({ catalogue }: { catalogue: CatalogueItem[] }) {
     return p && typeof p.price_kes === 'number' ? [{ line: l, product: p }] : [];
   });
 
-  const subtotal = priced.reduce((s, i) => s + (i.product.price_kes as number) * i.line.quantity, 0);
+  const subtotal = priced.reduce(
+    (s, i) => s + (i.product.price_kes as number) * i.line.quantity,
+    0,
+  );
   const vat = Math.round(subtotal * VAT_RATE);
   const total = subtotal + vat;
   const recurring = priced.filter((i) => i.product.recurring_fee_kes);

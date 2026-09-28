@@ -94,8 +94,8 @@ export function SeoPanel({
             className="min-h-11 rounded-control border border-border-strong bg-surface px-3 text-body"
           />
           <span className="text-body-sm text-text-secondary">
-            Left empty, the page uses its own name. The count above measures whichever will
-            actually be used.
+            Left empty, the page uses its own name. The count above measures whichever will actually
+            be used.
           </span>
           {titleError ? (
             <span className="text-body-sm text-state-alert-ink">{titleError}</span>
