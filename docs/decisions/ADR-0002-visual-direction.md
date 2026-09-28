@@ -50,6 +50,10 @@ Supporting decisions:
    **"Losing signal is the alarm."** — which describes a *trigger*, not an outcome, and therefore
    promises nothing. The sub-line carries the source hedge verbatim: *"…according to the configured
    security logic."* `ENGINE LOCK AVAILABLE` was cut from the readout for the same reason.
+   *Superseded 28 Sep 2026 (Sprint 12b, V75):* the readout moved from the hero to the homepage set
+   piece, and Kelvin approved a new headline, "Know where your vehicles are, what they're doing, and
+   when something goes wrong.", whose sub-line carries "subject to network and GPS availability"
+   verbatim. The rejected Sprint 1 headline stays rejected.
 2. **The resolved state is the default rendered DOM**, not something the sequence produces. Verified
    with JS disabled, under reduced motion, and by `curl` against the production build.
 3. **This ADR records the framing risk** — see Consequences.

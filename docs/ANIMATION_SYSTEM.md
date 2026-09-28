@@ -114,7 +114,7 @@ beside the frame, never a gap before they arrive. At span 1 that rule changes no
 | Piece | File | What it does |
 |---|---|---|
 | Markup | `pinned-sequence.tsx` | Stage, then an ordinary `<ol>` of steps, all visible. `data-pinned="off"` in the server HTML |
-| Styles | `pinned-sequence.module.css` | A CSS module, so it loads only where used. Everything pinned is under `[data-pinned='on']` |
+| Styles | `pinned-sequence.css` | Global `pinned-` classes, pulled into `app/globals.css` by an `@import` so they ship inside the one global stylesheet. Everything pinned is under `[data-pinned='on']`. **Not a CSS module since V77**: as a module it became a second render-blocking stylesheet on Home |
 | Loader | `pinned-sequence-loader.tsx` | The only initial JS. Decides with `willPin`, sets `data-pinned`, adds `html.sc-ready`, then — after load and idle — imports the enhancer when the act is within a viewport |
 | Enhancer | `pinned-enhancer.ts` | Its own async chunk (595 B gzipped). Sets `data-active` from IntersectionObserver on a centre line, and on `focusin` |
 | Decision | `will-pin.ts` | `PIN_QUERY` matches **and** the act is not already on screen — shared with `Reveal` so the two cannot disagree |

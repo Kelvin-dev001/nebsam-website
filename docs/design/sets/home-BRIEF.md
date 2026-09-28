@@ -158,13 +158,15 @@ screenshots. **Silence in front of it:** yes, beat 4. **The end resolves:** yes.
 3. **Beats 1 and 2 read alike.** Beat 2's frame gained a static route strip (two geofences and the
    trip between them), as beat 3 has its fuel gauge. Each frame now has a face of its own.
 
-**Open, for Kelvin:** "Complies" lands twice in quick succession — beat 4 ends on it, and the next
-section (the KEBS result, Sprint 4) leads with it as display type. Both are approved structure, so it
-was not changed here. Options are in the T4 report.
+**Decided by Kelvin, 28 Sep 2026: keep both.** "Complies" lands twice in quick succession — beat 4
+ends on it, and the next section (the KEBS result, Sprint 4) leads with it as display type. The first
+is the claim in context, the second is the evidence in full.
 
 ## The hero (D3b = b)
 
 The jamming readout moves from the hero into beat 5, so the page has one peak, not two. The hero
-headline is a public claim and changes only with Kelvin's sign-off (**NV-5 / V75**): three drafts are
-in the T4 report and **none ships**. Until one is approved the hero keeps "Losing signal is the
-alarm." and its sub-line. The LCP element (the hero paragraph) stays a server-rendered text element.
+headline is a public claim and changed only with Kelvin's sign-off (**NV-5 / V75**). **Approved 28 Sep
+2026:** "Know where your vehicles are, what they're doing, and when something goes wrong." — each
+clause is a beat below it. The condition of approval, met: the sub-line carries "subject to network and
+GPS availability" word for word. The headline is set smaller on phones and tablets so the WhatsApp
+action clears the cookie bar at 360px; the LCP element is server-rendered text either way.
