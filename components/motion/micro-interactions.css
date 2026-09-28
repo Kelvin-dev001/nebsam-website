@@ -36,11 +36,15 @@
    class overrode the transition, so it JUMPED 108px after hydration. That
    jump was the site's only layout shift (CLS 0.012 on every first visit).
    A transform moves it without moving layout, so it is no longer a shift.
-   Distances are the old bottom-32 / md:bottom-24 minus bottom-5. */
+   Distances are the old bottom-32 / md:bottom-24 minus bottom-5.
+
+   inOutQuad, not outQuart (review-animations gate, T5): this is an element
+   already on screen moving and moving back — a state change both ways,
+   which is what the in-out token is for. ease-out is for arrivals. */
 .fab-lift {
   transition-property: background-color, transform;
   transition-duration: var(--dur-micro), var(--dur-micro);
-  transition-timing-function: var(--ease-in-out-quad), var(--ease-out-quart);
+  transition-timing-function: var(--ease-in-out-quad), var(--ease-in-out-quad);
 }
 
 html[data-consent='open'] .fab-lift {

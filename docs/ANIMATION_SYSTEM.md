@@ -63,7 +63,7 @@ render-blocking request (V77). Transform and opacity only; existing tokens only.
 | Class | Used on | What moves | Why |
 |---|---|---|---|
 | `press-feedback` | `Button`, `ButtonLink` | 1px press at 120ms `outQuart` | Feedback |
-| `fab-lift` | the floating WhatsApp button | lifts clear of the cookie bar by **transform** (−108px, −76px from `md`), 160ms `outQuart` | It used to change `bottom`, and its transition was overridden, so it jumped: **the site's only layout shift**. A transform is not a layout shift |
+| `fab-lift` | the floating WhatsApp button | lifts clear of the cookie bar by **transform** (−108px, −76px from `md`), 160ms `inOutQuad` (it moves and moves back: a state change both ways) | It used to change `bottom`, and its transition was overridden, so it jumped: **the site's only layout shift**. A transform is not a layout shift |
 | `enter-from-right` + `enter-fade` | the mobile menu panel and its backdrop | panel from `translateX(100%)` at `reveal`; backdrop fades at `micro` | Shows where the panel comes from. **Closes instantly** by design: a link tap loads the next page, and Close and Escape should snap |
 | `enter-rise` | the enquiry confirmation (`components/forms/enquiry-success.tsx`) | fades and settles 8px at `reveal` | The form it replaces vanishes in a frame; the change needs a bridge |
 | `enter-fade` | "Added — view cart" (`components/cart/add-to-cart.tsx`) | fades at `micro` | Confirms the tap |
