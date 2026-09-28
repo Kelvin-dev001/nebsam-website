@@ -269,7 +269,7 @@ TOTAL: 26.9 MB across 120 files
 | `public/clients/muthukinjo.jpeg` | 6 KB | 225x225 | — |
 | `public/clients/ngongveg.png` | 4 KB | 225x225 | — |
 | `public/sr-200.jpg` | 2 KB | 225x225 | — |
-| `public/index.html` | 2 KB | — | — |
+| ~~`public/index.html`~~ | — | — | Deleted 29 Sep 2026 (V83): the CRA shell, served at `/index.html` |
 | `public/sitemap.xml` | 2 KB | — | — |
-| `public/manifest.json` | 0 KB | — | — |
+| ~~`public/manifest.json`~~ | — | — | Deleted 29 Sep 2026 (V83): the CRA manifest, referenced by nothing |
 | `public/robots.txt` | 0 KB | — | — |
