@@ -2,7 +2,7 @@
 
 > **Status: SUPERSEDED by ADR-0007. Removed 28 September 2026.** Kelvin decided to remove installation-certificate
 > verification completely. The route, admin import, attempt log, library and scripts are deleted,
-> and migration 0044 drops the tables (applied once V61 is resolved). What follows is kept as the
+> and migration 0044 dropped the tables (applied 28 September 2026). What follows is kept as the
 > record of what was built.
 
 **Status** Accepted, provisionally. Option A is built; **V03 is still open** and Option B remains a

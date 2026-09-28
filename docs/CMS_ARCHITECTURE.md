@@ -166,7 +166,7 @@ That immediacy is most of what makes a CMS feel real to a non-technical user.
 
 > **Removed 28 September 2026 — ADR-0007.** Kelvin decided to remove installation-certificate
 > verification completely. The route, admin import, attempt log, library and scripts are deleted,
-> and migration 0044 drops the tables (applied once V61 is resolved). What follows is kept as the
+> and migration 0044 dropped the tables (applied 28 September 2026). What follows is kept as the
 > record of what was built.
 
 The only bulk-data path in the admin, and it touches the most sensitive table on the project.

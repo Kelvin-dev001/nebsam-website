@@ -277,8 +277,8 @@ against production at cutover, so a migration that inserted test records would p
 database.
 
 **`npm run db:apply` and `npm run db:types` need `SUPABASE_ACCESS_TOKEN`**, a personal access token
-that is local-development only. It was renewed on 28 September 2026 (V61 resolved) and 0041–0043
-were applied then.
+that is local-development only. It was renewed on 28 September 2026 (V61 resolved), and 0041–0044
+were applied that day, one at a time by name.
 
 **The migration ledger starts at 0041 (V80).** 0001–0040 were pasted into the dashboard SQL editor
 before `apply-migration.mjs` existed, so its `schema_migrations` table has never heard of them:

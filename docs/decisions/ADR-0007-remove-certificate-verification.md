@@ -1,7 +1,7 @@
 # ADR-0007 — Remove installation-certificate verification
 
 **Status:** Accepted — Kelvin approved the plan on 28 September 2026 ("proceed"). Implemented on
-this branch; the migration is written and waits on V61 to be applied.
+this branch; migration 0044 applied on 28 September 2026, once the renewed token (V61) allowed it.
 **Date:** 28 September 2026
 **Deciders:** Client (Kelvin) decided the removal on 28 September 2026 ("remove this feature
 completely", register V03/V04); this ADR proposes how.
@@ -144,14 +144,18 @@ the public surface and legal copy, the admin, the library and scripts, migration
   secret value with the same `submission-ip:` prefix, so digests are unchanged.
 - **A signed-in pass of the admin navigation.** There was no staff session. The admin routes are
   absent from the build, and `verify:roles` passed.
-- **Migration 0044 is not applied** (V61).
+- **Migration 0044 applied, 28 September 2026**, by name, after a read-only check. Verified: the three
+  tables, the function and the type are gone; `certifications`, `public_certifications` and
+  `set_updated_at()` intact; `verify:db` clean on 29 tables; `verify:roles` 38/38; types regenerated
+  (109 lines removed).
 
 **Found along the way:**
 - **V78.** The only Turnstile widget was in the deleted verification form. The enquiry forms check a
   token but never render a widget, so **setting the Turnstile keys would reject every enquiry.** This
   predates the removal. Logged, and flagged in `lib/turnstile.ts` and CLAUDE.md.
 - **The privacy notice promises a 24-hour deletion** that only migration 0041 delivers. 0041 is
-  unapplied (V61), so today the forms keep the IP fingerprint inside each enquiry record.
+  now applied, but the forms do not use it yet: they still keep the IP fingerprint inside each
+  enquiry record (register V79).
 - **The forms' Zod validation logs a report-only CSP notice** when it probes whether `eval` is allowed.
   It is info-level, and Zod falls back when eval is refused, so it is harmless.
 

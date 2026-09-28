@@ -25,8 +25,8 @@ Supabase Postgres. **RLS on every table, no exceptions.** Every migration is a r
 > `industries`, `faqs`, `authors`) are empty by design; content migration is Sprint 4 onward.
 >
 > **Since 28 September 2026 (ADR-0007):** certificate verification is removed, and migration 0044
-> drops `installation_certificates`, `installation_plates_restricted`, `verification_attempts` and
-> the `verification_outcome` type once V61 lets it be applied. The notes below are the record.
+> dropped `installation_certificates`, `installation_plates_restricted`, `verification_attempts` and
+> the `verification_outcome` type the same day. The notes below are the record.
 >
 > Certificate shape confirmed as **Option A** by reading the live PostgREST schema:
 > `installation_certificates` carries `plate_hash`, `phone_last4_hash` and `certificate_number_last4`
