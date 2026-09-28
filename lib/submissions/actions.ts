@@ -35,28 +35,40 @@ import { SUBMISSION_SCHEMAS, type SubmissionKind, type SubmissionResult } from '
  * already exists: `submissions.payload` is `jsonb`, and the hash goes in it
  * under `meta`.
  *
- * It is a keyed hash, in a table no anon role can read, treated exactly as
- * `verification_attempts` treats an IP — which is the treatment the brief itself
- * specifies. It is not as clean as a dedicated table and it is not pretending to
+ * It is a keyed hash, in a table no anon role can read — the treatment the
+ * brief itself specifies for an IP. It is not as clean as a dedicated table and it is not pretending to
  * be: a proper `submission_attempts` table is RECOMMENDED FOR SPRINT 12 in the
  * Sprint 11 report, where the admin inbox is built and the change can be
  * approved on its merits rather than smuggled in behind a contact form.
  */
 const RATE_LIMIT_PER_HOUR = 5;
 
+let warnedNoSecret = false;
+
 function ipDigest(ip: string): string {
-  // Falls back to the plate secret's key domain deliberately: one server-only
-  // secret to manage, and a separate prefix so a submission hash can never be
-  // compared against a verification hash.
-  const secret = process.env.CERT_PLATE_HMAC_SECRET ?? '';
-  if (!secret) return '';
+  // SUBMISSION_IP_HMAC_SECRET since ADR-0007. It used to share the certificate
+  // lookup's CERT_PLATE_HMAC_SECRET; certificate verification is gone, and a
+  // secret named after a deleted feature invites someone to delete it — which
+  // would switch this rate limiting off without a sound. The old name is read
+  // as a fallback until every environment has the new one; remove it then.
+  const secret =
+    process.env.SUBMISSION_IP_HMAC_SECRET || process.env.CERT_PLATE_HMAC_SECRET || '';
+  if (!secret) {
+    // Still fails OPEN (see overRateLimit), but no longer silently. No IP, no
+    // payload, nothing personal: just the fact that a guard is off.
+    if (!warnedNoSecret) {
+      console.warn('SUBMISSION_IP_HMAC_SECRET is not set: enquiry-form rate limiting is off.');
+      warnedNoSecret = true;
+    }
+    return '';
+  }
   return createHmac('sha256', secret).update(`submission-ip:${ip}`).digest('hex');
 }
 
 async function clientIp(): Promise<string> {
   const h = await headers();
-  // Same precedence as the verification lookup, for the same reason: the
-  // platform header cannot be forged past Vercel, a client-supplied one can.
+  // The platform header first: it cannot be forged past Vercel, a
+  // client-supplied one can.
   const platform = h.get('x-vercel-forwarded-for');
   if (platform) return platform.split(',')[0].trim();
   const forwarded = h.get('x-forwarded-for');
@@ -72,13 +84,11 @@ async function overRateLimit(digest: string): Promise<boolean> {
     .select('id', { count: 'exact', head: true })
     .eq('payload->meta->>ip_hash', digest)
     .gt('created_at', since);
-  // Fail OPEN here, unlike verification.
-  //
-  // The asymmetry is deliberate. On the certificate endpoint an unreadable
-  // counter means a possible attack and the safe answer is to refuse. On a
-  // contact form it means a customer with an enquiry gets told to go away —
-  // and losing a lead is the failure this whole site exists to prevent, while
-  // the worst case here is a few extra rows in an inbox a human reads.
+  // Fail OPEN, deliberately. Where an unreadable counter guards something an
+  // attacker wants, the safe answer is to refuse. Here, refusing means a
+  // customer with an enquiry gets told to go away — and losing a lead is the
+  // failure this whole site exists to prevent, while the worst case of failing
+  // open is a few extra rows in an inbox a human reads.
   if (error) return false;
   return (count ?? 0) >= RATE_LIMIT_PER_HOUR;
 }
