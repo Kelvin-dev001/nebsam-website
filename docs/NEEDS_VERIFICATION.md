@@ -41,7 +41,7 @@ Both must be empty of blockers before launch. Part A is where the risk is.
 | **V12** | **Client logo permissions** | **PARTIALLY ANSWERED 4 Sep 2026: "we have permission".** Still needed before any logo is shown: WHICH clients, and permission in writing per `docs/CLIENT_PERMISSIONS.md`. Naming a client without evidence of consent is the risk this item exists for | Client | Proof band | OPEN — needs the list |
 | ~~V13~~ | **Platform screenshots** — which are Nebsam-branded and cleared for publication? | Some dashboards carry third-party branding; using them as "the Nebsam platform" is misleading and a trademark risk. **Also blocks `/platform` and the deferred `/solutions/fleet-management`** | Client | — | **ANSWERED 28 Sep 2026 (Kelvin): all are cleared for publication.** That settles permission. One rule still holds when they are used: a screenshot that carries another company's branding is captioned as what it is, never as "the Nebsam platform". Unblocks `/platform` and `/solutions/fleet-management`, neither built yet — ANSWERED — applies when those pages are built |
 | ~~V14~~ | **Consent for footage showing faces and plates** | **ANSWERED 4 Sep 2026: consent held.** Note the specific exposures are plates KCK 283C and KCK 289C, a fleet name, coordinates and two identifiable faces. Keep the written consent on file — it is the evidence if it is ever questioned | Client | — | **CLOSED** |
-| V15 | **Testimonials** — the 6 real ones with attribution and permission to name | Never invent; nothing publishable until supplied. If unsupplied, the section is absent, not filled | Client | Sprint 11 | OPEN — *Kelvin, 28 Sep 2026: "apply at least two seed data".* **Not applied:** a seeded testimonial on a public page is an invented testimonial (CLAUDE.md §5, brief) and a misleading representation to the reader. Options put back to Kelvin in the T4 follow-up report |
+| V15 | **Testimonials** — the 6 real ones with attribution and permission to name | Never invent; nothing publishable until supplied. If unsupplied, the section is absent, not filled | Client | Sprint 11 | OPEN — *Kelvin, 28 Sep 2026: "apply at least two seed data".* **Not applied:** a seeded testimonial on a public page is an invented testimonial (CLAUDE.md §5, brief) and a misleading representation to the reader. Options put back to Kelvin in the T4 follow-up report. **Decided 28 Sep 2026 (Kelvin): real testimonials with permission to name — nothing seeded.** Awaiting the testimonials |
 | V16 | **KEBS permit renewal** — diary the 26 Feb 2027 expiry | The site must never display a lapsed permit | Nebsam ops | Sprint 11 | OPEN — *Kelvin, 28 Sep 2026: will upload the renewed certificate soon, and asked to be reminded.* Added to the standing reminders |
 | ~~V17~~ | **School bus: payment gateway** — which gateways are actually supported? M-Pesa? | Do not imply M-Pesa support unless confirmed | Client | — | **ANSWERED 28 Sep 2026 (Kelvin): M-Pesa.** Applies when the school bus page is written (still blocked by V19, V24 and legal review) — ANSWERED |
 | ~~V18~~ | **School bus: biometric availability** — which of face/fingerprint/iris are deployed and priced today vs roadmap? | Cannot advertise a capability that is not shipping | Client | — | **ANSWERED 28 Sep 2026 (Kelvin): face, fingerprint and iris are all available today. Do not mention prices.** CLAUDE.md §10 still applies: biometric attendance is presented as optional, with RFID or manual alternatives — ANSWERED |
@@ -49,8 +49,8 @@ Both must be empty of blockers before launch. Part A is where the risk is.
 | ~~V20~~ | **School bus: driver facial verification fallback** — what happens on a false negative? | A false negative strands a bus full of children; the page must describe the real procedure | Client | — | **ANSWERED 28 Sep 2026 (Kelvin): false negatives are managed and neutralised in the school admin portal.** The page describes it that way — a school administrator resolves the failed verification in the admin portal — ANSWERED |
 | ~~V21~~ | **School bus: retention periods** for in-bus video, attendance records and biometric templates | Children's biometric data is sensitive personal data under DPA 2019; retention must be stated | Client + legal | — | **ANSWERED 28 Sep 2026 (Kelvin): kept for as long as the child is at that school.** Still subject to the legal review CLAUDE.md §10 requires before the page is published, including what happens to the data when a child leaves — ANSWERED — **legal review pending** |
 | ~~V22~~ | **School bus: proximity alert timing** — configurable? default? | The proposal gives "approximately five minutes" as an example only | Client | — | **ANSWERED 28 Sep 2026 (Kelvin): configurable; typically about five minutes away** — ANSWERED |
-| ~~V23~~ | **School bus: reference schools** for a testimonial or case study | Strongest possible proof for this product | Client | — | **ANSWERED 28 Sep 2026 (Kelvin): St. Augustine PCEA.** As with client logos (V12), the school's permission in writing is needed before it is named on the site — ANSWERED — **written permission needed to name** |
-| V24 | **School bus: pricing model** — per bus, per student, per term, per module? Is the parent app free? | Determines whether this appears in the shop or is enquiry-only | Client | Sprint 5 | OPEN — *Kelvin's note on V18 (28 Sep 2026) says avoid mentioning prices. If that means the school bus solution is enquiry-only with no prices shown, this item closes; awaiting confirmation* |
+| ~~V23~~ | **School bus: reference schools** for a testimonial or case study | Strongest possible proof for this product | Client | — | **ANSWERED 28 Sep 2026 (Kelvin): St. Augustine PCEA.** As with client logos (V12), the school's permission in writing is needed before it is named on the site; Kelvin agreed, 28 Sep — ANSWERED — **written permission needed to name** |
+| ~~V24~~ | **School bus: pricing model** — per bus, per student, per term, per module? Is the parent app free? | Determines whether this appears in the shop or is enquiry-only | Client | — | **ANSWERED 28 Sep 2026 (Kelvin): enquiry-only, no prices shown.** It never appears in the shop; the page's action is an enquiry. **CLOSED** |
 | V25 | **Search Console URL cross-check** — indexed URLs absent from the current sitemap | Missing one from the 301 map loses its ranking permanently. **Sprint 0 proved the sitemap incomplete by at least one live route** (see V34a), so it cannot be trusted as the full inventory | Client | **Sprint 2 cannot close** | OPEN |
 | ~~V26~~ | **Registered legal name** | **ANSWERED 4 Sep 2026: NEBSAM DIGITAL SOLUTIONS (plural).** Marketing continues to use "Nebsam Digital Solutions (K) Ltd" | Client | — | **CLOSED** |
 | V27 | **CAK Compliance Certificate has EXPIRED** — valid to 30 June 2025 | Brief 3.5 requires the site never displays a lapsed permit | Nebsam ops | Sprint 11 | OPEN — **contained, not resolved.** Sprint 11 shipped `/about/certifications`, which reads `public_certifications` and therefore CANNOT render this row. It reappears the day `expires_on` is updated, with no deploy. The renewal is still an operations task |
@@ -168,17 +168,31 @@ The largest cluster by far, and the reason the launch radio catalogue is limited
 
 | Model | File | Tokens | Nature of the gaps |
 |---|---|---|---|
-| Inrico DR10 gateway | `02-products/radios/inrico-dr10-gateway/` | 15 | Android version, RAM/ROM, channels, LMR bands and DMR tiers, power supply, IP rating, speaker, supported cameras, **price**, whether the KES 3,000 renewal applies |
+| Inrico DR10 gateway | `02-products/radios/inrico-dr10-gateway/` | 15 | Android version, RAM/ROM, channels, LMR bands and DMR tiers, power supply, IP rating, speaker, supported cameras, ~~price~~ **supplied: KES 350,000**, renewal **supplied: KES 6,000** (see below) |
 | Inrico S-100 | `02-products/radios/inrico-s-100/` | 14 | Android version, RAM/ROM, screen, camera resolution, channels, cellular bands, speaker, standby/talk time |
 | Inrico T-521 | `02-products/radios/inrico-t-521/` | 13 | OS version, RAM/ROM, screen, camera, channels, cellular bands, IP rating, speaker, standby/talk time, installation terms |
-| Baofeng UV-82 | `02-products/radios/baofeng-uv-82/` | 12 | Frequency range, transmit power, battery, standby/talk time, speaker, IP rating, display, operating range, **price** |
+| Baofeng UV-82 | `02-products/radios/baofeng-uv-82/` | 12 | Frequency range, transmit power, battery, standby/talk time, speaker, IP rating, display, operating range, ~~price~~ **supplied: KES 6,500** |
 | Baofeng UV-9R Plus | `02-products/radios/baofeng-uv-9r-plus/` | 12 | Channels, battery, transmit power, standby/talk time, speaker, display, emergency alert behaviour, operating range, **price** |
 | Inrico TM-7 | `02-products/radios/inrico-tm-7/` | 12 | Channels, screen, cellular bands, optional camera spec and price, backup battery, installation and antenna fitting |
-| Kenwood TK-3000 | `02-products/radios/kenwood-tk-3000/` | 12 | Battery, standby/talk time, IP rating, speaker, display, operating range, VHF variant, **price**, **authorised dealer status** |
-| Baofeng BF-888s | `02-products/radios/baofeng-bf-888s/` | 11 | Transmit power, battery, standby/talk time, IP rating, speaker, operating range, **price**, **CAK licensing for short-range** |
-| Baofeng UV-5R | `02-products/radios/baofeng-uv-5r/` | 10 | Frequency range, battery, standby/talk time, IP rating, speaker, LCD, **price** |
-| Inrico T-290 | `02-products/radios/inrico-t-290/` | 9 | Channels, screen, cellular bands, talk time, **price — and whether the model is still sold at all** |
+| Kenwood TK-3000 | `02-products/radios/kenwood-tk-3000/` | 12 | Battery, standby/talk time, IP rating, speaker, display, operating range, VHF variant, ~~price~~ **supplied: KES 6,500**, **authorised dealer status** |
+| Baofeng BF-888s | `02-products/radios/baofeng-bf-888s/` | 11 | Transmit power, battery, standby/talk time, IP rating, speaker, operating range, ~~price~~ **supplied: KES 3,500**, **CAK licensing for short-range** (partly answered, see below) |
+| Baofeng UV-5R | `02-products/radios/baofeng-uv-5r/` | 10 | Frequency range, battery, standby/talk time, IP rating, speaker, LCD, ~~price~~ **supplied: KES 5,500** |
+| Inrico T-290 | `02-products/radios/inrico-t-290/` | 9 | Channels, screen, cellular bands, talk time, ~~price — and whether the model is still sold at all~~ **supplied: out of stock** |
 | Inrico S-200 | `02-products/radios/inrico-s-200/` | 6 | Channels, cellular bands |
+
+**Answered by Kelvin, 28 September 2026 — recorded, not yet applied to any product:**
+
+- **Prices:** Inrico DR10 gateway KES 350,000; Baofeng UV-82 KES 6,500; Kenwood TK-3000 KES 6,500;
+  Baofeng BF-888s KES 3,500; Baofeng UV-5R KES 5,500. **Still to confirm: are these excluding VAT?**
+  Every price on the site is shown "excl. VAT", so a VAT-inclusive figure published as it stands
+  would overstate the price by 16%.
+- **DR10 renewal:** KES 6,000, where the documented PoC renewal is KES 3,000. Confirm it is per year,
+  per gateway.
+- **CAK:** Nebsam's CAK licence covers **selling** short-range radios. The open half is the
+  customer's: whether a buyer needs a frequency licence of their own to **operate** one. That stays
+  open until answered, and no short-range page implies either way.
+- **Inrico T-290:** out of stock. No page offers it for sale until it is back.
+- **Kenwood TK-3000 authorised-dealer status:** not answered; the rule below stands.
 
 **Three of these are more than specification gaps:**
 
@@ -189,8 +203,8 @@ The largest cluster by far, and the reason the launch radio catalogue is limited
 - **The Inrico T-290 is absent from the 2025 price list**, which lists only the T-521, S-100, S-200
   and TM-7. Confirm whether it is still sold. If discontinued, the page should not be built at all —
   but do not infer end-of-life from the omission alone.
-- **Kenwood authorised dealer status.** Reselling is fine; implying an authorised dealership that
-  does not exist is not.
+- **Remove the Kenwood authorised dealer status.** Reselling is fine; implying an authorised dealership that
+  does not exist is not. 
 
 ## B2 — Fuel monitoring (28 tokens across 2 files)
 
@@ -209,8 +223,8 @@ implies. **Clarify before any installation copy is written.**
 `02-products/video/hybrid-dashcam/` — recording resolution per lens, lens orientation and which two
 directions are covered, field of view, low-light and infrared, memory card support and maximum,
 supply voltage, power draw, parking-mode battery cut-off, IP rating, dimensions and weight,
-**price and recurring cost**, **cloud storage retention and whether it is subscription-based**,
-**cabin recording and privacy**, installation terms.
+**price costs 18000 no recurring cost. client is responsible for topping up data**, **no cloud storage for hybrid dashcam, client is responsible for inputting micro sd  storage depending on the needs**,
+**cabin recording and privacy- the camera has a privacy button feature**, installation terms. 
 
 Two are not merely specifications. **Cloud retention** and **cabin recording privacy** are data
 protection statements: the page describes what happens to recorded footage of identifiable people,
@@ -225,7 +239,7 @@ and voice recorder consent and notification, Google Maps integration, guard patr
 repository**, so the recorded hardware specification (720p lenses, 110°/130° viewing angles, Android
 8.1, 2GB/32GB, microSD to 256GB, 4G, WiFi, two-way talk, voice recorder) and the ADAS/DMS/DBA lists
 were **supplied verbally by the client** and are corroborated by no document. Confirm against the
-proposal when it is available.
+proposal when it is available. They are all available. 
 
 ## B5 — School bus (8 tokens)
 
@@ -233,7 +247,7 @@ proposal when it is available.
 them is a decision or a legal exposure rather than a datasheet lookup. Includes one not obvious from
 the V-numbers: **smoking detection** — the admin feature is headed "Alcohol and Smoking Monitoring"
 but the body describes only alcohol. Confirm whether smoking detection exists (it is a DMS camera
-feature on the video telematics product) and describe it accurately or drop it.
+feature on the video telematics product) and describe it accurately or drop it. Yes it exists but smoking does not affect engine ignition only alcohol blow test affects engine ignition.
 
 ## B6 — Certifications and downloads (14 tokens across 2 files)
 
@@ -249,7 +263,7 @@ feature on the video telematics product) and describe it accurately or drop it.
 | Dates and version numbers for the brochure and school bus proposal | OPEN — both undated; a sales proposal with no date cannot go in a download centre |
 | Locate `Video_Telematics_Proposal_2025.pdf` | **V14** |
 | Client permission to publish the ~70-name list | **V12** |
-| Whether the download centre should serve these proposals at all, or regenerated equivalents built from `content-source/` | OPEN — **a decision, not a fact.** Recommendation is to regenerate |
+| Whether the download centre should serve these proposals at all, or regenerated equivalents built from `content-source/` | **ANSWERED 28 Sep 2026 (Kelvin): regenerate them from `content-source/`, and publish the list.** Not yet applied |
 
 ---
 
