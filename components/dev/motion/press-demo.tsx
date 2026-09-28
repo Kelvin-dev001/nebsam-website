@@ -2,26 +2,14 @@ import { Button } from '@/components/ui/button';
 
 /**
  * Level 1 on both grounds. The real Button variants, so hover, press and the
- * section-following focus ring can be felt with the values the site ships —
- * plus one sample showing DURATION.press, which no component uses yet.
+ * section-following focus ring can be felt with the values the site ships.
  *
- * Why the sample exists: Button's press is `active:translate-y-px` under
- * `transition-colors`, and transition-colors does not cover transform, so
- * today's press is INSTANT. The sample adds transform to the transition at
- * --dur-press (120ms) so the two can be compared side by side. Whether any
- * shipped component adopts it is Sprint 12b T5's decision, not this page's.
- *
- * The curve is outQuart, not the inOutQuad Level 1 uses for colour: press
- * feedback is ease-out, because an in-out curve starts slow at the exact
- * moment the finger lands (review-animations STANDARDS, "Button press").
+ * Since Sprint 12b T5 every Button presses with `press-feedback`
+ * (components/motion/micro-interactions.css): colour at micro, and the 1px
+ * press at DURATION.press (120ms) on outQuart. The side-by-side sample this
+ * page used to carry, for comparing an instant press with a 120ms one, went
+ * when Kelvin approved the 120ms press for every button.
  */
-const pressSample =
-  'inline-flex min-h-[44px] items-center justify-center rounded-control bg-brand-signal-ink px-4 py-2.5 ' +
-  'text-body font-medium text-white hover:bg-[#134aa8] ' +
-  'transition-[transform,background-color] duration-press ease-out-quart ' +
-  'active:translate-y-px motion-reduce:active:translate-y-0 ' +
-  '[[data-section=dark]_&]:border [[data-section=dark]_&]:border-brand-signal';
-
 export function PressDemo() {
   return (
     <div className="flex flex-wrap items-center gap-4">
@@ -34,9 +22,6 @@ export function PressDemo() {
       <Button type="button" variant="ghost">
         Ghost
       </Button>
-      <button type="button" className={pressSample}>
-        Press at 120ms
-      </button>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { DataDemo } from '@/components/dev/motion/data-demo';
 import { EasingDemo } from '@/components/dev/motion/easing-demo';
+import { EntranceDemo } from '@/components/dev/motion/entrance-demo';
 import { MotionStatus } from '@/components/dev/motion/motion-status';
 import { PressDemo } from '@/components/dev/motion/press-demo';
 import { RevealDemo } from '@/components/dev/motion/reveal-demo';
@@ -103,8 +104,8 @@ export default function MotionPlaygroundPage() {
           <h2 className="font-display-tight text-h2 md:text-md-h2">Level 1 — micro, on navy</h2>
           <p className="mt-3 mb-8 max-w-prose text-body text-text-secondary-inverse">
             Hover, press and focus. Tab through to see the ring follow the section. The primary
-            gains its signal hairline on this ground. The last button adds transform to its
-            transition at the 120ms press token; the others press instantly.
+            gains its signal hairline on this ground. Every button presses its 1px at the 120ms
+            press token.
           </p>
           <PressDemo />
         </Shell>
@@ -118,6 +119,17 @@ export default function MotionPlaygroundPage() {
             light-section colour.
           </p>
           <PressDemo />
+        </Shell>
+      </Section>
+
+      <Section tone="light">
+        <Shell>
+          <h2 className="font-display-tight text-h2 md:text-md-h2">Level 1 — entrances</h2>
+          <p className="mt-3 mb-8 max-w-prose text-body text-text-secondary">
+            The real enquiry confirmation, mounted on demand. It fades and settles 8px, and takes
+            focus so a screen reader reads it out. Nothing is submitted.
+          </p>
+          <EntranceDemo />
         </Shell>
       </Section>
 
