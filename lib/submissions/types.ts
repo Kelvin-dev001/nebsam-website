@@ -107,7 +107,14 @@ export interface FieldSpec {
 export const SUBMISSION_FIELDS: Record<SubmissionKind, FieldSpec[]> = {
   contact: [
     { name: 'name', label: 'Your name', required: true, autoComplete: 'name' },
-    { name: 'phone', label: 'Phone number', type: 'tel', required: true, autoComplete: 'tel', inputMode: 'tel' },
+    {
+      name: 'phone',
+      label: 'Phone number',
+      type: 'tel',
+      required: true,
+      autoComplete: 'tel',
+      inputMode: 'tel',
+    },
     { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', hint: 'Optional.' },
     {
       name: 'branch',
@@ -120,9 +127,21 @@ export const SUBMISSION_FIELDS: Record<SubmissionKind, FieldSpec[]> = {
   ],
   quote: [
     { name: 'name', label: 'Your name', required: true, autoComplete: 'name' },
-    { name: 'phone', label: 'Phone number', type: 'tel', required: true, autoComplete: 'tel', inputMode: 'tel' },
+    {
+      name: 'phone',
+      label: 'Phone number',
+      type: 'tel',
+      required: true,
+      autoComplete: 'tel',
+      inputMode: 'tel',
+    },
     { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', hint: 'Optional.' },
-    { name: 'organisation', label: 'Company or organisation', autoComplete: 'organization', hint: 'Optional.' },
+    {
+      name: 'organisation',
+      label: 'Company or organisation',
+      autoComplete: 'organization',
+      hint: 'Optional.',
+    },
     {
       name: 'interest',
       label: 'What do you need?',
@@ -135,9 +154,21 @@ export const SUBMISSION_FIELDS: Record<SubmissionKind, FieldSpec[]> = {
   ],
   installation: [
     { name: 'name', label: 'Your name', required: true, autoComplete: 'name' },
-    { name: 'phone', label: 'Phone number', type: 'tel', required: true, autoComplete: 'tel', inputMode: 'tel' },
+    {
+      name: 'phone',
+      label: 'Phone number',
+      type: 'tel',
+      required: true,
+      autoComplete: 'tel',
+      inputMode: 'tel',
+    },
     { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', hint: 'Optional.' },
-    { name: 'product', label: 'What is being installed?', required: true, hint: 'The product name, or describe it.' },
+    {
+      name: 'product',
+      label: 'What is being installed?',
+      required: true,
+      hint: 'The product name, or describe it.',
+    },
     { name: 'vehicle', label: 'Vehicle', hint: 'Make and model. Optional.' },
     { name: 'town', label: 'Town', required: true, hint: 'Where the vehicle will be.' },
     {
@@ -155,7 +186,14 @@ export const SUBMISSION_FIELDS: Record<SubmissionKind, FieldSpec[]> = {
       hint: 'We will not store your name, phone number or email with this suggestion.',
     },
     { name: 'name', label: 'Your name', autoComplete: 'name', hint: 'Optional.' },
-    { name: 'phone', label: 'Phone number', type: 'tel', autoComplete: 'tel', inputMode: 'tel', hint: 'Optional.' },
+    {
+      name: 'phone',
+      label: 'Phone number',
+      type: 'tel',
+      autoComplete: 'tel',
+      inputMode: 'tel',
+      hint: 'Optional.',
+    },
     { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', hint: 'Optional.' },
     { name: 'message', label: 'Your suggestion', type: 'textarea', required: true },
   ],
