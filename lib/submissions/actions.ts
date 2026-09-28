@@ -51,8 +51,7 @@ function ipDigest(ip: string): string {
   // secret named after a deleted feature invites someone to delete it — which
   // would switch this rate limiting off without a sound. The old name is read
   // as a fallback until every environment has the new one; remove it then.
-  const secret =
-    process.env.SUBMISSION_IP_HMAC_SECRET || process.env.CERT_PLATE_HMAC_SECRET || '';
+  const secret = process.env.SUBMISSION_IP_HMAC_SECRET || process.env.CERT_PLATE_HMAC_SECRET || '';
   if (!secret) {
     // Still fails OPEN (see overRateLimit), but no longer silently. No IP, no
     // payload, nothing personal: just the fact that a guard is off.
@@ -146,7 +145,9 @@ export async function submitEnquiry(
     };
   }
 
-  const { company, ...fields } = parsed.data as Record<string, unknown> & { company?: string | null };
+  const { company, ...fields } = parsed.data as Record<string, unknown> & {
+    company?: string | null;
+  };
 
   // The honeypot. Answered with SUCCESS, not an error: a bot that is told it
   // failed gets rewritten, and a bot that believes it succeeded goes away. The
@@ -177,7 +178,8 @@ export async function submitEnquiry(
   if (!passed) {
     return {
       ok: false,
-      message: 'We could not confirm you are not a bot. Please try again, or message us on WhatsApp.',
+      message:
+        'We could not confirm you are not a bot. Please try again, or message us on WhatsApp.',
     };
   }
 
@@ -217,7 +219,8 @@ export async function submitEnquiry(
   if (error) {
     return {
       ok: false,
-      message: 'We could not record your message just now. Please try again, or message us on WhatsApp.',
+      message:
+        'We could not record your message just now. Please try again, or message us on WhatsApp.',
     };
   }
 
