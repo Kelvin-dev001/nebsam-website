@@ -46,13 +46,17 @@ export function EnquiryFields({
     if (kind === 'suggestion' && anonymous && contact && !error) return null;
 
     if (field.type === 'checkbox') {
+      // `defaultChecked`, not `checked`: the reset puts a box back to its
+      // default, so a controlled box came back UNTICKED after a refusal while
+      // the contact fields stayed hidden, and the next send went out as not
+      // anonymous. The default follows the state, so the reset now agrees.
       return (
         <CheckboxField
           key={field.name}
           name={field.name}
           label={field.label}
           hint={field.hint}
-          checked={anonymous}
+          defaultChecked={anonymous}
           onChange={(event) => onAnonymousChange(event.currentTarget.checked)}
         />
       );
