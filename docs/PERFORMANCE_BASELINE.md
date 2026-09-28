@@ -439,3 +439,32 @@ preloaded font, so what gates it is unchanged. **Home LCP still sits about 67 ms
 that is V47, not T4.**
 
 Raw JSON: `perf-2026-09-28-s12b-t4-v77/`, under `~/.claude/projects/C--Projects-nebsam-website/`.
+
+## 13. Sprint 12b T5 — the micro-interaction pass, paired against T0
+
+T5 shipped five micro-interactions and two accessibility fixes (`ANIMATION_SYSTEM.md`, Level 1).
+**The run is five pairs, not nine.** Claude Code stopped the Lighthouse loop and both servers at
+round 6 because the machine ran critically low on memory; round 6's T5 report is incomplete and is
+excluded. `benchmarkIndex` 2,392–2,673, except home round 1's T0 run (999).
+
+| Paired against T0, n = 5 | Home | Fuel |
+|---|---|---|
+| Performance | 97 (95–98), delta **0** | 95 (82–97), delta +8 |
+| LCP | 2.576 s (2.497–2.619), delta **−56 ms** (−351 to +71) | 2.530 s, delta +9 ms |
+| TBT | 77 ms, delta −3 ms | 167 ms, delta −348 ms |
+| **CLS** | **0.000 in every run; T0 0.012 in every run** | **0.000 in every run; T0 0.012** |
+| Transfer | delta +5,307 B | delta +855 B |
+| A11y / BP / SEO | 100 / 100 / 100 | 100 / 100 / 100 |
+
+**The one result that does not depend on the sample size: CLS is gone.** Every page's only layout
+shift was the floating WhatsApp button jumping clear of the cookie bar by changing `bottom`; it now
+lifts by a transform, which is not a layout shift. Five pairs are enough for a result that is
+0.012 in every T0 run and 0.000 in every T5 run. The timing columns are not: fuel's T0 arm was
+erratic again (TBT up to 1 s, as in §10 and §12), and home's LCP delta is inside the spread.
+
+Transfer: the T5 stylesheet added about 118 B gzipped to every route; the floating button's class
+list, sent in every page's HTML, got shorter. Product pages grew 0.4 kB of first-load JS because
+`AddToCart` now uses the shared `Button`.
+
+Raw JSON: `perf-2026-09-28-s12b-t5/` (rounds 1–5 valid), under
+`~/.claude/projects/C--Projects-nebsam-website/`.
