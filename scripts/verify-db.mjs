@@ -73,7 +73,7 @@ const TABLES = [
   'faqs', 'industries', 'installation_certificates', 'installation_plates_restricted',
   'media', 'order_items', 'orders', 'payment_intents', 'payments', 'product_categories',
   'product_industries', 'product_solutions', 'products', 'profiles', 'redirects', 'shipments',
-  'solution_industries', 'solutions', 'submissions', 'testimonials', 'verification_attempts',
+  'solution_industries', 'solutions', 'submission_attempts', 'submissions', 'testimonials', 'verification_attempts',
 ];
 
 const VIEWS = [
