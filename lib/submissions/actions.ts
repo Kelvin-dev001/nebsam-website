@@ -1,10 +1,9 @@
 'use server';
 
-import { headers } from 'next/headers';
-import { createHmac } from 'node:crypto';
 import { serviceClient } from '@/lib/supabase/server';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 import { z } from 'zod';
+import { clientIp, recordAttempt } from './rate-limit';
 import { SUBMISSION_SCHEMAS, type SubmissionKind, type SubmissionResult } from './types';
 
 /**
@@ -22,74 +21,9 @@ import { SUBMISSION_SCHEMAS, type SubmissionKind, type SubmissionResult } from '
  * ── What is deliberately NOT collected ──────────────────────────────────────
  * No IP address in the clear, no user agent, no referrer, no device
  * fingerprint. The only trace of the sender beyond what they typed is a KEYED
- * HASH of their IP, and it exists solely to make rate limiting possible.
+ * HASH of their IP, kept apart from the enquiry and deleted after 24 hours
+ * (`rate-limit.ts`), and it exists solely to make rate limiting possible.
  */
-
-/**
- * Rate limiting WITHOUT a new table.
- *
- * The obvious implementation is a `submission_attempts` table of its own. CLAUDE.md §3.5 requires a data-model change to be
- * proposed and approved in writing before it is made, and this sprint had one
- * unavoidable one already (migration 0039). So the counter uses a column that
- * already exists: `submissions.payload` is `jsonb`, and the hash goes in it
- * under `meta`.
- *
- * It is a keyed hash, in a table no anon role can read — the treatment the
- * brief itself specifies for an IP. It is not as clean as a dedicated table and it is not pretending to
- * be: a proper `submission_attempts` table is RECOMMENDED FOR SPRINT 12 in the
- * Sprint 11 report, where the admin inbox is built and the change can be
- * approved on its merits rather than smuggled in behind a contact form.
- */
-const RATE_LIMIT_PER_HOUR = 5;
-
-let warnedNoSecret = false;
-
-function ipDigest(ip: string): string {
-  // SUBMISSION_IP_HMAC_SECRET since ADR-0007. It used to share the certificate
-  // lookup's CERT_PLATE_HMAC_SECRET; certificate verification is gone, and a
-  // secret named after a deleted feature invites someone to delete it — which
-  // would switch this rate limiting off without a sound. The old name is read
-  // as a fallback until every environment has the new one; remove it then.
-  const secret = process.env.SUBMISSION_IP_HMAC_SECRET || process.env.CERT_PLATE_HMAC_SECRET || '';
-  if (!secret) {
-    // Still fails OPEN (see overRateLimit), but no longer silently. No IP, no
-    // payload, nothing personal: just the fact that a guard is off.
-    if (!warnedNoSecret) {
-      console.warn('SUBMISSION_IP_HMAC_SECRET is not set: enquiry-form rate limiting is off.');
-      warnedNoSecret = true;
-    }
-    return '';
-  }
-  return createHmac('sha256', secret).update(`submission-ip:${ip}`).digest('hex');
-}
-
-async function clientIp(): Promise<string> {
-  const h = await headers();
-  // The platform header first: it cannot be forged past Vercel, a
-  // client-supplied one can.
-  const platform = h.get('x-vercel-forwarded-for');
-  if (platform) return platform.split(',')[0].trim();
-  const forwarded = h.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
-  return h.get('x-real-ip')?.trim() || 'local';
-}
-
-async function overRateLimit(digest: string): Promise<boolean> {
-  if (!digest) return false;
-  const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-  const { count, error } = await serviceClient()
-    .from('submissions')
-    .select('id', { count: 'exact', head: true })
-    .eq('payload->meta->>ip_hash', digest)
-    .gt('created_at', since);
-  // Fail OPEN, deliberately. Where an unreadable counter guards something an
-  // attacker wants, the safe answer is to refuse. Here, refusing means a
-  // customer with an enquiry gets told to go away — and losing a lead is the
-  // failure this whole site exists to prevent, while the worst case of failing
-  // open is a few extra rows in an inbox a human reads.
-  if (error) return false;
-  return (count ?? 0) >= RATE_LIMIT_PER_HOUR;
-}
 
 /** A short, human-quotable reference. Random, so nothing is enumerable. */
 function reference(): string {
@@ -153,10 +87,22 @@ export async function submitEnquiry(
   // row is simply never written.
   if (company) return { ok: true, reference: reference(), kind };
 
-  const ip = await clientIp();
-  const digest = ipDigest(ip);
+  /**
+   * ANONYMITY IS ENFORCED HERE, not in the browser — and decided BEFORE rate
+   * limiting, because an anonymous suggestion is never recorded as an attempt
+   * (see rate-limit.ts for why a timestamp would otherwise identify it).
+   *
+   * When a suggestion is marked anonymous the contact fields are DROPPED before
+   * the row is built — not stored and hidden, not stored and filtered on read.
+   * A checkbox that only changes what an admin screen displays is not anonymity,
+   * and the person ticking it is trusting that it is.
+   */
+  const anonymous = kind === 'suggestion' && Boolean((fields as { anonymous?: string }).anonymous);
 
-  if (await overRateLimit(digest)) {
+  const ip = await clientIp();
+  const { limited } = anonymous ? { limited: false } : await recordAttempt(ip, kind);
+
+  if (limited) {
     return {
       ok: false,
       message:
@@ -182,15 +128,6 @@ export async function submitEnquiry(
     };
   }
 
-  /**
-   * ANONYMITY IS ENFORCED HERE, not in the browser.
-   *
-   * When a suggestion is marked anonymous the contact fields are DROPPED before
-   * the row is built — not stored and hidden, not stored and filtered on read.
-   * A checkbox that only changes what an admin screen displays is not anonymity,
-   * and the person ticking it is trusting that it is.
-   */
-  const anonymous = kind === 'suggestion' && Boolean((fields as { anonymous?: string }).anonymous);
   const payloadFields = anonymous
     ? { message: (fields as { message?: string }).message ?? '' }
     : fields;
@@ -202,17 +139,9 @@ export async function submitEnquiry(
       type: kind,
       is_anonymous: anonymous,
       status: 'new',
-      payload: {
-        ...payloadFields,
-        reference: ref,
-        // The rate-limit counter, and nothing else. An anonymous suggestion
-        // stores NO hash at all — a per-sender counter would make anonymous
-        // rows linkable to each other and to a named enquiry from the same
-        // person, which is precisely the linkage the checkbox promises to
-        // prevent. The cost is that anonymous suggestions are rate limited only
-        // by Turnstile, and that is the right side to err on.
-        meta: anonymous ? {} : { ip_hash: digest },
-      },
+      // No rate-limit fingerprint here any more (V79): it lives in
+      // submission_attempts, apart from the enquiry, and is pruned after 24 hours.
+      payload: { ...payloadFields, reference: ref },
     });
 
   if (error) {
