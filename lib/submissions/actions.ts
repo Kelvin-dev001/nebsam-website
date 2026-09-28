@@ -28,8 +28,7 @@ import { SUBMISSION_SCHEMAS, type SubmissionKind, type SubmissionResult } from '
 /**
  * Rate limiting WITHOUT a new table.
  *
- * The obvious implementation is a `submission_attempts` table beside
- * `verification_attempts`. CLAUDE.md §3.5 requires a data-model change to be
+ * The obvious implementation is a `submission_attempts` table of its own. CLAUDE.md §3.5 requires a data-model change to be
  * proposed and approved in writing before it is made, and this sprint had one
  * unavoidable one already (migration 0039). So the counter uses a column that
  * already exists: `submissions.payload` is `jsonb`, and the hash goes in it
@@ -168,10 +167,10 @@ export async function submitEnquiry(
   /**
    * Turnstile, where it is configured.
    *
-   * Unlike certificate verification, these forms are challenged on the FIRST
-   * submission — there is no failure to count, and a contact form is a cheaper
-   * target than a lookup. It fails OPEN when unconfigured, so an enquiry is
-   * never lost to a missing key.
+   * Checked on the FIRST submission — there is no failure to count. It fails
+   * OPEN when unconfigured, so an enquiry is never lost to a missing key.
+   * NOTE: no widget renders a token yet (register V78; see lib/turnstile.ts), so
+   * the keys must not be set until one does.
    */
   const token = formData.get('cf-turnstile-response');
   const passed = await verifyTurnstileToken(typeof token === 'string' ? token : null, ip);

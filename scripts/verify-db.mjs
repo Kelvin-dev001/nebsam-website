@@ -70,10 +70,9 @@ if (missing.length) {
 const TABLES = [
   'audit_log', 'authors', 'blog_categories', 'blog_post_revisions', 'blog_posts',
   'branches', 'certifications', 'client_logos', 'coverage_locations', 'downloads',
-  'faqs', 'industries', 'installation_certificates', 'installation_plates_restricted',
-  'media', 'order_items', 'orders', 'payment_intents', 'payments', 'product_categories',
+  'faqs', 'industries', 'media', 'order_items', 'orders', 'payment_intents', 'payments', 'product_categories',
   'product_industries', 'product_solutions', 'products', 'profiles', 'redirects', 'shipments',
-  'solution_industries', 'solutions', 'submissions', 'testimonials', 'verification_attempts',
+  'solution_industries', 'solutions', 'submissions', 'testimonials',
 ];
 
 const VIEWS = [
@@ -86,8 +85,7 @@ const VIEWS = [
 
 /** Tables that must never hold data outside production operations. */
 const MUST_BE_EMPTY = [
-  'orders', 'order_items', 'submissions', 'installation_certificates',
-  'installation_plates_restricted', 'testimonials', 'client_logos', 'payments', 'profiles',
+  'orders', 'order_items', 'submissions', 'testimonials', 'client_logos', 'payments', 'profiles',
 ];
 
 const service = createClient(URL_, SERVICE, { auth: { persistSession: false } });
