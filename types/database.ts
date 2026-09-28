@@ -42,15 +42,7 @@ export type Database = {
           entity_id?: string | null
           id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "audit_log_actor_id_fkey"
-            columns: ["actor_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       authors: {
         Row: {
@@ -1214,6 +1206,21 @@ export type Database = {
         }
         Relationships: []
       }
+      schema_migrations: {
+        Row: {
+          applied_at: string
+          version: string
+        }
+        Insert: {
+          applied_at?: string
+          version: string
+        }
+        Update: {
+          applied_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
       shipments: {
         Row: {
           carrier: string | null
@@ -1344,6 +1351,30 @@ export type Database = {
           status?: Database["public"]["Enums"]["content_status"]
           summary?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      submission_attempts: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string
+          kind: Database["public"]["Enums"]["submission_type"]
+          refused: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash: string
+          kind: Database["public"]["Enums"]["submission_type"]
+          refused?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string
+          kind?: Database["public"]["Enums"]["submission_type"]
+          refused?: boolean
         }
         Relationships: []
       }
@@ -2064,10 +2095,12 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
       }
+      increment_download_count: { Args: { p_id: string }; Returns: undefined }
       is_staff: {
         Args: { min_role: Database["public"]["Enums"]["user_role"] }
         Returns: boolean
       }
+      prune_submission_attempts: { Args: never; Returns: undefined }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       verification_attempt_counts: {
