@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import { addToCart } from '@/lib/cart';
 import { ROUTES } from '@/lib/constants';
 
@@ -13,31 +14,45 @@ import { ROUTES } from '@/lib/constants';
  * checkout anyway.
  *
  * Only the product ID crosses into storage. See lib/cart.ts for why.
+ *
+ * SPRINT 12b T5. The button is the shared primary `Button`, sized like its
+ * alternative on the same page ("Request price on WhatsApp"), so it has the
+ * same hover, press and dark-ground boundary as every other primary action;
+ * it used to be a bare <button> with none of them.
+ *
+ * The confirmation is ANNOUNCED (accessibility fix B): it renders inside a
+ * role="status" region that is in the DOM from the start, because a live
+ * region only announces changes to content it already contained. It also
+ * fades in beside the button (`enter-fade`, micro-interactions.css).
  */
 export function AddToCart({ productId }: { productId: string }) {
   const [added, setAdded] = React.useState(false);
 
   return (
-    <div className="flex flex-wrap items-center gap-4">
-      <button
+    <div className="flex w-full flex-wrap items-center gap-4 sm:w-auto">
+      <Button
         type="button"
+        variant="primary"
+        size="lg"
+        className="w-full sm:w-auto"
         onClick={() => {
           addToCart(productId);
           setAdded(true);
         }}
-        className="inline-flex min-h-11 items-center rounded-control bg-brand-signal-ink px-5 text-white"
       >
         Add to cart
-      </button>
+      </Button>
 
-      {added ? (
-        <a
-          href={ROUTES.cart}
-          className="inline-flex min-h-11 items-center text-body text-text-inverse underline underline-offset-4"
-        >
-          Added — view cart
-        </a>
-      ) : null}
+      <span role="status">
+        {added ? (
+          <a
+            href={ROUTES.cart}
+            className="enter-fade inline-flex min-h-11 items-center text-body text-text-inverse underline underline-offset-4"
+          >
+            Added — view cart
+          </a>
+        ) : null}
+      </span>
     </div>
   );
 }
