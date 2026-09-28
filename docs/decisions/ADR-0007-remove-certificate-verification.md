@@ -142,6 +142,11 @@ the public surface and legal copy, the admin, the library and scripts, migration
 - **A rate-limit hash under the new secret name.** Checking it end to end means submitting a real
   enquiry, which writes a row that staff see. By reading the code instead: the fallback reads the same
   secret value with the same `submission-ip:` prefix, so digests are unchanged.
+  **Since verified end to end, 28 September 2026 (`sprint/12e-drop-cert-secret-fallback`), without
+  writing an enquiry:** five attempts seeded for a documentation-range IP (RFC 5737) keyed with
+  `SUBMISSION_IP_HMAC_SECRET` alone, then the real contact form submitted from that IP on the
+  production build. It was refused, the sixth attempt was recorded as refused, no enquiry was
+  written, no server warning was logged, and every probe row was deleted.
 - **A signed-in pass of the admin navigation.** There was no staff session. The admin routes are
   absent from the build, and `verify:roles` passed.
 - **Migration 0044 applied, 28 September 2026**, by name, after a read-only check. Verified: the three
@@ -159,6 +164,10 @@ the public surface and legal copy, the admin, the library and scripts, migration
 - **The forms' Zod validation logs a report-only CSP notice** when it probes whether `eval` is allowed.
   It is info-level, and Zod falls back when eval is refused, so it is harmless.
 
-**Still Kelvin's:** a dated amendment to brief PART 9.2, which still describes the feature. Also, once
-every environment has `SUBMISSION_IP_HMAC_SECRET`, delete `CERT_PLATE_HMAC_SECRET`,
-`CERT_QR_TOKEN_SECRET` and the `CERT_VERIFY_*` values from `.env.local` and Vercel.
+**The one-release fallback ended on 28 September 2026.** With `SUBMISSION_IP_HMAC_SECRET` confirmed
+in `.env.local` and 12d merged, `sprint/12e-drop-cert-secret-fallback` stopped reading
+`CERT_PLATE_HMAC_SECRET`. Nothing in the code reads any `CERT_*` variable now.
+
+**Still Kelvin's:** a dated amendment to brief PART 9.2, which still describes the feature. Also
+delete `CERT_PLATE_HMAC_SECRET`, `CERT_QR_TOKEN_SECRET` and the `CERT_VERIFY_*` values from
+`.env.local` and Vercel, since nothing reads them.

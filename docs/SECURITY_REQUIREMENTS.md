@@ -220,8 +220,8 @@ public commitments**. So:
 `.env.example` documents every variable, commented and grouped; any new variable is added in the
 same commit that introduces its use. Real values never appear in code, commits, docs or logs.
 
-Server-only, never `NEXT_PUBLIC_`: `SUPABASE_SERVICE_ROLE_KEY` · `CERT_PLATE_HMAC_SECRET` ·
-`CERT_QR_TOKEN_SECRET` · `TURNSTILE_SECRET_KEY` · `EMAIL_PROVIDER_API_KEY` · `CLOUDINARY_URL`.
+Server-only, never `NEXT_PUBLIC_`: `SUPABASE_SERVICE_ROLE_KEY` · `SUBMISSION_IP_HMAC_SECRET` ·
+`TURNSTILE_SECRET_KEY` · `EMAIL_PROVIDER_API_KEY` · `CLOUDINARY_URL`.
 
 `.gitignore` already covers `.env`, `.env.local` and `.env*.local`, and `.claude/settings.json`
 denies reading them.
