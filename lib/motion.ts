@@ -19,6 +19,13 @@ export const EASE = {
 } as const;
 
 export const DURATION = {
+  /**
+   * Level 1 — press feedback. Faster than `micro` because a press answers the
+   * hand directly; 120ms is the floor of PART 17's Level 1 range. Only matters
+   * where a component transitions `transform`: `transition-colors` alone makes
+   * the press instant. Mirrored as `--dur-press` in app/globals.css.
+   */
+  press: 120,
   /** Level 1 — Micro: hover, press, focus, icon response */
   micro: 160,
   /** Level 2 — Reveal: scroll-triggered entrance, fires once */
@@ -34,6 +41,30 @@ export const STAGGER_CAP = 6;
 
 /** Level 2 travel. More than ~24px reads as a slide show. */
 export const REVEAL_TRAVEL_PX = 20;
+
+/**
+ * Level 4 — the pinned stage (ADR-0006).
+ *
+ * Inactive steps are dimmed with OPACITY ONLY, and a dimmed step is still
+ * content, so it must still clear 4.5:1. 0.6 is the lowest round value that
+ * does on the dark ground: #C3CEEA body text 4.86:1, #FFFFFF 7.07:1 on
+ * brand-navy. It does NOT hold on paper (text-secondary would need 0.86), which
+ * is why the stage sits on the dark ground and state colours appear only in the
+ * active step (state-warn dimmed is 3.71:1). Table: docs/DESIGN_SYSTEM.md §3.5.
+ * Mirrored as `--stage-inactive` in app/globals.css.
+ */
+export const STAGE = {
+  inactiveOpacity: 0.6,
+} as const;
+
+/**
+ * When the pinned stage may pin (memo D2). Below 768px, on a coarse pointer, or
+ * under reduced motion the same markup renders as stacked flow. The enhancer
+ * evaluates this ONE query; CSS keys off the `data-pinned` attribute it sets,
+ * never off a media query of its own, so the two can never disagree.
+ */
+export const PIN_QUERY =
+  '(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)';
 
 /**
  * The signature sequence (Level 3).

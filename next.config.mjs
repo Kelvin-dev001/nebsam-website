@@ -129,9 +129,25 @@ const headers = async () => [
   },
 ];
 
+/**
+ * DEVELOPMENT-ONLY ROUTES are named `page.dev.tsx` and exist only in `next dev`
+ * or in a build made with MOTION_PLAYGROUND=1.
+ *
+ * A runtime 404 was not enough. A route that is built still shapes the
+ * bundles of every route it shares code with, and the /dev/motion playground
+ * shares Reveal and the readout with the homepage. In Sprint 12b T3 that
+ * split the homepage's code into a second chunk: one extra request, measured
+ * at +74 ms LCP across nine paired Lighthouse runs, on a route already over
+ * its LCP budget. Excluded from the build, the playground cannot touch a
+ * public route at all.
+ */
+const includeDevRoutes =
+  process.env.NODE_ENV !== 'production' || process.env.MOTION_PLAYGROUND === '1';
+
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js', ...(includeDevRoutes ? ['dev.tsx'] : [])],
   images: {
     formats: ['image/avif', 'image/webp'],
   },

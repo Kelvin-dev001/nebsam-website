@@ -16,9 +16,12 @@ type Size = 'md' | 'lg';
  *
  * Full variant table: docs/DESIGN_SYSTEM.md §4.
  */
+// `press-feedback` (components/motion/micro-interactions.css) transitions the
+// colours at micro and the 1px press at the press token, 120ms ease-out. With
+// `transition-colors` alone the press was instant (Sprint 12b T5, item 5).
 const base =
   'inline-flex items-center justify-center gap-2 rounded-control font-medium ' +
-  'transition-colors duration-micro ease-in-out-quad ' +
+  'press-feedback ' +
   'active:translate-y-px motion-reduce:active:translate-y-0 ' +
   'disabled:pointer-events-none disabled:opacity-50';
 
@@ -39,14 +42,20 @@ const variants: Record<Variant, string> = {
     '[[data-section=dark]_&]:text-brand-signal',
 };
 
-const darkPrimaryBoundary = '[[data-section=dark]_&]:border [[data-section=dark]_&]:border-brand-signal';
+const darkPrimaryBoundary =
+  '[[data-section=dark]_&]:border [[data-section=dark]_&]:border-brand-signal';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
 }
 
-export function Button({ variant = 'secondary', size = 'md', className = '', ...props }: ButtonProps) {
+export function Button({
+  variant = 'secondary',
+  size = 'md',
+  className = '',
+  ...props
+}: ButtonProps) {
   return (
     <button
       className={[

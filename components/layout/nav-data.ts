@@ -1,11 +1,11 @@
-import { LAUNCH_SOLUTIONS, PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
+import { LINKED_SOLUTIONS, PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
 
 /**
  * Navigation, derived from the route table rather than hand-listed, so a
  * renamed route cannot leave a stale nav entry behind.
  *
  * The two deferred solutions are absent because they are absent from
- * LAUNCH_SOLUTIONS — reserved slugs are not navigable and not in the sitemap.
+ * LINKED_SOLUTIONS — reserved slugs are not navigable and not in the sitemap.
  */
 export interface NavItem {
   label: string;
@@ -17,7 +17,7 @@ export const PRIMARY_NAV: NavItem[] = [
   {
     label: 'Solutions',
     href: ROUTES.solutions,
-    children: LAUNCH_SOLUTIONS.map((s) => ({
+    children: LINKED_SOLUTIONS.map((s) => ({
       label: s.name,
       href: ROUTES.solution(s.slug),
     })),

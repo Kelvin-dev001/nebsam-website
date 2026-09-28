@@ -1,7 +1,6 @@
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { ButtonLink } from '@/components/ui/button';
 import { Reveal } from '@/components/motion/reveal';
-import { SignalReadout } from '@/components/telemetry/signal-readout';
 import { BRANCHES, SHORT_DESCRIPTION, whatsappUrl } from '@/lib/company';
 
 /**
@@ -23,9 +22,24 @@ import { BRANCHES, SHORT_DESCRIPTION, whatsappUrl } from '@/lib/company';
  * national homepage, which only makes sense to someone who already knows the
  * business. It now names the branch it dials.
  *
- * The signature element holds section 4 rather than getting its own band. It
- * is the argument the headline makes, and separating the claim from its
- * demonstration by a section boundary weakens both.
+ * SPRINT 12b T4: THE READOUT MOVED OUT (memo D3b = b). The jamming readout
+ * now peaks the "One vehicle, instrumented" set piece (components/home/
+ * one-vehicle.tsx), where it arrives with context. A page with two jamming
+ * moments has two peaks, and a page with two peaks has none.
+ *
+ * THE HEADLINE (register V75, approved by Kelvin 28 Sep 2026). It carries the
+ * whole company, as ADR-0002 asked of the production hero, and each clause is
+ * a beat of the set piece below it. The sub-line is where the claim is earned
+ * and hedged, so it is traced sentence by sentence:
+ *  - "Position, speed and ignition state, subject to network and GPS
+ *    availability": 02-products/trackers/standard-tracker/write-up.md §01. The
+ *    hedge is word for word and is a condition of the headline's approval.
+ *  - abnormal fuel level drops: 01-solutions/fuel-monitoring/write-up.md §02.
+ *  - geofence entries and exits: standard-tracker write-up §04.
+ *  - jamming attempts, on an anti-jamming tracker only: anti-jammer-tracker
+ *    write-up line 79, and the approved Sprint 1 hero copy ("alerting you").
+ * The LCP element is server-rendered text either way: the headline on phones,
+ * where it is now the largest block, and the paragraph where it is not.
  */
 export function Hero() {
   const nairobi = BRANCHES.find((b) => b.slug === 'nairobi') ?? BRANCHES[0];
@@ -40,26 +54,28 @@ export function Hero() {
           </Reveal>
 
           <Reveal index={1}>
-            <h1 className="mt-5 font-display text-display md:text-md-display">
-              Losing signal is the alarm.
+            {/*
+              Stepped down from the display sizes the old two-line headline
+              used, because this one is thirteen words. At display size on a
+              360px phone it ran to seven lines and pushed "Talk to us on
+              WhatsApp" under the cookie bar on a first visit (measured 28 Sep
+              2026). At h1 size it is five lines and the action clears the bar;
+              from lg it returns to display size, four lines at 1440.
+            */}
+            <h1 className="mt-5 font-display text-h1 md:text-md-h1 lg:text-md-display">
+              {"Know where your vehicles are, what they're doing, and when something goes wrong."}
             </h1>
           </Reveal>
 
           <Reveal index={2}>
             <p className="mt-5 max-w-prose text-body-lg text-text-secondary-inverse">
-              A GSM jammer cuts the uplink so a tracker cannot report. An anti-jamming tracker
-              treats that silence as an event rather than a gap — alerting you and immobilising the
-              vehicle according to the configured security logic.
+              Position, speed and ignition state, subject to network and GPS availability — with
+              alerts for abnormal fuel level drops, geofence entries and exits and, on an
+              anti-jamming tracker, jamming attempts.
             </p>
           </Reveal>
 
           <Reveal index={3}>
-            <div className="mt-8">
-              <SignalReadout />
-            </div>
-          </Reveal>
-
-          <Reveal index={4}>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
               <ButtonLink
                 href={whatsappUrl(
@@ -85,7 +101,7 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <Reveal index={5}>
+          <Reveal index={4}>
             {/*
               Who Nebsam is and where it operates, stated plainly in the first
               screen. The SEO skill is explicit that LLMs quote what is

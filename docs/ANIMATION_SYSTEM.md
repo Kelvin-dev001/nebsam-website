@@ -33,10 +33,10 @@ transitions are linear while the button hover is `inOutQuad`.
 
 | Level | Duration | Easing | Where it is used today |
 |---|---|---|---|
-| 1 — Micro | **160ms** | `inOutQuad` | Button hover and press, link colour, field border, signal bar opacity |
-| 2 — Reveal | **420ms**, stagger **70ms**, cap **6**, travel **20px** | `outQuart` | `Reveal` on hero and "Complies." blocks |
-| 3 — Data | **900ms** | `linear` | Readout status colour, GSM/GPS bar state |
-| 4 — Cinematic | not used in Sprint 1 | `outExpo` | reserved — one per page maximum |
+| 1 — Micro | **160ms**; press **120ms** | `inOutQuad` for colour; `outQuart` for press, lifts and entrances | Button hover and press, link colour, field border, signal bar opacity; since T5 the WhatsApp button's lift and three entrances (below) |
+| 2 — Reveal | **420ms**, stagger **70ms**, cap **6**, travel **20px** | `outQuart` | `Reveal` on hero and "Complies." blocks; the home set piece's steps in stacked flow |
+| 3 — Data | **900ms** | `linear` | Readout status colour, GSM/GPS bar state — since T4 in the home set piece's peak frame (beat 5), no longer in the hero. **Asymmetric since T4:** into `state-warn` at `micro` (the alarm snaps), back to `state-ok` at `data` (relief settles) |
+| 4 — Cinematic | progress mapped 1:1 to scroll; step changes **420ms**; inactive steps at **0.6** opacity | `outQuart` for step changes | The pinned stage, **ADR-0006** — one per page, Tier A pages only. Built in Sprint 12b T3; first used on Home, "One vehicle, instrumented" (T4, `components/home/one-vehicle.tsx`) |
 | 5 — Transition | not used in Sprint 1 | `outQuart` | reserved — must never delay content paint |
 
 ### Level 1 — Micro, 160ms
@@ -46,6 +46,36 @@ transitions are linear while the button hover is `inOutQuad`.
 Press scales via `active:translate-y-px`, disabled under reduced motion. **Focus rings appear
 instantly and are never animated in** — a delayed focus ring is a keyboard user watching the
 interface catch up.
+
+**Press has its own token, `DURATION.press` = 120ms** (`--dur-press`, `duration-press`), the floor of
+PART 17's Level 1 range, because a press answers the hand directly. **Since Sprint 12b T5 every
+`Button` and `ButtonLink` transitions it**, through `press-feedback`: colour at `micro` on `inOutQuad`,
+the 1px press at `press` on **`EASE.outQuart`** — ease-out, because an in-out curve starts slow at the
+moment the finger lands. Measured: 0.74px at 31ms, the full 1px by ~100ms. Before T5,
+`transition-colors` did not cover transform and the press was instant.
+
+#### The T5 micro-interactions (approved by Kelvin, 28 September 2026)
+
+All in `components/motion/micro-interactions.css`, pulled into the one global stylesheet by an
+`@import` at the top of `app/globals.css` — **never a CSS module**, which on Home became a second
+render-blocking request (V77). Transform and opacity only; existing tokens only.
+
+| Class | Used on | What moves | Why |
+|---|---|---|---|
+| `press-feedback` | `Button`, `ButtonLink` | 1px press at 120ms `outQuart` | Feedback |
+| `fab-lift` | the floating WhatsApp button | lifts clear of the cookie bar by **transform** (−108px, −76px from `md`), 160ms `inOutQuad` (it moves and moves back: a state change both ways) | It used to change `bottom`, and its transition was overridden, so it jumped: **the site's only layout shift**. A transform is not a layout shift |
+| `enter-from-right` + `enter-fade` | the mobile menu panel and its backdrop | panel from `translateX(100%)` at `reveal`; backdrop fades at `micro` | Shows where the panel comes from. **Closes instantly** by design: a link tap loads the next page, and Close and Escape should snap |
+| `enter-rise` | the enquiry confirmation (`components/forms/enquiry-success.tsx`) | fades and settles 8px at `reveal` | The form it replaces vanishes in a frame; the change needs a bridge |
+| `enter-fade` | "Added — view cart" (`components/cart/add-to-cart.tsx`) | fades at `micro` | Confirms the tap |
+
+**Entrances use `@starting-style`**, so an inserted element transitions in with no JavaScript, and a
+browser without it renders the final state at once. Reduced motion needs no rule of its own: the
+backstop below makes every transition 0.01ms, so each entrance lands in under a frame.
+
+Rejected in the T5 gate, and why: desktop nav hover (core navigation, tens of times a visit), form
+errors and focus rings (must be instant), the menu's exit (delays navigation), hiding the anonymous
+suggestion's contact fields (user-caused, and height is layout), an animated "Sending…" (decoration
+over a short wait).
 
 ### Level 2 — Reveal, 420ms
 Fires **once**, never on re-scroll. `IntersectionObserver` at 0.15 threshold, disconnected on first
@@ -72,10 +102,71 @@ The brand's signature motion. Colour and bar-state transitions in the readout, `
 Counters, when they arrive, count to a **real** number. If a figure is unverified there is no
 counter.
 
-### Levels 4 and 5
-Reserved, not used in the prototype. Level 4 is capped at one per page and must never affect the LCP
-element. Level 5 must never delay content paint — a transition that holds the next page back to look
-smooth has traded the LCP budget for a flourish.
+### Level 4 — the pinned stage (ADR-0006)
+One per page, and only on Tier A pages (Home, `/solutions/vehicle-security`,
+`/solutions/fuel-monitoring`). A visual stage stays in view through native `position: sticky` while
+its steps scroll past. It must never affect the LCP element. ADR-0006 lists the conditions; the ones
+that shape every build:
+
+- **It pins only when `PIN_QUERY` matches** (`lib/motion.ts`): ≥ 768px, fine pointer, no reduced
+  motion. Otherwise the same markup is stacked flow with Level 2 reveals.
+- **Progress is mapped 1:1 to scroll** by CSS scroll-driven animation behind `@supports`, with
+  `IntersectionObserver` as the fallback. Step changes crossfade at `DURATION.reveal` with
+  `EASE.outQuart` — no separate Level 4 duration exists, deliberately.
+- **Inactive steps dim to `STAGE.inactiveOpacity` (0.6) with opacity only.** A dimmed step is still
+  content and must clear 4.5:1. On `brand-navy` it does: `#C3CEEA` 4.86, `#FFFFFF` 7.07. On paper it
+  does not (`text-secondary` would need 0.86), so **the stage sits on the dark ground**, and **state
+  colours appear only in the active step** (`state-warn` dimmed is 3.71). Full table:
+  `DESIGN_SYSTEM.md` §3.5.
+- **The progress rail** is a `border-hairline-inverse` track (decorative) with a
+  `text-secondary-inverse` fill (11.81:1) — an instrument scale. Not `brand-signal`, which means
+  "interactive", and not amber, which means "alarm".
+
+#### Building one: `PinnedSequence` (built in Sprint 12b T3)
+
+`components/motion/pinned-sequence.tsx`, a server component:
+`<PinnedSequence id steps frames caption restingFrame? spans? />`. **Steps carry the argument; frames
+are illustration of it** (aria-hidden, caption excepted), so nothing a reader needs may live only in a
+frame.
+
+**`spans`** (added in T4) gives each step its scroll room in viewport heights, default 1. The peak
+gets the most by a visible margin; the home set piece uses `[1, 1, 1, 1, 1.8]`. A step's content is
+one viewport tall and **sticky at the top of its step**, so extra span is a hold with the words
+beside the frame, never a gap before they arrive. At span 1 that rule changes nothing.
+
+| Piece | File | What it does |
+|---|---|---|
+| Markup | `pinned-sequence.tsx` | Stage, then an ordinary `<ol>` of steps, all visible. `data-pinned="off"` in the server HTML |
+| Styles | `pinned-sequence.css` | Global `pinned-` classes, pulled into `app/globals.css` by an `@import` so they ship inside the one global stylesheet. Everything pinned is under `[data-pinned='on']`. **Not a CSS module since V77**: as a module it became a second render-blocking stylesheet on Home |
+| Loader | `pinned-sequence-loader.tsx` | The only initial JS. Decides with `willPin`, sets `data-pinned`, adds `html.sc-ready`, then — after load and idle — imports the enhancer when the act is within a viewport |
+| Enhancer | `pinned-enhancer.ts` | Its own async chunk (595 B gzipped). Sets `data-active` from IntersectionObserver on a centre line, and on `focusin` |
+| Decision | `will-pin.ts` | `PIN_QUERY` matches **and** the act is not already on screen — shared with `Reveal` so the two cannot disagree |
+
+- **It never pins an act that is on screen at the moment of deciding.** The pinned layout changes the
+  act's geometry, so switching under the reader's eyes would be a layout shift. A reader who
+  reloads mid-sequence gets stacked flow, which is complete.
+- **Stacked flow reveals its steps with `Reveal skipWhenPinned`.** When the act pins, `Reveal` stands
+  aside, because an inline `opacity: 1` left by a reveal would override the dim.
+- **Frames crossfade asymmetrically:** the leaving frame snaps out at `micro`, the arriving one eases
+  in at `reveal`. Symmetric fades left both half-visible at once.
+- **Stacked, only the resting frame takes space**, and the stage is capped at 42rem. The frame never
+  changes there, so reserving the tallest frame's height only left a hole under a shorter resting
+  frame, and an uncapped stage stretched the frame across a wide screen (both found in T4).
+- **A frame that animates picks its own moment.** The home peak (`components/home/peak-readout.tsx`)
+  plays the Level 3 sequence once: pinned, when its frame becomes active; stacked, when it is 60% in
+  view. Never under reduced motion, never on a loop.
+- **Smooth scrolling: none.** No library, no global `scroll-behavior: smooth` (memo D4). Checked in
+  T3: nothing in the codebase sets it.
+
+**One known harness false positive.** Under `--reduced-motion`, scroll-craft's `shoot.mjs` can
+report a contrast failure on a step that sits behind the fixed cookie bar. The harness hides fixed
+elements and screenshots the frame in the same instant, before the bar has repainted hidden, so it
+grades the step against the bar's own text. Replayed with a 300 ms settle, the frame is plain navy.
+The step's real contrast is the §3.5 table in `DESIGN_SYSTEM.md`.
+
+### Level 5
+Reserved, not used. It must never delay content paint — a transition that holds the next page back to
+look smooth has traded the LCP budget for a flourish.
 
 ---
 
@@ -121,7 +212,15 @@ it. It is not what produces it.
 | Crawler / LLM retrieval | Resolved state in the server HTML |
 
 `useState<Phase>('resolved')` is the initial value, so SSR emits it. The effect returns to
-`'resolved'` at the end, so the DOM is never left altered.
+`'resolved'` at the end, so the DOM is never left altered. Since T4 the phase clock lives in
+`components/telemetry/use-jam-sequence.ts`, and `SignalReadout` takes `autoplay` (off when a parent
+picks the moment), `showCaption` (off only where the parent prints the same caption) and `variant`
+(`inline`, or `stage` for the home peak frame: plate row like the other frames, status on its own
+line at `h3` size from `lg`).
+
+**Where it plays since T4:** beat 5 of the home set piece, not the hero (memo D3b = b). The argument
+table above still holds — the story lands at 3.8s — but the clock now starts when the reader reaches
+the peak, not at page load.
 
 ---
 
@@ -135,7 +234,7 @@ it is a complete one that does not move.
 | 1 Micro | Colour and border changes retained; `active:translate-y-px` disabled via `motion-reduce:` |
 | 2 Reveal | **Content rendered complete, at full opacity, with no inline style.** No transform, no stagger |
 | 3 Data | The readout renders the resolved state and never runs the sequence |
-| 4 Cinematic | (reserved) static composition, parallax off |
+| 4 Cinematic | **No pin.** `data-pinned` is never set, so the pinned stage renders as stacked flow, every step at full opacity, with no inline style |
 | 5 Transition | (reserved) instant |
 
 **Two mechanisms, deliberately:**
@@ -157,10 +256,14 @@ whether or not the sequence ran — the argument survives without the motion.
 - Nothing animates purely because it can.
 - **Content is never gated behind an animation** (§2, Level 2).
 - **No infinite ambient motion.** The sequence runs once and stops. Nothing loops.
-- **No scroll-jacking.** The scrollbar always means what it says.
+- **No scroll-jacking.** The scrollbar always means what it says. **ADR-0006 permits native
+  `position: sticky` pinning** for one set piece per page, because sticky is a layout mode and scroll
+  still maps 1:1 to what moves. Still banned: wheel, touch or key interception; scroll smoothing;
+  forced snapping; scroll-linked layout properties.
 - **Animation never causes layout shift.** Measured CLS on the prototype: **0**, across 0 shifts.
 - **GPU-friendly properties only** — `transform` and `opacity`. No `will-change` was needed.
-- No layout-thrashing scroll handlers. `IntersectionObserver` only.
+- No JS `scroll` event handlers. `IntersectionObserver`, plus CSS scroll-driven animation
+  (`animation-timeline`) behind `@supports` for the ADR-0006 progress rail.
 - One animation library. Sprint 1 shipped with **none** — every level above is CSS transitions plus
   `setTimeout`, which is why the route costs 110 kB of JS rather than 110 kB plus a motion library.
 
@@ -184,7 +287,8 @@ whether or not the sequence ran — the argument survives without the motion.
 - [ ] Content present, server-rendered and visible regardless of animation state
 - [ ] `transform` / `opacity` only
 - [ ] Reveals fire once; stagger capped at 6; travel ≤ 24px
-- [ ] At most one Level 4 on the page
+- [ ] At most one Level 4 on the page; if it pins, every ADR-0006 condition holds
+- [ ] Dimmed or inactive text still clears 4.5:1 on its ground
 - [ ] Nothing loops
 - [ ] Reduced motion verified — content complete, meaning intact
 - [ ] CLS measured, not assumed

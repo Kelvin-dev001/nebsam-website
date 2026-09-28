@@ -1,6 +1,6 @@
 import { Hero } from '@/components/home/hero';
 import { ProofBand } from '@/components/home/proof-band';
-import { Thesis } from '@/components/home/thesis';
+import { OneVehicle } from '@/components/home/one-vehicle';
 import { KebsResult } from '@/components/home/kebs-result';
 import { HowWeWork } from '@/components/home/how-we-work';
 import { Coverage } from '@/components/home/coverage';
@@ -40,9 +40,14 @@ import { ROUTES } from '@/lib/constants';
  * sprint that creates their content, when they can be designed against the
  * real thing and reviewed.
  *
- * TONE RHYTHM: dark → paper → light → paper → dark → light → dark. Brief 6.6
+ * TONE RHYTHM: dark → paper → dark → paper → dark → light → dark. Brief 6.6
  * prohibits identical section rhythm, so no two adjacent sections share a
  * ground and the page alternates weight as well as colour.
+ *
+ * SPRINT 12b T4: section 3 (the Thesis) became "One vehicle, instrumented" —
+ * brief 9.1 §3 and §4 in one pinned set piece (ADR-0006), which must sit on
+ * the dark ground. The Thesis copy seeds its beats; the hero's jamming readout
+ * is its peak. Still seven sections. Brief: docs/design/sets/home-BRIEF.md.
  */
 
 /**
@@ -87,7 +92,7 @@ export default async function HomePage() {
     <main id="main">
       <Hero />
       <ProofBand />
-      <Thesis />
+      <OneVehicle />
       <KebsResult certifications={certifications.data} />
       <HowWeWork />
       <Coverage branches={branches.data} coverage={coverage.data} />

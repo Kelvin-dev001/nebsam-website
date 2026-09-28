@@ -33,6 +33,9 @@ function formatKes(amount: number): string {
 
 export function ProductPrice({ product }: { product: PublicProduct }) {
   const hasPrice = typeof product.price_kes === 'number';
+  // The sentence below ends with its own full stop, and staff write notes that
+  // end with one too ("…Reviewed annually."), which rendered as "..".
+  const feeNote = product.recurring_fee_note?.trim().replace(/\.+$/, '');
 
   return (
     <div className="mt-8">
@@ -49,7 +52,7 @@ export function ProductPrice({ product }: { product: PublicProduct }) {
             <p className="mt-2 max-w-prose text-body-sm text-text-secondary-inverse">
               Plus {formatKes(product.recurring_fee_kes)}
               {product.recurring_fee_period ? ` per ${product.recurring_fee_period}` : ''}
-              {product.recurring_fee_note ? ` — ${product.recurring_fee_note}` : ''}.
+              {feeNote ? ` — ${feeNote}` : ''}.
             </p>
           ) : null}
         </>
@@ -64,15 +67,19 @@ export function ProductPrice({ product }: { product: PublicProduct }) {
       )}
 
       {/*
-        Installation and delivery terms are NOT stated. Whether a price includes
-        installation, SIM provisioning or configuration is register item V05 and
-        is unresolved for every category. Asserting either way would be
-        inventing a commercial term, and the register is explicit that ambiguity
-        here generates order disputes — so the page says where the answer comes
-        from instead of guessing at it.
+        INSTALLATION TERMS come from the product row. V05 was answered on 4 Sep
+        2026 — prices include installation by a Nebsam technician — and
+        migration 0032 wrote that sentence into `installation_terms` on every
+        product, where staff can change it per product in the admin. This page
+        went on printing the pre-answer placeholder until Sprint 12b.
+
+        Only where a product has no terms recorded does the page fall back to
+        saying where the answer comes from, rather than inventing a commercial
+        term in either direction.
       */}
       <p className="mt-3 max-w-prose text-body-sm text-text-secondary-inverse">
-        Installation and delivery terms are confirmed when you order.
+        {product.installation_terms?.trim() ||
+          'Installation and delivery terms are confirmed when you order.'}
       </p>
 
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">

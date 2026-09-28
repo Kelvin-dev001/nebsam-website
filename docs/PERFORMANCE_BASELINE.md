@@ -197,3 +197,276 @@ site, for an effect below the noise floor. Not done, deliberately.
 
 Raw JSON for every run in this document is archived outside the repo at
 `~/.claude/projects/C--Projects-nebsam-website/perf-2026-09-05/`.
+
+---
+
+## 9. Sprint 12b T0 baseline — 25 September 2026
+
+The reference every Sprint 12b task is compared against. **The app code is `7b7f1e7`**: every commit
+on `sprint/12b-motion-scroll` up to the end of T0 is docs or tooling.
+
+Method as §3, exactly. Production build with `.next/cache/fetch-cache` cleared first (V54b),
+`next start` on port 3000, each route warmed with five requests, Lighthouse **12.8.2** mobile preset
+with default simulated throttling, **9 runs per route**, the two routes interleaved (home, fuel,
+home, fuel…) so machine load falls on both equally. `benchmarkIndex` stayed at **2879–3518** across
+all 18 runs. The machine was quiet, which is why these ranges are narrow where §2's were not.
+
+### 9.1 Lighthouse
+
+| Route | n | Performance | Range | LCP | Range | FCP | TBT | CLS | Transfer |
+|---|---|---|---|---|---|---|---|---|---|
+| `/` | 9 | **97** | 97–97 | **2.561 s** | 2.559–2.585 | 0.935 s | 35 ms | 0.012 | 256 KB |
+| `/solutions/fuel-monitoring` | 9 | **97** | 97–98 | **2.561 s** | 2.489–2.568 | 0.912 s | 36 ms | 0.012 | 256 KB |
+
+Accessibility 100, Best Practices 96, SEO 100 on every run of both routes.
+
+**Not comparable with §2.** A different day under different load is exactly the unpaired comparison
+§3 rule 2 forbids, so home's 93 → 97 is not evidence of anything. LCP is still **~61 ms over the
+2.5 s budget** on both routes (V47 stands).
+
+**The LCP element is the paragraph under the H1, not the headline**, on both routes: home
+`<p class="mt-5 max-w-prose text-body-lg text-text-secondary-inverse">`, fuel
+`<p class="mt-4 text-body-lg text-text-primary">`. Two consequences for Sprint 12b: prompt §6's rule
+that the LCP element never animates in covers that paragraph, and a D3b hero rewrite that changes its
+length can move LCP. Why a text element paints at ~2.56 s after an FCP of ~0.91 s is not established
+here. V41 (fonts not preloaded) is the standing candidate.
+
+### 9.2 First Load JS (`next build`)
+
+| Route | First Load JS | Headroom to 180 KB |
+|---|---|---|
+| Shared by all | 103 kB (46.4 + 54.2 + 2) | — |
+| `/` | 105 kB | 75 kB |
+| `/solutions/[slug]` | 103 kB | 77 kB |
+| `/products/[slug]` | 104 kB | 76 kB |
+| `/cart` | 107 kB | 73 kB |
+| `/support/verify-installation` | 108 kB | 72 kB |
+| `/contact`, `/quote`, `/support/book-installation`, `/support/suggestions` | 131 kB | **49 kB** |
+| `/admin/*` | 103–112 kB | 68 kB or more |
+| Middleware | 93.6 kB | — |
+
+The four form routes are the tightest in the app, and all are Tier C (no scroll effects).
+
+### 9.3 How later tasks compare against this
+
+Paired, per §3 rule 2. The T0 arm is the app at `7b7f1e7`, served as a production build from a
+separate worktree on a second port. Runs interleave T0 and the task build against the same warm
+servers, and the reported figure is the median of the paired differences.
+
+Raw JSON for all 18 runs, the build log and the two scripts that produced and summarised them are
+archived outside the repo at `~/.claude/projects/C--Projects-nebsam-website/perf-2026-09-25-s12b-t0/`.
+
+---
+
+## 10. Sprint 12b T2 against T0 — sizes solid, timing comparison inconclusive
+
+T2 added the motion tokens, ADR-0006 docs and the `/dev/motion` playground. Nine interleaved pairs
+per route (T0 arm then T2, back to back) on `/` and `/solutions/fuel-monitoring`, Lighthouse 12.8.2.
+The T0 arm was `7b7f1e7` in a separate git worktree on port 3002, sharing `node_modules` through a
+directory junction.
+
+### 10.1 What is solid: deterministic, and identical in every pair
+
+| | `/` | `/solutions/fuel-monitoring` |
+|---|---|---|
+| Transfer, paired delta | **+63 B** (every pair) | **+15 B** (every pair) |
+| First Load JS | 105 kB, unchanged | 103 kB, unchanged |
+| CLS | 0.012, unchanged | 0.012, unchanged |
+| Accessibility / Best Practices / SEO | 100 / 96 / 100, unchanged | 100 / 96 / 100, unchanged |
+
+Where the bytes come from: the global stylesheet grew **+17 B gzipped** (two custom properties;
+zero new rules once the playground was given its own stylesheet), and the home page chunk grew
+~60 B because `PIN_QUERY` and `STAGE` are not tree-shaken out of `lib/motion.ts`, which the home
+page already imports. The T4 set piece uses both on that page.
+
+### 10.2 What is not: the timing comparison
+
+| | T2 median | T0-arm median | Paired delta, median (range) |
+|---|---|---|---|
+| `/` Performance | 97 (94–97) | 97 | 0 (0 to +24) |
+| `/` LCP | 2.580 s | 2.518 s | −2 ms (−746 to +82) |
+| fuel Performance | 97 (78–97) | 82 | **+14** (+1 to +22) |
+| fuel TBT | 97 ms | 576 ms | **−475 ms** |
+
+**The fuel deltas are not a T2 effect and must not be read as one.** T2 changed 15 bytes on that
+page. Two faults in the measurement explain them instead:
+
+1. **The T0 arm does not reproduce the T0 baseline.** On the same app code, §9 measured fuel TBT at
+   31–44 ms in every run. The T0 arm split into two modes: 94–200 ms in three runs, 547–957 ms in
+   six, with a steady `benchmarkIndex` (2398–2609). Its shared chunk is also named differently
+   (`4454-…` against `1255-…`), so the worktree build is not byte-identical to the original. The
+   `node_modules` junction is the likely cause; it is **not established**.
+2. **The machine ran out of memory.** Claude Code stopped both servers and the run for memory
+   pressure just after the last pair completed; free RAM was 1.7 GB of 15.6 GB. Home's
+   `benchmarkIndex` fell to 604 in the worst pair.
+
+**For T3 and T4:** build the T0 arm with its own `npm ci`, not a junction; confirm it reproduces §9
+before pairing against it; measure with memory headroom. Better still, judge on Vercel preview
+deployments, as `PERFORMANCE_BUDGETS.md` §3 and the sprint prompt both prefer.
+
+Budgets on T2's own medians are unchanged from §9: Performance ≥ 90 met; **LCP still over 2.5 s**
+(V47, 2.580 / 2.517 s, not moved by T2: the home paired delta is −2 ms); everything else met.
+
+Raw JSON for all 36 runs and the scripts are archived at
+`~/.claude/projects/C--Projects-nebsam-website/perf-2026-09-25-s12b-t2/`.
+
+---
+
+## 11. Sprint 12b T3 — a regression found, traced to a dev route, fixed, re-measured
+
+T3 added the pinned-stage primitive (ADR-0006) and demonstrated it on the `/dev/motion` playground.
+No public route uses the primitive yet.
+
+### 11.1 A trustworthy control, this time
+
+§10's T0 arm was unusable. This one was rebuilt the way §10 said it should be: a worktree at
+`bcab5d4` (the T0 app code plus the Next 15.5.26 security fix, so the arms differ only by Sprint 12b
+work), with its **own `npm ci`** instead of a junction. Its shared chunks carry **the same content
+hashes** as the sprint build, and it **reproduces §9**: home 97 / 2.561 s / TBT 33 ms, fuel 97 /
+2.561 s / 32 ms. Best Practices reads **100** on both arms, up from 96, because the CSP console error
+fixed on 25 September was the failing audit.
+
+### 11.2 First measurement: +74 ms LCP on the homepage
+
+Nine interleaved pairs per route: home paired LCP delta **+74 ms** (seven of nine pairs at +73 to
++76), transfer **+1,462 B**; fuel flat. The homepage made **one more request**: its motion code had
+been moved out of its page chunk into a shared chunk (`1566-…`), which the homepage then had to
+fetch separately. A rebuild with the playground moved out of `app/` put the homepage back to one
+page chunk, which proved the cause: **the dev-only playground, because it imports the same Reveal
+and readout as the homepage, was shaping the homepage's chunking.** A runtime 404 did not stop that;
+a built route participates in code splitting whether or not it is ever served.
+
+### 11.3 The fix, and the re-measurement
+
+Development-only pages are now `page.dev.tsx`, and `next.config.mjs` treats `.dev.tsx` as a page
+only in `next dev` or a build made with `MOTION_PLAYGROUND=1`. An ordinary production build does not
+contain `/dev/motion` at all.
+
+| Paired against T0, n = 9 | Home | Fuel |
+|---|---|---|
+| Performance | 97, delta **0** | 97, delta **0** |
+| LCP | 2.562 s, delta **0 ms** (−7 to +2) | 2.561 s, delta **−1 ms** |
+| TBT | 30 ms, delta −2 ms | 32 ms, delta +1 ms |
+| Transfer | delta **+171 B** | delta **+43 B** |
+| Requests | 15 vs 15 | unchanged |
+| CLS · A11y / BP / SEO | 0.012 · 100 / 100 / 100 | 0.012 · 100 / 100 / 100 |
+
+`benchmarkIndex` 3349–3622 across all 36 runs. The +171 B on home is the T2 constants and `willPin`
+in its page chunk; the T4 set piece uses all of them there. **LCP is unchanged and still ~60 ms over
+budget (V47).**
+
+**Rule that follows:** measure public routes only on an **unflagged** build. A build made with
+`MOTION_PLAYGROUND=1` chunks differently, by design of the bug above.
+
+Raw JSON, scripts and build logs: `perf-2026-09-26-s12b-t3/` (the regression) and
+`perf-2026-09-26-s12b-t3-fixed/` (the fix), under `~/.claude/projects/C--Projects-nebsam-website/`.
+
+## 12. Sprint 12b T4 — the homepage set piece, paired against T0
+
+T4 put the pinned stage on a public route for the first time: "One vehicle, instrumented" on Home.
+Two nine-pair runs, both against the §11 T0 arm (`bcab5d4`, own `npm ci`) on :3002, with T4
+**unflagged** on :3000, Lighthouse 12.8.2. Run 1 measured the build before the last three changes
+(the asymmetric alarm colour, the readout file split, beat 2's route strip); run 2 measured the final
+build. **The machine was busier than in T3:** `benchmarkIndex` about 2,000–2,700 against 3,349–3,622,
+and round 1 of each run was heavily loaded on both arms (503–991).
+
+| Home, paired against T0, n = 9 | Run 1 | Run 2 (final build) |
+|---|---|---|
+| Performance | 97, delta **0** | 95, delta **+1** |
+| LCP | 2.568 s, delta **+5 ms** (−1 to +82) | 2.717 s, delta **+150 ms** (−121 to +519) |
+| TBT | 65 ms, delta +4 ms | 126 ms, delta −50 ms |
+| CLS | 0.012, delta 0 | 0.012, delta 0 |
+| Transfer | delta **+6,917 B** | delta **+6,954 B** |
+| Requests | **16** vs 15 | **16** vs 15 |
+| A11y / BP / SEO | 100 / 100 / 100 | 100 / 100 / 100 |
+
+Fuel, which T4 does not touch, moved only by **+275 B** (the new Tailwind utilities in the global
+stylesheet); its LCP deltas were −75 and −37 ms, and both arms were erratic there (TBT up to about
+1 s on T0).
+
+### 12.1 Where Home's extra cost comes from
+
+Both runs show **one more request, and it is render-blocking**: the pinned stage's CSS module
+(`pinned-sequence.module.css`, 2,803 B raw, **855 B gzipped**) is a second stylesheet in Home's
+`<head>`. Lighthouse's render-blocking audit prices potential savings at **198 ms on T4 against
+57 ms on T0**, and the LCP element is the same hero paragraph on both arms. The rest of the +6.95 KB
+is the set piece's server-rendered copy and its RSC payload (HTML **+3.7 KB**) and the page chunk
+(**+1.1 KB**, the peak's client code); the shared chunks are unchanged.
+
+The two runs disagree on the size (+5 vs +150 ms), not the direction or the cause. Lantern scales
+CPU work to the machine's measured speed, and run 2's machine was slower. **Home LCP was already over
+budget at T0 (V47), and on this rig T4 adds to it.**
+
+### 12.2 Not fixed in T4 — a decision (V77)
+
+Each fix has a cost, and one of them reverses a T3 decision, so this is Kelvin's call:
+
+- **(a) Move the stage's rules into the global stylesheet.** Home returns to one stylesheet; every
+  route's CSS grows by about 0.85 KB gzipped. Reverses T3's "a CSS module, so it loads only where
+  used".
+- **(b) `experimental.inlineCss` in `next.config.mjs`.** No render-blocking stylesheet on any route,
+  but every navigation carries its CSS in the HTML, with no cross-page cache. A config change.
+- **(c) Leave it until a preview measurement.** The local rig serves HTTP/1.1. V47 already records
+  that this rig cannot resolve LCP differences of this size, and previews are blocked on V76.
+
+Raw JSON and scripts: `perf-2026-09-27-s12b-t4/` (run 1) and `perf-2026-09-27-s12b-t4-final/`
+(run 2), under `~/.claude/projects/C--Projects-nebsam-website/`.
+
+### 12.3 Kelvin chose (a) — re-measured, 28 September 2026
+
+The stage's rules became global `pinned-` classes pulled into `app/globals.css` by an `@import`, so
+they ship inside the one stylesheet (`37f2c65`). The same build also carries the approved hero
+headline (V75, `ba67ad4`). Nine pairs against the same T0 arm:
+
+| Paired against T0, n = 9 | Home | Fuel |
+|---|---|---|
+| Performance | 97 (88–97), delta **0** | 97 (82–98), delta −1 |
+| LCP | 2.567 s (2.496–2.600), delta **−2 ms** (−186 to +70) | 2.543 s, delta −1 ms |
+| TBT | 66 ms, delta −11 ms | 42 ms, delta −9 ms |
+| CLS | 0.012, delta 0 | 0.012, delta 0 |
+| Transfer | delta **+5,211 B** | delta **+836 B** |
+| Requests | **15 vs 15** | 14 vs 14 |
+| A11y / BP / SEO | 100 / 100 / 100 | 100 / 100 / 100 |
+
+`benchmarkIndex` 1,495–3,305. **Home is back to one stylesheet and one request fewer**, and
+Lighthouse's render-blocking savings read 94 ms against T0's 103 ms. The cost of (a) is the +836 B on
+Fuel and every other route: the stage's rules in the shared stylesheet. The rest of Home's +5.2 KB is
+the set piece's server-rendered copy and its client code.
+
+On mobile, the LCP element is now the hero **headline**: at five lines of display type it is a
+larger block than the paragraph, which was LCP before. It is server-rendered text in the same
+preloaded font, so what gates it is unchanged. **Home LCP still sits about 67 ms over budget, exactly where T0 does:
+that is V47, not T4.**
+
+Raw JSON: `perf-2026-09-28-s12b-t4-v77/`, under `~/.claude/projects/C--Projects-nebsam-website/`.
+
+## 13. Sprint 12b T5 — the micro-interaction pass, paired against T0
+
+T5 shipped five micro-interactions and two accessibility fixes (`ANIMATION_SYSTEM.md`, Level 1).
+Nine pairs, in two sittings. Claude Code stopped both servers during round 6 of the first run because
+the machine ran critically low on memory; the loop ran on against nothing, so rounds 6–9 came back
+`runtimeError` and were discarded. Rounds 6–9 were re-run on 28 September with a script that rejects
+a `runtimeError` report. Rounds 1–5 measured the T5 build before the easing fix (`0eb772a`), rounds
+6–9 the build after it; that fix changes an easing curve only, with no layout or load effect.
+`benchmarkIndex` 2,392–2,734, except home round 1's T0 run (999).
+
+| Paired against T0, n = 9 | Home | Fuel |
+|---|---|---|
+| Performance | 97 (95–98), delta **0** | 95 (82–98), delta +1 |
+| LCP | 2.563 s (2.497–2.619), delta **−8 ms** (−351 to +71) | 2.527 s, delta +1 ms |
+| TBT | 61 ms, delta −3 ms | 96 ms, delta −44 ms |
+| **CLS** | **0.000 in every run; T0 0.012 in every run** | **0.000** (max 0.004); T0 0.012 |
+| Transfer | delta +5,305 B | delta +854 B |
+| A11y / BP / SEO | 100 / 100 / 100 | 100 / 100 / 100 |
+
+**CLS is gone.** Every page's only layout shift was the floating WhatsApp button jumping clear of the
+cookie bar by changing `bottom`; it now lifts by a transform, which is not a layout shift. The timing
+columns are unchanged within noise. **Home LCP stays ~63 ms over budget, as on T0 (V47).**
+
+Transfer: the T5 stylesheet added about 118 B gzipped to every route; the floating button's class
+list, sent in every page's HTML, got shorter. Product pages grew 0.4 kB of first-load JS because
+`AddToCart` now uses the shared `Button`.
+
+Raw JSON: `perf-2026-09-28-s12b-t5/`, under `~/.claude/projects/C--Projects-nebsam-website/`.
+**Lesson for the scripts:** checking only that a report file exists lets a dead server produce "ok".
+Reject any report that carries `runtimeError`.

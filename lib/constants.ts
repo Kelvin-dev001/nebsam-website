@@ -36,6 +36,12 @@ export const ROUTES = {
   privacy: '/legal/privacy-policy',
   terms: '/legal/terms',
   cookies: '/legal/cookies',
+  /**
+   * DEVELOPMENT ONLY. The Sprint 12b motion playground: noindex, absent from
+   * the sitemap and llms.txt, and a 404 in production unless
+   * MOTION_PLAYGROUND=1. Never link to it from a public page.
+   */
+  devMotion: '/dev/motion',
 } as const;
 
 /**
@@ -62,6 +68,24 @@ export const LAUNCH_SOLUTIONS = [
 
 /** Reserved but NOT built and NOT in the sitemap. See ADR-0002 and SPRINT_PLAN. */
 export const DEFERRED_SOLUTION_SLUGS = ['fleet-management', 'asset-tracking'] as const;
+
+/**
+ * Seeded but held as a DRAFT, so its route is a 404. school-bus-management
+ * waits on V19 and a legal review (it describes children's data, CLAUDE.md
+ * §10). Remove it from here in the same change that publishes it.
+ */
+export const DRAFT_SOLUTION_SLUGS: readonly string[] = ['school-bus-management'];
+
+/**
+ * The solutions a link may point at: every launch solution except drafts.
+ * Navigation, the footer, the 404 page and llms.txt all read this, not
+ * LAUNCH_SOLUTIONS — until Sprint 12b they linked to the draft, a 404, on every
+ * page and in the file LLM assistants read. (The sitemap reads the published
+ * view instead, for the same reason.)
+ */
+export const LINKED_SOLUTIONS = LAUNCH_SOLUTIONS.filter(
+  (s) => !DRAFT_SOLUTION_SLUGS.includes(s.slug),
+);
 
 export const PRODUCT_CATEGORIES = [
   { slug: 'gps-trackers', name: 'GPS Trackers' },

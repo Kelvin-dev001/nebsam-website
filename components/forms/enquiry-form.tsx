@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useActionState } from 'react';
 import { submitEnquiry } from '@/lib/submissions/actions';
 import { Button } from '@/components/ui/button';
+import { EnquirySuccess } from './enquiry-success';
 import { CheckboxField, Field, SelectField, TextareaField } from '@/components/ui/field';
 import { track } from '@/lib/analytics';
 import { EVENTS, type EventName } from '@/lib/constants';
@@ -47,14 +48,13 @@ const SUBMIT_LABEL: Record<SubmissionKind, string> = {
   suggestion: 'Send suggestion',
 };
 
-const SUCCESS_HEADING: Record<SubmissionKind, string> = {
-  contact: 'Message received',
-  quote: 'Quote request received',
-  installation: 'Booking request received',
-  suggestion: 'Thank you',
-};
-
-export function EnquiryForm({ kind, whatsappMessage }: { kind: SubmissionKind; whatsappMessage: string }) {
+export function EnquiryForm({
+  kind,
+  whatsappMessage,
+}: {
+  kind: SubmissionKind;
+  whatsappMessage: string;
+}) {
   const [result, formAction, pending] = useActionState<SubmissionResult | null, FormData>(
     submitEnquiry,
     null,
@@ -67,27 +67,7 @@ export function EnquiryForm({ kind, whatsappMessage }: { kind: SubmissionKind; w
 
   if (result?.ok) {
     return (
-      <div data-enquiry-result className="border-l-2 border-state-ok-ink bg-surface-raised p-5 md:p-6">
-        <h2 className="font-display-tight text-h3 text-text-primary">{SUCCESS_HEADING[kind]}</h2>
-        <p className="mt-3 text-body text-text-secondary">
-          {kind === 'suggestion'
-            ? 'We read every suggestion. Thank you for taking the time.'
-            : 'We will get back to you. If it is urgent, WhatsApp is the fastest way to reach us.'}
-        </p>
-        <p className="mt-4 font-mono text-body-sm text-text-secondary">
-          Reference <span className="text-text-primary">{result.reference}</span>
-        </p>
-        {kind !== 'suggestion' ? (
-          <p className="mt-5 text-body">
-            <a
-              className="text-brand-signal-ink underline underline-offset-4"
-              href={whatsappUrl(whatsappMessage)}
-            >
-              Continue on WhatsApp
-            </a>
-          </p>
-        ) : null}
-      </div>
+      <EnquirySuccess kind={kind} reference={result.reference} whatsappMessage={whatsappMessage} />
     );
   }
 
@@ -102,7 +82,8 @@ export function EnquiryForm({ kind, whatsappMessage }: { kind: SubmissionKind; w
       <input type="hidden" name="kind" value={kind} />
 
       {fields.map((field) => {
-        const error = result && !result.ok && result.field === field.name ? result.message : undefined;
+        const error =
+          result && !result.ok && result.field === field.name ? result.message : undefined;
 
         // A suggestion sent anonymously hides the contact fields rather than
         // merely ignoring them. Leaving them on screen invites someone to fill
@@ -174,7 +155,10 @@ export function EnquiryForm({ kind, whatsappMessage }: { kind: SubmissionKind; w
           itself; this is for everything that is not about one field. */}
       <div role="status" aria-live="polite">
         {result && !result.ok && !result.field ? (
-          <p data-enquiry-result className="border-l-2 border-state-alert-ink bg-surface-raised p-4 text-body-sm">
+          <p
+            data-enquiry-result
+            className="border-l-2 border-state-alert-ink bg-surface-raised p-4 text-body-sm"
+          >
             {result.message}
           </p>
         ) : null}
@@ -184,7 +168,10 @@ export function EnquiryForm({ kind, whatsappMessage }: { kind: SubmissionKind; w
         <Button type="submit" variant="primary" size="lg" disabled={pending}>
           {pending ? 'Sending…' : SUBMIT_LABEL[kind]}
         </Button>
-        <a className="text-body-sm text-brand-signal-ink underline underline-offset-4" href={whatsappUrl(whatsappMessage)}>
+        <a
+          className="text-body-sm text-brand-signal-ink underline underline-offset-4"
+          href={whatsappUrl(whatsappMessage)}
+        >
           Or message us on WhatsApp
         </a>
       </div>

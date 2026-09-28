@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useReducedMotion } from './use-reduced-motion';
+import { willPin } from './will-pin';
 import { DURATION, EASE, REVEAL_TRAVEL_PX, STAGGER_CAP, STAGGER_MS } from '@/lib/motion';
 
 /**
@@ -26,12 +27,20 @@ export function Reveal({
   index = 0,
   as: Tag = 'div',
   className = '',
+  skipWhenPinned = false,
 }: {
   children: React.ReactNode;
   /** Position among siblings, for stagger. Capped at STAGGER_CAP. */
   index?: number;
   as?: 'div' | 'li' | 'section';
   className?: string;
+  /**
+   * For content inside a pinned-stage act (ADR-0006). The act's steps reveal
+   * as stacked flow, but when the act PINS they are driven by the stage's dim
+   * instead — and an inline `opacity: 1` left by a reveal would override that
+   * dim. So when the same `willPin` the loader uses says yes, stand aside.
+   */
+  skipWhenPinned?: boolean;
 }) {
   const reduced = useReducedMotion();
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -45,6 +54,8 @@ export function Reveal({
     // Only ever decide once.
     if (el.dataset.revealDecided === '1') return;
     el.dataset.revealDecided = '1';
+
+    if (skipWhenPinned && willPin(el.closest('[data-sc-act]'))) return;
 
     const box = el.getBoundingClientRect();
     const alreadyVisible = box.top < window.innerHeight && box.bottom > 0;
@@ -68,7 +79,7 @@ export function Reveal({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [reduced]);
+  }, [reduced, skipWhenPinned]);
 
   const delay = Math.min(index, STAGGER_CAP) * STAGGER_MS;
   const animating = shown !== null;

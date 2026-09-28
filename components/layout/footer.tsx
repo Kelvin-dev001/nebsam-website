@@ -1,11 +1,5 @@
-import {
-  BRANCHES,
-  CANONICAL_DESCRIPTION,
-  COMPANY,
-  CONTACT,
-  COVERAGE_TOWNS,
-} from '@/lib/company';
-import { LAUNCH_SOLUTIONS, ROUTES } from '@/lib/constants';
+import { BRANCHES, CANONICAL_DESCRIPTION, COMPANY, CONTACT, COVERAGE_TOWNS } from '@/lib/company';
+import { LINKED_SOLUTIONS, ROUTES } from '@/lib/constants';
 import { FOOTER_LEGAL, FOOTER_SUPPORT } from './nav-data';
 
 /**
@@ -75,7 +69,7 @@ export function Footer() {
               Solutions
             </h2>
             <ul className="mt-3 flex flex-col gap-2">
-              {LAUNCH_SOLUTIONS.map((solution) => (
+              {LINKED_SOLUTIONS.map((solution) => (
                 <li key={solution.slug}>
                   <a
                     href={ROUTES.solution(solution.slug)}

@@ -162,6 +162,12 @@ fake-broadsheet hairline columns). Those are defaults, not decisions.
 registration plates, be labelled as illustration where it could be mistaken for live data, and never
 be described as real customer data.
 
+**Motion (Sprint 12b).** Tokens in `lib/motion.ts`, mirrored as CSS variables; system in
+`docs/ANIMATION_SYSTEM.md`. At most one pinned stage per page, Tier A only (ADR-0006). Reduced motion
+is complete and static. **Shared motion CSS goes into the one global stylesheet** by an `@import` at
+the top of `app/globals.css` (`pinned-sequence.css`, `micro-interactions.css`) — **never a CSS
+module**: on Home a module became a second render-blocking stylesheet (V77).
+
 ## 7. SEO / LLM checklist per page type
 
 Use the **`nebsam-seo`** skill. Full plan: `docs/SEO_LLM_STRATEGY.md`.
@@ -259,9 +265,12 @@ npm run seed:certs                  # illustrative certificates for testing veri
 npm run seed:certs -- --remove      # and their teardown
 npm run pentest:verify              # the Sprint 11 gate — 37 checks over HTTP
 
+MOTION_PLAYGROUND=1 npm run build   # a production build WITH the /dev/motion playground  (Sprint 12b)
+
 npm run verify:roles                # the Sprint 12 gate — 47 RLS checks, per role  (from Sprint 12)
 npm run db:apply -- --status        # which migrations are applied, which are pending
-npm run db:apply -- --pending       # apply every pending migration, in order
+npm run db:apply -- 0044_name.sql   # apply ONE migration by name — the only safe form until V80
+npm run db:apply -- --pending       # NOT SAFE until V80: would re-run 0001–0040 (see below)
 npm run storage:init                # create/repair the PRIVATE uploads bucket, and assert it is private
 ```
 
@@ -275,16 +284,27 @@ fixtures seeded. It clears `verification_attempts` first so the run is reproduci
 do so against anything but localhost.
 
 **`npm run db:apply` and `npm run db:types` need `SUPABASE_ACCESS_TOKEN`**, a personal access token
-that is local-development only. It is **currently expired** (register item V61), which is why
-migrations 0041–0043 are written and unapplied. The service-role key is unaffected, so the app,
-the Storage API and every verification script still work.
+that is local-development only. It was renewed on 28 September 2026 (V61 resolved) and 0041–0043
+were applied then.
+
+**The migration ledger starts at 0041 (V80).** 0001–0040 were pasted into the dashboard SQL editor
+before `apply-migration.mjs` existed, so its `schema_migrations` table has never heard of them:
+`--status` lists them as pending and **`--pending` would re-run all forty against the live
+database.** Until the ledger is reconciled, apply migrations one at a time by name, after a
+read-only check that the migration's objects are not already there.
 
 **`npm run verify:roles` creates four throwaway auth accounts, runs the matrix and deletes them.**
 It asserts against the POLICIES, not the screens — the admin runs under the service-role key and
 bypasses RLS entirely, so clicking around the admin proves nothing about the database boundary.
 
 **Measure on the production build (`npm run build && npm start`), never on `next dev`** — dev builds
-are not production builds and the budget numbers will lie.
+are not production builds and the budget numbers will lie. **Never measure a `MOTION_PLAYGROUND=1`
+build either**: development-only pages are `page.dev.tsx`, built only in `next dev` or a flagged
+build, and a built dev route changes how public routes are chunked (PERFORMANCE_BASELINE §11).
+
+**Vercel previews.** `vercel.json` on `develop` and the branches cut from it builds them as Next.js
+(V76); `main` does not carry it and keeps serving the CRA site until the Sprint 15 cutover. Previews
+have no environment variables and sit behind Vercel Authentication.
 
 **ESLint + Prettier + `tsc --noEmit` must pass before any commit.**
 

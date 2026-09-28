@@ -1,0 +1,5 @@
+/* Utilities for the /dev/motion playground only. Built from tailwind.dev.config.ts,
+   which scans the whole codebase so the cascade on this page matches the site's.
+   Imported by page.tsx, so Next loads it on this route and nowhere else. */
+@config '../../../../tailwind.dev.config.ts';
+@tailwind utilities;

@@ -13,7 +13,9 @@ import { track } from '@/lib/analytics';
  *
  * It lifts clear of the cookie bar while that is open — the two are the only
  * fixed elements on the page and they would otherwise share a corner. The
- * root element carries data-consent="open" for exactly this.
+ * root element carries data-consent="open" for exactly this, and `fab-lift`
+ * (components/motion/micro-interactions.css) moves it with a transform, so
+ * the lift is not a layout shift (Sprint 12b T5).
  *
  * The click fires `whatsapp_click` with the source page for funnel analysis.
  * No PII in the payload, and nothing fires before cookie consent — `track()`
@@ -29,7 +31,7 @@ export function WhatsAppButton() {
           context: 'floating_button',
         })
       }
-      className="fixed bottom-5 right-5 z-30 transition-[bottom] duration-micro ease-in-out-quad [html[data-consent=open]_&]:bottom-32 md:[html[data-consent=open]_&]:bottom-24 inline-flex min-h-[52px] items-center gap-2 rounded-control border border-brand-signal bg-brand-signal-ink px-5 text-body font-medium text-white shadow-lg transition-colors duration-micro ease-in-out-quad hover:bg-[#134aa8]"
+      className="fab-lift fixed bottom-5 right-5 z-30 inline-flex min-h-[52px] items-center gap-2 rounded-control border border-brand-signal bg-brand-signal-ink px-5 text-body font-medium text-white shadow-lg hover:bg-[#134aa8]"
     >
       <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-state-ok" />
       WhatsApp
