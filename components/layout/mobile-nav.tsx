@@ -116,9 +116,11 @@ export function MobileNav() {
         Menu
       </button>
 
+      {/* z-50: the open menu is modal, so it sits above the cookie bar (z-40),
+          which otherwise drew over the panel's own WhatsApp action. */}
       {open ? (
         <div
-          className="fixed inset-0 z-40 lg:hidden"
+          className="fixed inset-0 z-50 lg:hidden"
           data-section="dark"
           role="dialog"
           aria-modal="true"
