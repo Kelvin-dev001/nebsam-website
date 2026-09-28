@@ -25,12 +25,21 @@ import { BRANCHES, SHORT_DESCRIPTION, whatsappUrl } from '@/lib/company';
  * SPRINT 12b T4: THE READOUT MOVED OUT (memo D3b = b). The jamming readout
  * now peaks the "One vehicle, instrumented" set piece (components/home/
  * one-vehicle.tsx), where it arrives with context. A page with two jamming
- * moments has two peaks, and a page with two peaks has none. ADR-0002 already
- * said the production hero must carry the whole company; the headline below
- * changes only when Kelvin approves a new one (register V75 / NV-5) — three
- * drafts are in the T4 report and none ships. Until then the headline and
- * sub-line stay exactly as they were, and the hero paragraph stays the LCP
- * element, as server-rendered text.
+ * moments has two peaks, and a page with two peaks has none.
+ *
+ * THE HEADLINE (register V75, approved by Kelvin 28 Sep 2026). It carries the
+ * whole company, as ADR-0002 asked of the production hero, and each clause is
+ * a beat of the set piece below it. The sub-line is where the claim is earned
+ * and hedged, so it is traced sentence by sentence:
+ *  - "Position, speed and ignition state, subject to network and GPS
+ *    availability": 02-products/trackers/standard-tracker/write-up.md §01. The
+ *    hedge is word for word and is a condition of the headline's approval.
+ *  - abnormal fuel level drops: 01-solutions/fuel-monitoring/write-up.md §02.
+ *  - geofence entries and exits: standard-tracker write-up §04.
+ *  - jamming attempts, on an anti-jamming tracker only: anti-jammer-tracker
+ *    write-up line 79, and the approved Sprint 1 hero copy ("alerting you").
+ * The LCP element is server-rendered text either way: the headline on phones,
+ * where it is now the largest block, and the paragraph where it is not.
  */
 export function Hero() {
   const nairobi = BRANCHES.find((b) => b.slug === 'nairobi') ?? BRANCHES[0];
@@ -45,16 +54,24 @@ export function Hero() {
           </Reveal>
 
           <Reveal index={1}>
-            <h1 className="mt-5 font-display text-display md:text-md-display">
-              Losing signal is the alarm.
+            {/*
+              Stepped down from the display sizes the old two-line headline
+              used, because this one is thirteen words. At display size on a
+              360px phone it ran to seven lines and pushed "Talk to us on
+              WhatsApp" under the cookie bar on a first visit (measured 28 Sep
+              2026). At h1 size it is five lines and the action clears the bar;
+              from lg it returns to display size, four lines at 1440.
+            */}
+            <h1 className="mt-5 font-display text-h1 md:text-md-h1 lg:text-md-display">
+              {"Know where your vehicles are, what they're doing, and when something goes wrong."}
             </h1>
           </Reveal>
 
           <Reveal index={2}>
             <p className="mt-5 max-w-prose text-body-lg text-text-secondary-inverse">
-              A GSM jammer cuts the uplink so a tracker cannot report. An anti-jamming tracker
-              treats that silence as an event rather than a gap — alerting you and immobilising the
-              vehicle according to the configured security logic.
+              Position, speed and ignition state, subject to network and GPS availability — with
+              alerts for abnormal fuel level drops, geofence entries and exits and, on an
+              anti-jamming tracker, jamming attempts.
             </p>
           </Reveal>
 
