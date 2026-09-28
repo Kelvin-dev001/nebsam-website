@@ -53,7 +53,6 @@ export type OrderStatus = Enums['order_status'];
 export type SubmissionType = Enums['submission_type'];
 export type CoverageType = Enums['coverage_type'];
 export type AvailabilityStatus = Enums['availability_status'];
-export type VerificationOutcome = Enums['verification_outcome'];
 
 export type { Json } from '@/types/database';
 
