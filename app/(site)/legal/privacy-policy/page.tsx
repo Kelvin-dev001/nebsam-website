@@ -18,7 +18,6 @@ import { LegalPage, LegalSectionBlock, LegalTable } from '@/components/legal/leg
  *
  * What IS knowable with certainty is what this website does, because that is in
  * the code: `lib/submissions/types.ts` lists every field of every form,
- * `lib/verification/` shows that no plaintext plate is ever stored,
  * `app/(site)/cart/actions.ts` shows what an order records, and
  * `next.config.mjs` lists every third party the browser is allowed to contact.
  *
@@ -45,7 +44,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Privacy notice — Nebsam Digital Solutions',
   description:
-    'What Nebsam does with the information you send through this website: the forms, certificate verification, orders and analytics. Your rights under the Data Protection Act 2019.',
+    'What Nebsam does with what you send through this website — enquiry forms, orders and analytics — and your rights under the Data Protection Act 2019.',
   path: ROUTES.privacy,
 });
 
@@ -57,13 +56,13 @@ export default function PrivacyPolicyPage() {
       title="Privacy notice"
       lead="What we collect through this website, why, who else sees it, and what you can ask us to do about it."
       path={ROUTES.privacy}
-      reviewedOn="2026-09-11"
+      reviewedOn="2026-09-28"
       scope={
         <>
           <p>
             This notice covers <strong>this website</strong>,{' '}
-            <code className="font-mono text-mono">nebsamdigital.com</code> — the enquiry forms,
-            certificate verification, the shop, and analytics.
+            <code className="font-mono text-mono">nebsamdigital.com</code> — the enquiry forms, the
+            shop, and analytics.
           </p>
           <p>
             <strong>
@@ -153,23 +152,11 @@ export default function PrivacyPolicyPage() {
                 </Link>
               </>,
               <>
-                Your suggestion. Name, phone and email are <strong>optional</strong>, and if you tick
-                &ldquo;send anonymously&rdquo; they are <strong>discarded before the record is
-                written</strong> — not stored and hidden
+                Your suggestion. Name, phone and email are <strong>optional</strong>, and if you
+                tick &ldquo;send anonymously&rdquo; they are{' '}
+                <strong>discarded before the record is written</strong> — not stored and hidden
               </>,
               'Improving what we do',
-            ],
-            [
-              <>
-                <Link href={ROUTES.verifyInstallation} className="underline underline-offset-4">
-                  Certificate verification
-                </Link>
-              </>,
-              <>
-                A vehicle registration and the last four digits of the phone number given at
-                installation. <strong>Neither is stored.</strong> See below
-              </>,
-              'Confirming a certificate is genuine and current',
             ],
             [
               <>
@@ -184,44 +171,17 @@ export default function PrivacyPolicyPage() {
         />
       </LegalSectionBlock>
 
-      <LegalSectionBlock
-        id="verification"
-        heading="Certificate verification stores no registration number"
-      >
-        <p>
-          This one is worth explaining, because it is unusual and it is deliberate.
-        </p>
-        <p>
-          A number plate is public information — it is painted on the outside of the vehicle. If a
-          lookup answered on the plate alone, anyone could work through registrations and find out
-          which vehicles carry a tracker and which of those had lapsed. That is a list of vehicles
-          worth stealing, and we are not willing to hold it.
-        </p>
-        <p>
-          So the plate you type is converted, on our server, into a one-way keyed fingerprint and
-          compared against fingerprints. <strong>The registration itself is never written down</strong>,
-          and neither are the phone digits. Someone who obtained a complete copy of that table would
-          get no usable list of registrations from it.
-        </p>
-        <p>
-          We do keep a record that <em>an attempt happened</em> — the time, the outcome, and
-          fingerprints of the plate and the network address — so that we can tell ordinary use from
-          somebody working through a list. Those records cannot be turned back into a registration
-          or an address.
-        </p>
-      </LegalSectionBlock>
-
       <LegalSectionBlock id="security-data" heading="Information collected for security">
         <p>
           To stop a form being flooded automatically, we count how many submissions come from one
-          network connection in an hour. Your network address is <strong>not stored in readable
-          form</strong> — it is converted to a keyed fingerprint that exists only to make that count
-          possible.
+          network connection in an hour. Your network address is{' '}
+          <strong>not stored in readable form</strong> — it is converted to a keyed fingerprint that
+          exists only to make that count possible.
         </p>
         <p>
-          An anonymous suggestion stores <strong>no fingerprint at all</strong>. That is a deliberate
-          trade: it means anonymous suggestions cannot be linked to each other or to a named enquiry
-          from the same person, which is what the anonymous option promises.
+          An anonymous suggestion stores <strong>no fingerprint at all</strong>. That is a
+          deliberate trade: it means anonymous suggestions cannot be linked to each other or to a
+          named enquiry from the same person, which is what the anonymous option promises.
         </p>
       </LegalSectionBlock>
 
@@ -233,7 +193,7 @@ export default function PrivacyPolicyPage() {
           rows={[
             [
               'Supabase',
-              'The database and file storage behind this website — enquiries, orders and certificate fingerprints',
+              'The database and file storage behind this website — enquiries and orders',
               <>
                 Hosted outside Kenya.{' '}
                 <span className="text-state-warn-ink">
@@ -247,11 +207,7 @@ export default function PrivacyPolicyPage() {
               'The check that a form is submitted by a person rather than a script',
               'Global network',
             ],
-            [
-              'Google',
-              'Analytics — only if you accept them',
-              'Global network',
-            ],
+            ['Google', 'Analytics — only if you accept them', 'Global network'],
             [
               'Meta (WhatsApp)',
               'The chat itself, once you choose to message us. Anything you send in that conversation is governed by WhatsApp’s own terms as well as ours',
@@ -268,9 +224,9 @@ export default function PrivacyPolicyPage() {
           no reason to keep them.
         </p>
         <p className="text-state-warn-ink">
-          [[NEEDS_VERIFICATION: retention periods for enquiries, quotes, installation bookings,
-          orders and certificate records — each needs a stated period and a reason, confirmed with
-          the company&rsquo;s legal adviser]]
+          [[NEEDS_VERIFICATION: retention periods for enquiries, quotes, installation bookings and
+          orders — each needs a stated period and a reason, confirmed with the company&rsquo;s legal
+          adviser]]
         </p>
         <p>
           Until those periods are settled, we keep enquiry and order records for as long as needed
@@ -285,8 +241,12 @@ export default function PrivacyPolicyPage() {
           <li>be told what personal data we hold about you, and get a copy of it;</li>
           <li>have inaccurate data corrected;</li>
           <li>have data deleted, where we have no continuing reason to keep it;</li>
-          <li>object to processing, and to ask us to restrict it while an objection is considered;</li>
-          <li>withdraw consent where processing relies on it — declining analytics is one example;</li>
+          <li>
+            object to processing, and to ask us to restrict it while an objection is considered;
+          </li>
+          <li>
+            withdraw consent where processing relies on it — declining analytics is one example;
+          </li>
           <li>complain to the Office of the Data Protection Commissioner.</li>
         </ul>
         <p>

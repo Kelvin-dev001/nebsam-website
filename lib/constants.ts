@@ -28,7 +28,6 @@ export const ROUTES = {
   coverage: '/about/coverage',
   partners: '/about/partners',
   support: '/support',
-  verifyInstallation: '/support/verify-installation',
   suggestions: '/support/suggestions',
   bookInstallation: '/support/book-installation',
   contact: '/contact',
@@ -96,8 +95,7 @@ export const PRODUCT_CATEGORIES = [
 ] as const;
 
 /**
- * Analytics events. No PII in any payload, ever — and for certificate
- * verification, the OUTCOME only, never the plate (brief 9.2).
+ * Analytics events. No PII in any payload, ever.
  */
 export const EVENTS = {
   whatsappClick: 'whatsapp_click',
@@ -112,7 +110,6 @@ export const EVENTS = {
   addToCart: 'add_to_cart',
   beginCheckout: 'begin_checkout',
   whatsappOrderSubmitted: 'whatsapp_order_submitted',
-  certificateVerified: 'certificate_verified',
   blogReadComplete: 'blog_read_complete',
 } as const;
 

@@ -114,11 +114,6 @@ ${current
   under coverage is served by visiting agents and technicians. Do not describe any of them
   as a branch, and do not state a number of agents or technicians — that figure is not
   published and any number would be invented.
-- Certificate verification exists, reachable from ${SITE_URL}${ROUTES.support}. Its URL is
-  deliberately excluded from robots.txt and from this list. It requires BOTH the vehicle
-  registration AND the last four digits of the phone number registered at installation,
-  because a number plate is public and a lookup on it alone would disclose which vehicles
-  carry a tracker and which of those have lapsed.
 `;
 
   return new Response(body, {
