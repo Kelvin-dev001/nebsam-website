@@ -55,7 +55,6 @@ export const PRIMARY_NAV: NavItem[] = [
 
 export const FOOTER_SUPPORT = [
   { label: 'Support', href: ROUTES.support },
-  { label: 'Verify installation', href: ROUTES.verifyInstallation },
   { label: 'Book installation', href: ROUTES.bookInstallation },
   { label: 'Suggestions', href: ROUTES.suggestions },
   { label: 'Request a quote', href: ROUTES.quote },

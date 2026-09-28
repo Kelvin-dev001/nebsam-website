@@ -10,6 +10,11 @@ not a bug report.
 
 ## 1. Certificate verification — the highest-risk surface
 
+> **Removed 28 September 2026 — ADR-0007.** Kelvin decided to remove installation-certificate
+> verification completely. The route, admin import, attempt log, library and scripts are deleted,
+> and migration 0044 dropped the tables (applied 28 September 2026). What follows is kept as the
+> record of what was built.
+
 `/support/verify-installation`. Brief PART 9.2.
 
 ### 1.1 The threat

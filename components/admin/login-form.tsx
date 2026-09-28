@@ -8,9 +8,8 @@ import { signIn, type LoginResult } from '@/app/(admin)/admin/login/actions';
 /**
  * The sign-in form.
  *
- * `useActionState` with a real `action`, so it submits without JavaScript —
- * the same construction as `components/support/verify-form.tsx`, for the same
- * reason: the endpoint must be reachable the way it will actually be reached.
+ * `useActionState` with a real `action`, so it submits without JavaScript:
+ * the endpoint must be reachable the way it will actually be reached.
  *
  * The action is UNBOUND. Register item V59 records a bound server action
  * hanging the production server outright on the no-JavaScript path under Next

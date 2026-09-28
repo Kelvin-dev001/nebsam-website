@@ -16,8 +16,8 @@ import type { Database } from '@/types/database';
  *   publicClient()  — anon key. Reads the public views from 0009 and nothing
  *                     else. Used for ordinary page data.
  *   serviceClient() — service-role key. BYPASSES RLS. Used only for writes and
- *                     for the certificate lookup, always inside a server action
- *                     that has already validated its input with Zod.
+ *                     admin paths, always server-side, after input has been
+ *                     validated with Zod.
  */
 
 function required(name: string): string {
@@ -93,8 +93,7 @@ export function contentTag(resource: string): string {
  * silent staleness that looks exactly like the bug this fixes.
  */
 const taggedFetch: typeof fetch = (input, init) => {
-  const url =
-    typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
   const match = /\/rest\/v1\/([A-Za-z0-9_]+)/.exec(url);
   const tags = match ? [contentTag(match[1])] : [];
   return fetch(input, { ...init, next: { tags } });
@@ -102,13 +101,11 @@ const taggedFetch: typeof fetch = (input, init) => {
 
 /**
  * Admin and write paths never read from the data cache at all. A cached answer
- * to "what does this row currently say" is a correctness bug in an editor, and
- * a cached answer to "does this certificate exist" is worse. These clients are
+ * to "what does this row currently say" is a correctness bug in an editor. These clients are
  * only used from `force-dynamic` admin routes and server actions, so this
  * cannot pull a public route out of static generation.
  */
-const uncachedFetch: typeof fetch = (input, init) =>
-  fetch(input, { ...init, cache: 'no-store' });
+const uncachedFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: 'no-store' });
 
 /**
  * Anon-key client. Cannot write anything: 0008 grants the anon role no policy
@@ -128,8 +125,7 @@ export function publicClient() {
  * Every call site is responsible for its own authorisation check, because the
  * database will not do it for you here. Use it for:
  *   - creating an order (the row must exist before WhatsApp opens)
- *   - the certificate lookup (never queried from a browser, brief 9.2)
- *   - writing audit_log and verification_attempts
+ *   - writing audit_log
  *
  * Never use it to serve ordinary page content — that is what publicClient is
  * for, and routing reads through it keeps the publication gates in 0009 doing
@@ -148,7 +144,5 @@ export function serviceClient() {
 
 /** True when Supabase is configured. Lets pages degrade rather than crash. */
 export function isDatabaseConfigured(): boolean {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  );
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 }

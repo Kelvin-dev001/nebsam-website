@@ -617,71 +617,6 @@ export type Database = {
         }
         Relationships: []
       }
-      installation_certificates: {
-        Row: {
-          certificate_number_last4: string | null
-          created_at: string
-          expires_on: string | null
-          id: string
-          installed_on: string | null
-          phone_last4_hash: string
-          plate_hash: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          certificate_number_last4?: string | null
-          created_at?: string
-          expires_on?: string | null
-          id?: string
-          installed_on?: string | null
-          phone_last4_hash: string
-          plate_hash: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          certificate_number_last4?: string | null
-          created_at?: string
-          expires_on?: string | null
-          id?: string
-          installed_on?: string | null
-          phone_last4_hash?: string
-          plate_hash?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      installation_plates_restricted: {
-        Row: {
-          certificate_id: string
-          created_at: string
-          phone_plaintext: string | null
-          plate_plaintext: string
-        }
-        Insert: {
-          certificate_id: string
-          created_at?: string
-          phone_plaintext?: string | null
-          plate_plaintext: string
-        }
-        Update: {
-          certificate_id?: string
-          created_at?: string
-          phone_plaintext?: string | null
-          plate_plaintext?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "installation_plates_restricted_certificate_id_fkey"
-            columns: ["certificate_id"]
-            isOneToOne: true
-            referencedRelation: "installation_certificates"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       media: {
         Row: {
           alt_text: string
@@ -1464,30 +1399,6 @@ export type Database = {
         }
         Relationships: []
       }
-      verification_attempts: {
-        Row: {
-          created_at: string
-          id: string
-          ip_hash: string | null
-          outcome: Database["public"]["Enums"]["verification_outcome"]
-          plate_hash: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          ip_hash?: string | null
-          outcome: Database["public"]["Enums"]["verification_outcome"]
-          plate_hash?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          ip_hash?: string | null
-          outcome?: Database["public"]["Enums"]["verification_outcome"]
-          plate_hash?: string | null
-        }
-        Relationships: []
-      }
     }
     Views: {
       public_authors: {
@@ -2103,13 +2014,6 @@ export type Database = {
       prune_submission_attempts: { Args: never; Returns: undefined }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
-      verification_attempt_counts: {
-        Args: { p_ip_hash: string; p_plate_hash: string }
-        Returns: {
-          ip_last_hour: number
-          plate_last_day: number
-        }[]
-      }
     }
     Enums: {
       availability_status: "in_stock" | "out_of_stock" | "pre_order"
@@ -2129,12 +2033,6 @@ export type Database = {
         | "installation"
         | "suggestion"
       user_role: "admin" | "editor" | "sales" | "viewer"
-      verification_outcome:
-        | "valid"
-        | "expired"
-        | "not_found"
-        | "factor_failed"
-        | "rate_limited"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2281,13 +2179,6 @@ export const Constants = {
         "suggestion",
       ],
       user_role: ["admin", "editor", "sales", "viewer"],
-      verification_outcome: [
-        "valid",
-        "expired",
-        "not_found",
-        "factor_failed",
-        "rate_limited",
-      ],
     },
   },
 } as const

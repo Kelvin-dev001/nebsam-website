@@ -40,7 +40,6 @@ app/
     layout.tsx                      auth gate + admin chrome
     …
   api/
-    verify-installation/route.ts    rate-limited, server-only
     revalidate/route.ts
   llms.txt/route.ts                 generated, never hand-maintained
   sitemap.ts  robots.ts             generated
@@ -83,7 +82,7 @@ important behind client-only rendering or interaction. Specifications never sit 
 | `/platform`, `/about/*`, `/legal/*` | Static | |
 | `/cart` | Client island inside a server shell | Cart is client state by nature; the shell is not |
 | `/orders/[orderNumber]` | Dynamic, `noindex` | Per-request lookup; order number is a bearer token |
-| `/support/verify-installation` | Dynamic, server action only | Security-critical; never ships data to the client |
+| ~~`/support/verify-installation`~~ | — | Removed 28 Sep 2026, ADR-0007 |
 | `/admin/*` | Dynamic, auth-gated, `noindex, nofollow` | Excluded from the sitemap |
 
 **Client boundaries are deliberately few:** cart, the mega menu, the verification form, carousels,

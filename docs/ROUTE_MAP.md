@@ -36,7 +36,7 @@ client-side rendering for its content.
 | `/about/coverage` | Coverage network | `branches`, `coverage_locations` | Static | `LocalBusiness` × 3 |
 | `/about/partners` | Partners | `client_logos` (permission-gated) | Static | `BreadcrumbList` |
 | `/support` | Support hub | static | Static | `BreadcrumbList` |
-| `/support/verify-installation` | **Certificate verification** | `installation_certificates` server-side only | Dynamic, server action | none · `noindex` |
+| ~~`/support/verify-installation`~~ | **Removed 28 Sep 2026 (ADR-0007).** Never live, never indexed, so it 404s with no redirect | — | — | — |
 | `/support/suggestions` | Suggestions | `submissions` | Dynamic | none |
 | `/support/book-installation` | Installation booking | `submissions` | Dynamic | none |
 | `/contact` | Contact | `lib/company.ts`, `branches` | Static shell + form | `ContactPage`, `LocalBusiness` × 3 |
@@ -174,5 +174,5 @@ and show "Request price".
 
 ## 4. Excluded from the sitemap
 
-`/admin/*` · `/cart` · `/orders/[orderNumber]` · `/support/verify-installation` · any draft or
+`/admin/*` · `/cart` · `/orders/[orderNumber]` · any draft or
 unpublished content · the two deferred solution slugs.

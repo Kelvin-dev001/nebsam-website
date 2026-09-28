@@ -50,8 +50,8 @@ export default function BookInstallationPage() {
             Request an installation
           </h1>
           <p className="mt-5 max-w-prose text-body-lg text-text-secondary-inverse">
-            Tell us what is being fitted, to which vehicle, and where it will be. We come back to you
-            with a time — nothing is booked until we have confirmed it with you.
+            Tell us what is being fitted, to which vehicle, and where it will be. We come back to
+            you with a time — nothing is booked until we have confirmed it with you.
           </p>
         </Shell>
       </Section>
@@ -75,24 +75,6 @@ export default function BookInstallationPage() {
               kind="installation"
               whatsappMessage="Hello Nebsam — I would like to book an installation."
             />
-          </div>
-        </Shell>
-      </Section>
-
-      <Section tone="paper">
-        <Shell>
-          <div className="max-w-prose">
-            <h2 className="font-display-tight text-h3 text-text-primary">Already have a certificate?</h2>
-            <p className="mt-4 text-body text-text-secondary">
-              If you are checking an installation that has already been done, use{' '}
-              <a
-                className="text-brand-signal-ink underline underline-offset-4"
-                href={ROUTES.verifyInstallation}
-              >
-                verify an installation
-              </a>{' '}
-              instead.
-            </p>
           </div>
         </Shell>
       </Section>

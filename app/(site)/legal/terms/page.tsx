@@ -21,26 +21,23 @@ import { LegalPage, LegalSectionBlock } from '@/components/legal/legal-page';
  *
  * So this page covers what can be stated truthfully from the code and from
  * confirmed facts: what the prices on this site mean, what a cart is and is not,
- * what certificate verification does and does not prove, and how to use the
- * site. Terms of SALE are marked as outstanding rather than drafted.
+ * and how to use the site. Terms of SALE are marked as outstanding rather than
+ * drafted. (A section on certificate verification went with the feature,
+ * ADR-0007.)
  *
- * ── The three statements that actually protect somebody ─────────────────────
+ * ── The statements that actually protect somebody ───────────────────────────
  *
  * 1. Prices exclude VAT and are indicative until quoted. Brief 10.2 calls a
  *    VAT-exclusive price shown without a label the most common source of order
  *    disputes in Kenyan e-commerce.
  * 2. Adding to the cart and messaging on WhatsApp is not a concluded contract.
- * 3. A verification result is about a certificate record, not a promise that a
- *    device is currently working. That one matters most: somebody could
- *    reasonably read "installation confirmed" as "my tracker is working", and it
- *    is not the same claim.
  */
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
   title: 'Terms of use — Nebsam Digital Solutions',
   description:
-    'The terms for using this website: what the prices mean, what a cart is, what certificate verification proves, and acceptable use.',
+    'The terms for using the Nebsam website: what the prices shown mean, what a cart is and is not, how orders begin on WhatsApp, and acceptable use.',
   path: ROUTES.terms,
 });
 
@@ -50,16 +47,17 @@ export default function TermsPage() {
       title="Terms of use"
       lead="The rules for using this website, and what the information on it does and does not commit us to."
       path={ROUTES.terms}
-      reviewedOn="2026-09-11"
+      reviewedOn="2026-09-28"
       scope={
         <>
           <p>
             This page covers <strong>using this website</strong> — the information on it, the prices
-            shown, the shop and certificate verification.
+            shown, and the shop.
           </p>
           <p>
             <strong>
-              It is not the terms of sale for a product or an installation, and it is not a warranty.
+              It is not the terms of sale for a product or an installation, and it is not a
+              warranty.
             </strong>{' '}
             Those are set out in the quotation, invoice and installation paperwork for each job. If
             something in this page appears to conflict with a signed quotation or contract, the
@@ -70,7 +68,9 @@ export default function TermsPage() {
       reviewStatus={
         <>
           <p>
-            <strong>These terms cover the website only and have not been through legal review.</strong>{' '}
+            <strong>
+              These terms cover the website only and have not been through legal review.
+            </strong>{' '}
             Terms of sale — warranty, returns, installation liability, limitation of liability and
             the governing-law clause — are deliberately <strong>not</strong> drafted here. Inventing
             a warranty term that a customer might rely on would be worse than saying nothing, so
@@ -86,8 +86,8 @@ export default function TermsPage() {
     >
       <LegalSectionBlock id="who" heading="Who these terms are with">
         <p>
-          This website is operated by {COMPANY.legalName}. Using it means accepting the terms on this
-          page. If you do not accept them, please do not use the site.
+          This website is operated by {COMPANY.legalName}. Using it means accepting the terms on
+          this page. If you do not accept them, please do not use the site.
         </p>
       </LegalSectionBlock>
 
@@ -130,30 +130,6 @@ export default function TermsPage() {
         </p>
       </LegalSectionBlock>
 
-      <LegalSectionBlock
-        id="verification"
-        heading="What certificate verification does and does not prove"
-      >
-        <p>
-          <Link href={ROUTES.verifyInstallation} className="underline underline-offset-4">
-            Certificate verification
-          </Link>{' '}
-          tells you whether a Nebsam installation certificate matching the registration and phone
-          digits you entered <strong>exists in our records</strong>, and whether it is within its
-          validity dates.
-        </p>
-        <p>
-          <strong>It is not a statement that a device is currently working</strong>, that it is still
-          fitted to the vehicle, or that any subscription is paid up. A certificate can be valid on
-          paper while a unit has been removed, damaged or disconnected. If you are buying a used
-          vehicle and the tracker matters to you, ask us to check the device itself.
-        </p>
-        <p>
-          A result of &ldquo;could not be confirmed&rdquo; does not prove a certificate is fake. It
-          most often means a detail was mistyped. Contact us and a person will check.
-        </p>
-      </LegalSectionBlock>
-
       <LegalSectionBlock id="accuracy" heading="Accuracy of what is published here">
         <p>
           We take care that product descriptions, specifications and coverage information are
@@ -175,11 +151,9 @@ export default function TermsPage() {
         <p>Please do not:</p>
         <ul className="ml-5 flex list-disc flex-col gap-1.5">
           <li>
-            submit registration numbers to certificate verification other than for a vehicle you own
-            or are genuinely considering buying — working through registrations to find out which
-            vehicles carry trackers is the exact misuse the second factor exists to prevent;
+            attempt to access the administration area, staff accounts, or any data that is not
+            yours;
           </li>
-          <li>attempt to access the administration area, staff accounts, or any data that is not yours;</li>
           <li>
             submit automated traffic, scrape the site at a volume that affects other visitors, or
             attempt to bypass the rate limits and bot checks;
@@ -187,7 +161,7 @@ export default function TermsPage() {
           <li>use the enquiry forms to send unsolicited marketing or anything unlawful.</li>
         </ul>
         <p>
-          We log verification attempts and form submissions in the way described in the{' '}
+          We log form submissions in the way described in the{' '}
           <Link href={ROUTES.privacy} className="underline underline-offset-4">
             privacy notice
           </Link>
@@ -198,8 +172,8 @@ export default function TermsPage() {
       <LegalSectionBlock id="content-ownership" heading="Content on this site">
         <p>
           The text, photographs, diagrams and design on this site belong to {COMPANY.legalName} or
-          are used with permission. You are welcome to read, print and share pages, and to quote from
-          them with attribution and a link.
+          are used with permission. You are welcome to read, print and share pages, and to quote
+          from them with attribution and a link.
         </p>
         <p>
           Republishing substantial parts as your own, or using our name, logo or content to imply an
@@ -220,9 +194,9 @@ export default function TermsPage() {
 
       <LegalSectionBlock id="changes" heading="Changes to these terms">
         <p>
-          We may update this page. The date at the top shows when it was last reviewed. Changes apply
-          from the date they are published, and they do not change the terms of a contract already
-          agreed with you.
+          We may update this page. The date at the top shows when it was last reviewed. Changes
+          apply from the date they are published, and they do not change the terms of a contract
+          already agreed with you.
         </p>
       </LegalSectionBlock>
 

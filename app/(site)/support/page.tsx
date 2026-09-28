@@ -7,25 +7,25 @@ import { ROUTES } from '@/lib/constants';
 import { CONTACT, whatsappUrl } from '@/lib/company';
 
 /**
- * SUPPORT HUB — the parent level for verification, booking and suggestions.
+ * SUPPORT HUB — the parent level for booking and suggestions.
  *
  * The same shape as the Resources hub from Sprint 10, and for the same reasons:
  * brief 6.6 prohibits uniform rounded-card grids and three-column feature blocks
- * as the default answer, and a hub with three children is where that reflex is
- * strongest. Rows in an index, each saying what it actually does.
+ * as the default answer. Rows in an index, each saying what it actually does.
+ * (Certificate verification was a third row until it was removed, ADR-0007.)
  *
  * ── WhatsApp is above the list, not in it ───────────────────────────────────
  * The first commercial objective is qualified enquiries, WhatsApp first. Most
  * people arriving at "support" want a person, not a form, and burying that among
- * three equal-weight links would be optimising the page for tidiness over the
- * thing it is for.
+ * equal-weight links would be optimising the page for tidiness over the thing it
+ * is for.
  */
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
   title: 'Support — Nebsam vehicle tracking',
   description:
-    'Get help with a Nebsam installation: verify a certificate, book an installation, or send us a suggestion. WhatsApp, phone and email, seven days a week.',
+    'Get help with a Nebsam vehicle tracking or security installation: book an installation or send a suggestion. WhatsApp, phone and email, seven days a week.',
   path: ROUTES.support,
 });
 
@@ -36,13 +36,6 @@ export default function SupportPage() {
   ];
 
   const entries = [
-    {
-      href: ROUTES.verifyInstallation,
-      name: 'Verify an installation',
-      lede: 'Confirm a certificate is genuine and still current',
-      description:
-        'For buying a used vehicle, for an insurer, or for a certificate that has been in the glovebox a while. You will need the registration and the last four digits of the phone number given at installation — a plate on its own is public, so we do not answer on it alone.',
-    },
     {
       href: ROUTES.bookInstallation,
       name: 'Book an installation',
@@ -88,7 +81,10 @@ export default function SupportPage() {
             >
               Call {CONTACT.whatsapp.display}
             </a>
-            <a className="text-brand-signal underline underline-offset-4" href={`mailto:${CONTACT.generalEmail}`}>
+            <a
+              className="text-brand-signal underline underline-offset-4"
+              href={`mailto:${CONTACT.generalEmail}`}
+            >
               {CONTACT.generalEmail}
             </a>
           </p>
@@ -103,7 +99,10 @@ export default function SupportPage() {
           <ul className="border-t border-border-hairline">
             {entries.map((entry) => (
               <li key={entry.href} className="border-b border-border-hairline">
-                <a href={entry.href} className="group grid gap-x-10 gap-y-2 py-7 md:grid-cols-[22rem_1fr]">
+                <a
+                  href={entry.href}
+                  className="group grid gap-x-10 gap-y-2 py-7 md:grid-cols-[22rem_1fr]"
+                >
                   <div>
                     <h2 className="font-display-tight text-h3 text-text-primary underline-offset-4 group-hover:underline">
                       {entry.name}
@@ -136,7 +135,10 @@ export default function SupportPage() {
                 FAQ page
               </a>
               , and anything else can go through{' '}
-              <a className="text-brand-signal-ink underline underline-offset-4" href={ROUTES.contact}>
+              <a
+                className="text-brand-signal-ink underline underline-offset-4"
+                href={ROUTES.contact}
+              >
                 contact
               </a>
               .

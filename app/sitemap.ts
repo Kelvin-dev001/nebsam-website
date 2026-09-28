@@ -9,7 +9,7 @@ import { getBlogPosts, getIndustries, getProducts, getSolutions } from '@/lib/co
  * schema. Generating it from the route table removes that failure mode.
  *
  * EXCLUDED, deliberately:
- *  - /admin/*, /cart, /orders/[n], /support/verify-installation — noindex
+ *  - /admin/*, /cart, /orders/[n] — noindex
  *  - the two DEFERRED solution slugs. A reserved slug that 404s is honest; a
  *    sitemap entry pointing at a 404 is a crawl error we would be authoring
  *    ourselves.
@@ -47,11 +47,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    * Sprint 10 added resources, downloads and faqs, and published blog posts.
    * Sprint 11 adds about, certifications, coverage, support, book-installation,
    * suggestions, contact and quote.
-   *
-   * /support/verify-installation is NOT here and must never be. It is noindex,
-   * and a search result is a durable public record of a private lookup.
    */
-  const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
+  const staticRoutes: {
+    path: string;
+    priority: number;
+    changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'];
+  }[] = [
     { path: ROUTES.home, priority: 1.0, changeFrequency: 'weekly' },
     { path: ROUTES.solutions, priority: 0.9, changeFrequency: 'monthly' },
     { path: ROUTES.products, priority: 0.9, changeFrequency: 'weekly' },
@@ -153,7 +154,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       : [],
   );
 
-  return [...staticRoutes, ...solutionRoutes, ...productRoutes, ...industryRoutes, ...postRoutes].map((route) => ({
+  return [
+    ...staticRoutes,
+    ...solutionRoutes,
+    ...productRoutes,
+    ...industryRoutes,
+    ...postRoutes,
+  ].map((route) => ({
     url: `${SITE_URL}${route.path === '/' ? '' : route.path}`,
     lastModified: now,
     changeFrequency: route.changeFrequency,

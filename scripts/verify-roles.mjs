@@ -15,7 +15,7 @@
  * So there are two boundaries, not one, and they protect different things:
  *
  *   - `requireStaff()` protects the ADMIN. Signing in as a `viewer` and opening
- *     /admin/certificates gets a redirect from that call, not from a policy.
+ *     /admin/audit gets a redirect from that call, not from a policy.
  *   - RLS protects the DATABASE from anything holding an anon key and a session
  *     — a compromised browser session, a future client-side query, a mistake in
  *     a later sprint that reaches for `publicClient()` instead of the service
@@ -331,52 +331,7 @@ try {
     }
   }
 
-  // ── 5. Verification: the tightest surface on the project ─────────────────
-  //
-  // 0008 has NO select policy on installation_certificates for anyone —
-  // "not for admin, not for anyone". So every role, including admin, must see
-  // nothing, and this is the assertion that catches a future migration
-  // helpfully adding one.
-  console.log('\n  Verification — no session may read certificates, not even admin');
-  for (const role of ROLES) {
-    const res = await asUser(staff[role].token, '/installation_certificates?select=id&limit=1');
-    const body = await res.text();
-    let rows = -1;
-    try {
-      const parsed = JSON.parse(body);
-      rows = Array.isArray(parsed) ? parsed.length : -1;
-    } catch {
-      rows = -1;
-    }
-    record(
-      !res.ok || rows === 0,
-      `${role} cannot read installation_certificates`,
-      !res.ok || rows === 0 ? '' : `saw ${rows} row(s)`,
-    );
-  }
-  for (const role of ROLES) {
-    const res = await asUser(staff[role].token, '/installation_plates_restricted?select=certificate_id&limit=1');
-    const body = await res.text();
-    let rows = -1;
-    try {
-      const parsed = JSON.parse(body);
-      rows = Array.isArray(parsed) ? parsed.length : -1;
-    } catch {
-      rows = -1;
-    }
-    const expectRows = role === 'admin';
-    // Admin HAS a policy here (`for all`), so a non-empty read would be legal.
-    // The table is empty in a clean project, so the assertion is that a
-    // non-admin is refused or sees nothing, and that admin's request is not
-    // refused at the permission level.
-    record(
-      expectRows ? res.ok : !res.ok || rows === 0,
-      `${role} ${expectRows ? 'is permitted' : 'is refused'} on installation_plates_restricted`,
-      expectRows ? (res.ok ? '' : `got ${res.status}`) : '',
-    );
-  }
-
-  // ── 6. Audit log: admin reads, NOBODY writes ─────────────────────────────
+  // ── 5. Audit log: admin reads, NOBODY writes ─────────────────────────────
   console.log('\n  Audit log — admin reads, nobody writes');
   for (const role of ROLES) {
     const write = await canWrite(staff[role].token, 'audit_log', {
@@ -443,7 +398,7 @@ try {
     }
   }
 
-  // ── 7. Profiles: self only, unless admin ─────────────────────────────────
+  // ── 6. Profiles: self only, unless admin ─────────────────────────────────
   console.log('\n  Profiles — self only, unless admin');
   for (const role of ROLES) {
     const res = await asUser(staff[role].token, '/profiles?select=id,role');
@@ -473,9 +428,9 @@ try {
     record(blocked, 'a viewer CANNOT promote themselves to admin', blocked ? '' : body.slice(0, 160));
   }
 
-  // ── 8. The anon key, one more time ───────────────────────────────────────
+  // ── 7. The anon key, one more time ───────────────────────────────────────
   console.log('\n  The anon key');
-  for (const table of ['orders', 'submissions', 'profiles', 'audit_log', 'installation_certificates']) {
+  for (const table of ['orders', 'submissions', 'profiles', 'audit_log']) {
     const res = await fetch(`${URL}/rest/v1/${table}?select=*&limit=1`, {
       headers: { apikey: ANON, Authorization: `Bearer ${ANON}` },
     });

@@ -5,12 +5,10 @@ import { CONSENT_COOKIE, CONSENT_VERSION, type EventName } from '@/lib/constants
 /**
  * The single analytics wrapper (brief PART 19).
  *
- * Three rules enforced here rather than left to each caller:
+ * Rules enforced here rather than left to each caller:
  *  1. NOTHING fires before cookie consent. Not "fires and respects a flag" —
  *     the GA4 script is not even loaded until consent is granted.
  *  2. NO PII in any payload, ever.
- *  3. Certificate verification reports the OUTCOME only, never the plate
- *     (brief 9.2). There is no parameter here that could carry one.
  *
  * Event names come from lib/constants.ts so a typo is a type error.
  */
