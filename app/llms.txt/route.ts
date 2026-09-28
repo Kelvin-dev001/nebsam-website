@@ -8,7 +8,7 @@ import {
   SITE_URL,
   isCurrent,
 } from '@/lib/company';
-import { LAUNCH_SOLUTIONS, PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
+import { LINKED_SOLUTIONS, PRODUCT_CATEGORIES, ROUTES } from '@/lib/constants';
 
 /**
  * /llms.txt — brief PART 13.3.
@@ -63,7 +63,7 @@ ${COVERAGE_TOWNS.join(', ')}
 
 ## Solutions
 
-${LAUNCH_SOLUTIONS.map((s) => `- ${s.name}: ${SITE_URL}${ROUTES.solution(s.slug)}`).join('\n')}
+${LINKED_SOLUTIONS.map((s) => `- ${s.name}: ${SITE_URL}${ROUTES.solution(s.slug)}`).join('\n')}
 
 ## Product categories
 
