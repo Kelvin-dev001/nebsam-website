@@ -228,8 +228,9 @@ site must not undermine that posture.
 - Admin protected by middleware **and** RLS. No client-side-only guards.
 - Server-side Zod on every mutation. **Never trust client input or client prices** — recompute every
   total server-side from the database at order creation.
-- Rate limiting on all public POST endpoints and on certificate verification.
-- Bot protection (honeypot + Turnstile) that never blocks keyboard-only users.
+- Rate limiting on all public POST endpoints.
+- Bot protection (honeypot + Turnstile) that never blocks keyboard-only users. **No Turnstile widget
+  is rendered yet (V78): do not set the Turnstile keys until one is, or every enquiry is rejected.**
 - Uploads: extension **and** MIME allowlist, size cap, private bucket, short-lived signed URLs.
 - Security headers: CSP (report-only, then enforced), HSTS, `X-Content-Type-Options`,
   `Referrer-Policy`, `frame-ancestors`.
@@ -237,9 +238,10 @@ site must not undermine that posture.
 - GA4 does not fire before cookie consent.
 - `audit_log` written for every admin create/update/delete.
 
-**Certificate verification (`/support/verify-installation`) is security-critical.** A vehicle plate
-is public information, so a plate-only lookup that reveals validity or expiry is a target list for
-thieves. Never ship one. See `docs/SECURITY_REQUIREMENTS.md` and brief PART 9.2.
+**Certificate verification was removed (ADR-0007, 28 September 2026)** at Kelvin's decision; brief
+PART 9.2 still describes it until he amends the brief. If anything like it returns, the rule stands:
+a vehicle plate is public information, so a plate-only lookup that reveals validity or expiry is a
+target list for thieves. Never ship one.
 
 **The School Bus Solution is the highest legal-sensitivity content on the site** — children's
 personal data and optionally children's biometric data. Draft conservatively, state that biometric
@@ -261,31 +263,22 @@ npm run test         # test suite                         (from Sprint 9)
 npx supabase migration new <name>   # new migration       (from Sprint 3)
 npx supabase db push                # apply migrations    (from Sprint 3)
 
-npm run seed:certs                  # illustrative certificates for testing verification
-npm run seed:certs -- --remove      # and their teardown
-npm run pentest:verify              # the Sprint 11 gate — 37 checks over HTTP
-
 MOTION_PLAYGROUND=1 npm run build   # a production build WITH the /dev/motion playground  (Sprint 12b)
 
-npm run verify:roles                # the Sprint 12 gate — 47 RLS checks, per role  (from Sprint 12)
+npm run verify:roles                # the Sprint 12 gate — 38 RLS checks, per role (47 before ADR-0007)
 npm run db:apply -- --status        # which migrations are applied, which are pending
 npm run db:apply -- --pending       # apply every pending migration, in order
 npm run storage:init                # create/repair the PRIVATE uploads bucket, and assert it is private
 ```
 
-**Certificate fixtures are a script, never a migration.** Migrations run everywhere in order,
-including against production at cutover, and a migration that inserted certificates would put
-working test records into the live lookup — making the one endpoint whose entire purpose is
-trustworthiness tell a visitor something false.
-
-**`npm run pentest:verify` needs a running production build** (`npm run build && npm start`) and the
-fixtures seeded. It clears `verification_attempts` first so the run is reproducible, and refuses to
-do so against anything but localhost.
+**Test fixtures are a script, never a migration.** Migrations run everywhere in order, including
+against production at cutover, so a migration that inserted test records would put them in the live
+database.
 
 **`npm run db:apply` and `npm run db:types` need `SUPABASE_ACCESS_TOKEN`**, a personal access token
 that is local-development only. It is **currently expired** (register item V61), which is why
-migrations 0041–0043 are written and unapplied. The service-role key is unaffected, so the app,
-the Storage API and every verification script still work.
+migrations 0041–0044 are written and unapplied. The service-role key is unaffected, so the app,
+the Storage API, `verify:db` and `verify:roles` still work.
 
 **`npm run verify:roles` creates four throwaway auth accounts, runs the matrix and deletes them.**
 It asserts against the POLICIES, not the screens — the admin runs under the service-role key and
@@ -354,6 +347,6 @@ Read at the start of every sprint. Building before understanding · inventing fa
 8 MB site unusable on Kenyan mobile data · generic AI-template aesthetics · animation everywhere
 meaning nowhere · an admin a non-technical person quietly abandons, killing the blog · content
 copy-pasted from source documents with the caps lock still on · URLs minted before naming is settled
-· a dropped WhatsApp chat losing an order because nothing was persisted · a certificate endpoint
-that leaks customer data or can be enumerated · client-only rendering that repeats the current
+· a dropped WhatsApp chat losing an order because nothing was persisted · an endpoint that leaks
+customer data or can be enumerated · client-only rendering that repeats the current
 site's central failure · rolling sprints together and delivering 15,000 unreviewed lines.

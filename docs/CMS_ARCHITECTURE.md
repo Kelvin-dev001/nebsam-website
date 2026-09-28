@@ -47,7 +47,7 @@ to". Unaided.
   Trust
     Testimonials · Certifications · Client logos · Partners
   Operations
-    Installation certificates (CSV import) · Branches · Coverage locations
+    Branches · Coverage locations   (certificate import removed, ADR-0007)
   Media library
   Settings
     Users & roles · Site settings · Audit log
@@ -163,6 +163,11 @@ That immediacy is most of what makes a CMS feel real to a non-technical user.
 ## 6. Operations tooling
 
 ### 6.1 Installation certificates — CSV import
+
+> **Removed 28 September 2026 — ADR-0007.** Kelvin decided to remove installation-certificate
+> verification completely. The route, admin import, attempt log, library and scripts are deleted,
+> and migration 0044 drops the tables (applied once V61 is resolved). What follows is kept as the
+> record of what was built.
 
 The only bulk-data path in the admin, and it touches the most sensitive table on the project.
 
