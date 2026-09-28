@@ -241,7 +241,7 @@ feature on the video telematics product) and describe it accurately or drop it.
 |---|---|
 | IRMS full name and relationship | **V02** |
 | Issuing body for the Private Security Provider registration | **CLOSED by inspection** — Private Security Regulatory Authority, Ministry of Interior and National Administration, under s.28 of the Private Security Regulation Act No. 13 of 2016 |
-| Is a KIPI certificate scan available? | OPEN — if not, do **not** illustrate it with a badge implying a document exists |
+| Is a KIPI certificate scan available? | **ANSWERED 28 Sep 2026 (Kelvin): yes, a scan is available.** Not yet supplied: drop it in `media-inbox/` and say so. Before it is shown, check it for the retired addresses, phone number and email in brief PART 3.2, as the KEBS permit had to be — a document image is rendered output like any other |
 | KEBS laboratory test report BS202445237 as a document | OPEN — needed for the download centre and the certifications page link |
 | Registration numbers and expiry dates for the data controller, data processor, CAK and PSRA registrations | OPEN — only the KEBS permit has a recorded number and expiry; the others need the same so the CMS can track renewals |
 | DPO / data protection contact | **V11** |
