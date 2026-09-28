@@ -269,7 +269,8 @@ MOTION_PLAYGROUND=1 npm run build   # a production build WITH the /dev/motion pl
 
 npm run verify:roles                # the Sprint 12 gate — 47 RLS checks, per role  (from Sprint 12)
 npm run db:apply -- --status        # which migrations are applied, which are pending
-npm run db:apply -- --pending       # apply every pending migration, in order
+npm run db:apply -- 0044_name.sql   # apply ONE migration by name — the only safe form until V80
+npm run db:apply -- --pending       # NOT SAFE until V80: would re-run 0001–0040 (see below)
 npm run storage:init                # create/repair the PRIVATE uploads bucket, and assert it is private
 ```
 
@@ -283,9 +284,14 @@ fixtures seeded. It clears `verification_attempts` first so the run is reproduci
 do so against anything but localhost.
 
 **`npm run db:apply` and `npm run db:types` need `SUPABASE_ACCESS_TOKEN`**, a personal access token
-that is local-development only. It is **currently expired** (register item V61), which is why
-migrations 0041–0043 are written and unapplied. The service-role key is unaffected, so the app,
-the Storage API and every verification script still work.
+that is local-development only. It was renewed on 28 September 2026 (V61 resolved) and 0041–0043
+were applied then.
+
+**The migration ledger starts at 0041 (V80).** 0001–0040 were pasted into the dashboard SQL editor
+before `apply-migration.mjs` existed, so its `schema_migrations` table has never heard of them:
+`--status` lists them as pending and **`--pending` would re-run all forty against the live
+database.** Until the ledger is reconciled, apply migrations one at a time by name, after a
+read-only check that the migration's objects are not already there.
 
 **`npm run verify:roles` creates four throwaway auth accounts, runs the matrix and deletes them.**
 It asserts against the POLICIES, not the screens — the admin runs under the service-role key and
