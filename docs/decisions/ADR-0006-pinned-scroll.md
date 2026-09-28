@@ -130,7 +130,11 @@ which predates Sprint 12b. Harness: no dead scroll in all three passes; contrast
 4.41:1 only in the shot where each sits under the bar, 18.69:1 once clear). Lighthouse paired
 against T0 (`PERFORMANCE_BASELINE.md` §12): no change to CLS, TBT or the 100s, but **the stage's CSS
 module is a second render-blocking stylesheet on Home** and LCP moved +5 ms and +150 ms in two runs.
-The fix trades against this ADR's CSS-module choice, so it is a decision: **V77**.
+The fix traded against this ADR's CSS-module choice, so it went to Kelvin as **V77**. **He chose
+(a), 28 September 2026:** the stage's rules are now global `pinned-` classes bundled into the one
+stylesheet (`components/motion/pinned-sequence.css`). Re-measured: Home back to T0's request count,
+paired LCP delta −2 ms, every route +836 B (§12.3). **The stage is no longer a CSS module; do not
+make it one again.**
 
 **What T4 added to the primitive**, all found by looking at the real page: `spans` (per-step scroll
 room); step content sticky at the top of its step, so a long span is a hold rather than a gap; only
