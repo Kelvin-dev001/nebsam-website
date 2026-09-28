@@ -36,9 +36,9 @@ export const RATE_LIMIT_PER_HOUR = 5;
 let warnedNoSecret = false;
 
 function ipDigestHex(ip: string): string {
-  // SUBMISSION_IP_HMAC_SECRET since ADR-0007, with the old certificate secret's
-  // name read as a fallback until every environment has the new one.
-  const secret = process.env.SUBMISSION_IP_HMAC_SECRET || process.env.CERT_PLATE_HMAC_SECRET || '';
+  // SUBMISSION_IP_HMAC_SECRET only. The old certificate secret's name was read
+  // as a fallback for one release after ADR-0007, and no longer is.
+  const secret = process.env.SUBMISSION_IP_HMAC_SECRET || '';
   if (!secret) {
     // Fails OPEN, but not silently. No IP, no payload: just that a guard is off.
     if (!warnedNoSecret) {
