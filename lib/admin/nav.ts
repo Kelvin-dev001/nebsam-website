@@ -15,7 +15,7 @@ import type { UserRole } from '@/types/content';
  * ── `minRole` is presentation, not permission ───────────────────────────────
  *
  * Hiding a link is a courtesy to a salesperson who has no business in the
- * certificate importer. It is NOT the boundary — `docs/CMS_ARCHITECTURE.md` §2:
+ * audit log. It is NOT the boundary — `docs/CMS_ARCHITECTURE.md` §2:
  * "a hidden button is not a permission". Every page calls `requireStaff()` with
  * its own minimum and every policy in migration 0008 enforces the same ranks at
  * the database. This file exists so the three agree; if they ever disagree, the
@@ -104,18 +104,6 @@ export const ADMIN_NAV: AdminNavGroup[] = [
         detail: 'KEBS, CAK, ODPC, PSRA — and how long each has left',
       },
       {
-        label: 'Certificates',
-        href: '/admin/certificates',
-        minRole: 'admin',
-        detail: 'Installation certificate import — plates hashed, never stored',
-      },
-      {
-        label: 'Security',
-        href: '/admin/security',
-        minRole: 'admin',
-        detail: 'Verification attempts, and the spike that means enumeration',
-      },
-      {
         label: 'Audit log',
         href: '/admin/audit',
         minRole: 'admin',
@@ -148,7 +136,5 @@ export function navForRole(role: UserRole): AdminNavGroup[] {
  * boundary costs one line and prevents that call.
  */
 export function hiddenForRole(role: UserRole): AdminNavItem[] {
-  return ADMIN_NAV.flatMap((group) => group.items).filter(
-    (item) => !outranks(role, item.minRole),
-  );
+  return ADMIN_NAV.flatMap((group) => group.items).filter((item) => !outranks(role, item.minRole));
 }

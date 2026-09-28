@@ -50,92 +50,51 @@ export interface OldestEnquiry {
 export interface Dashboard {
   signals: DashboardSignal[];
   oldest: OldestEnquiry[];
-  /** Whether the verification attempt rate is above its normal band — see §1.1. */
-  verificationSpike: { attempts: number; refused: number; window: string } | null;
 }
-
-/**
- * The verification spike threshold.
- *
- * `docs/SECURITY_REQUIREMENTS.md` §1.5: "an enumeration attack looks like
- * traffic; you only see it if you are counting". This is the counting.
- *
- * 40 in an hour is deliberately well above ordinary use and well below what an
- * attacker needs to be useful. A single person checking their own certificate
- * makes one or two attempts; the per-IP limit is 10 an hour and the per-plate
- * limit is 5 a day, so 40 across the whole endpoint means either many people at
- * once — which Nebsam would know about — or many addresses, which is the shape
- * of the attack. It is a starting value chosen from the limits already in
- * place, and it should be revised against real traffic after launch rather than
- * defended as though it were derived.
- */
-const SPIKE_THRESHOLD_PER_HOUR = 40;
 
 export async function getDashboard(): Promise<Dashboard> {
   const db = serviceClient();
   const now = Date.now();
-  const hourAgo = new Date(now - 60 * 60 * 1000).toISOString();
   const in90Days = new Date(now + 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const in7Days = new Date(now + 7 * 24 * 60 * 60 * 1000).toISOString();
 
   // Issued together rather than in sequence. Seven sequential round trips to a
   // hosted Postgres is most of a second of staring at a blank dashboard, and
   // none of these queries depends on another's result.
-  const [
-    unanswered,
-    liveOrders,
-    expiring,
-    inReview,
-    scheduled,
-    uncleared,
-    unchecked,
-    attempts,
-    refused,
-    oldest,
-  ] = await Promise.all([
-    db.from('submissions').select('id', { head: true, count: 'exact' }).eq('status', 'new'),
-    db
-      .from('orders')
-      .select('id', { head: true, count: 'exact' })
-      .in('status', ['new', 'contacted']),
-    // Already-expired rows count too. An instrument that lapsed last month is
-    // more urgent than one lapsing next month, and a window that started today
-    // would silently drop it off the dashboard the day it became a problem.
-    db
-      .from('certifications')
-      .select('id', { head: true, count: 'exact' })
-      .not('expires_on', 'is', null)
-      .lte('expires_on', in90Days),
-    db.from('blog_posts').select('id', { head: true, count: 'exact' }).eq('status', 'in_review'),
-    db
-      .from('blog_posts')
-      .select('id', { head: true, count: 'exact' })
-      .eq('status', 'published')
-      .gt('published_at', new Date(now).toISOString())
-      .lte('published_at', in7Days),
-    db
-      .from('downloads')
-      .select('id', { head: true, count: 'exact' })
-      .eq('cleared_for_publication', false),
-    db.from('media').select('id', { head: true, count: 'exact' }).eq('privacy_checked', false),
-    db
-      .from('verification_attempts')
-      .select('id', { head: true, count: 'exact' })
-      .gt('created_at', hourAgo),
-    db
-      .from('verification_attempts')
-      .select('id', { head: true, count: 'exact' })
-      .eq('outcome', 'rate_limited')
-      .gt('created_at', hourAgo),
-    db
-      .from('submissions')
-      .select('id, type, created_at, is_anonymous')
-      .eq('status', 'new')
-      .order('created_at', { ascending: true })
-      .limit(5),
-  ]);
-
-  const attemptCount = attempts.count ?? 0;
+  const [unanswered, liveOrders, expiring, inReview, scheduled, uncleared, unchecked, oldest] =
+    await Promise.all([
+      db.from('submissions').select('id', { head: true, count: 'exact' }).eq('status', 'new'),
+      db
+        .from('orders')
+        .select('id', { head: true, count: 'exact' })
+        .in('status', ['new', 'contacted']),
+      // Already-expired rows count too. An instrument that lapsed last month is
+      // more urgent than one lapsing next month, and a window that started today
+      // would silently drop it off the dashboard the day it became a problem.
+      db
+        .from('certifications')
+        .select('id', { head: true, count: 'exact' })
+        .not('expires_on', 'is', null)
+        .lte('expires_on', in90Days),
+      db.from('blog_posts').select('id', { head: true, count: 'exact' }).eq('status', 'in_review'),
+      db
+        .from('blog_posts')
+        .select('id', { head: true, count: 'exact' })
+        .eq('status', 'published')
+        .gt('published_at', new Date(now).toISOString())
+        .lte('published_at', in7Days),
+      db
+        .from('downloads')
+        .select('id', { head: true, count: 'exact' })
+        .eq('cleared_for_publication', false),
+      db.from('media').select('id', { head: true, count: 'exact' }).eq('privacy_checked', false),
+      db
+        .from('submissions')
+        .select('id, type, created_at, is_anonymous')
+        .eq('status', 'new')
+        .order('created_at', { ascending: true })
+        .limit(5),
+    ]);
 
   const signals: DashboardSignal[] = [
     {
@@ -157,10 +116,7 @@ export async function getDashboard(): Promise<Dashboard> {
     {
       label: 'Registrations expired or expiring within 90 days',
       count: expiring.count ?? 0,
-      // `/admin/certifications`, the COMPANY registrations. `/admin/certificates`
-      // is the customer installation records, which is a different table and a
-      // different problem — and the two names being one letter apart is exactly
-      // why this link was pointed at the wrong one first.
+      // `/admin/certifications`, the COMPANY registrations (KEBS, CAK, ODPC, PSRA).
       href: '/admin/certifications',
       clear: 'No registration needs renewing in the next 90 days.',
       tone: 'alert',
@@ -201,11 +157,5 @@ export async function getDashboard(): Promise<Dashboard> {
   return {
     signals,
     oldest: oldest.data ?? [],
-    verificationSpike:
-      attemptCount >= SPIKE_THRESHOLD_PER_HOUR
-        ? { attempts: attemptCount, refused: refused.count ?? 0, window: 'the last hour' }
-        : null,
   };
 }
-
-export { SPIKE_THRESHOLD_PER_HOUR };

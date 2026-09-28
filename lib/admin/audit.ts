@@ -43,6 +43,8 @@ export type AuditEntity =
   | 'download'
   | 'media'
   | 'certification'
+  // Historical only: certificate imports ended with ADR-0007. Kept so rows
+  // already in the append-only log still type-check and display.
   | 'installation_certificate'
   | 'profile';
 

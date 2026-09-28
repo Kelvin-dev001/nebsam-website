@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { requireStaff } from '@/lib/admin/actor';
-import { getDashboard, SPIKE_THRESHOLD_PER_HOUR } from '@/lib/admin/dashboard';
+import { getDashboard } from '@/lib/admin/dashboard';
 import { hiddenForRole } from '@/lib/admin/nav';
 import { Badge } from '@/components/ui/badge';
 import { isDatabaseConfigured } from '@/lib/content';
@@ -62,7 +62,7 @@ export default async function AdminDashboard() {
     );
   }
 
-  const { signals, oldest, verificationSpike } = await getDashboard();
+  const { signals, oldest } = await getDashboard();
   const outstanding = signals.filter((signal) => signal.count > 0);
   const hidden = hiddenForRole(actor.role);
 
@@ -72,46 +72,6 @@ export default async function AdminDashboard() {
         <h1 className="font-display text-h1 md:text-md-h1">Dashboard</h1>
         <Badge tone="neutral">{actor.role}</Badge>
       </div>
-
-      {/*
-        The security signal goes ABOVE everything, and only exists when it is
-        true. SECURITY_REQUIREMENTS §1.5 — an enumeration attack looks like
-        traffic; you only see it if you are counting. A permanently-present
-        "attacks: 0" panel is a panel people stop reading.
-      */}
-      {verificationSpike ? (
-        <div
-          role="alert"
-          className="mt-6 rounded-panel border-2 border-state-alert-ink bg-surface p-5"
-        >
-          <h2 className="font-display-tight text-h3 text-state-alert-ink">
-            Certificate verification is being hit hard
-          </h2>
-          <p className="mt-2 max-w-prose text-body">
-            <strong>{verificationSpike.attempts} attempts</strong> in {verificationSpike.window},
-            against a normal band of well under {SPIKE_THRESHOLD_PER_HOUR}.{' '}
-            {verificationSpike.refused > 0 ? (
-              <>
-                <strong>{verificationSpike.refused}</strong> were refused by the rate limiter.
-              </>
-            ) : (
-              <>None was refused by the rate limiter, which means the load is spread across many
-              addresses.</>
-            )}
-          </p>
-          <p className="mt-2 max-w-prose text-body-sm text-text-secondary">
-            A plate is public information, so someone working through a list of them learns which
-            vehicles carry a tracking installation. Look at the attempt log before assuming this is
-            ordinary traffic.
-          </p>
-          <Link
-            href="/admin/security"
-            className="mt-4 inline-flex min-h-11 items-center rounded-control bg-brand-signal-ink px-5 text-white"
-          >
-            Open the attempt log
-          </Link>
-        </div>
-      ) : null}
 
       {outstanding.length === 0 ? (
         <p className="mt-8 max-w-prose text-body text-text-secondary">
