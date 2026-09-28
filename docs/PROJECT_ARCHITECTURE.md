@@ -161,11 +161,13 @@ one-line justification in the sprint report.
 
 `.env.example` documents every variable, commented and grouped by service. Any new variable is added
 there **in the same commit** that introduces its use. Server-only keys are marked as such:
-`SUPABASE_SERVICE_ROLE_KEY`, `CERT_PLATE_HMAC_SECRET`, `CERT_QR_TOKEN_SECRET`,
-`TURNSTILE_SECRET_KEY`, `EMAIL_PROVIDER_API_KEY`.
+`SUPABASE_SERVICE_ROLE_KEY`, `SUBMISSION_IP_HMAC_SECRET`, `TURNSTILE_SECRET_KEY`,
+`EMAIL_PROVIDER_API_KEY`.
 
-`CERT_PLATE_HMAC_SECRET` deserves a note: rotating it invalidates the entire plate lookup index, so
-rotation requires a planned re-hash migration. That is recorded in `docs/SECURITY_REQUIREMENTS.md`.
+`SUBMISSION_IP_HMAC_SECRET` keys the IP digest the enquiry forms rate-limit on. Unset, rate limiting
+is off (the forms fail open, with one server warning); rotated, the one-hour windows simply reset. It
+replaced `CERT_PLATE_HMAC_SECRET` when certificate verification was removed (ADR-0007), and
+`CERT_QR_TOKEN_SECRET` went with it.
 
 ## 10. What this architecture is protecting against
 
