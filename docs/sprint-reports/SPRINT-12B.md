@@ -1,6 +1,6 @@
 # SPRINT 12b — MOTION & SCROLL
 
-**Branch** `sprint/12b-motion-scroll` · 57 commits · 25–28 September 2026
+**Branch** `sprint/12b-motion-scroll` · 60 commits · 25–28 September 2026
 **Delivers** Motion tokens, an SSR-safe pinned-stage primitive, the homepage set piece "One vehicle,
 instrumented", the approved hero headline, and a micro-interaction pass. None of it may cost
 crawlability, accessibility or the Kenyan mobile budget.
@@ -159,6 +159,11 @@ seeded. Held: "publish this" on two never-publish claims.
 
 ## KNOWN ISSUES / RISKS
 
+- **Migrations 0041–0043 applied on 28 Sep** once Kelvin renewed the token (V61), one at a time by
+  name and verified. **Never run `db:apply -- --pending`** until the ledger is reconciled: it would
+  re-run 0001–0040 (V80).
+- **The privacy notice promises a 24-hour deletion the forms do not perform yet** (V79): the rate
+  limiter still writes its fingerprint into each enquiry instead of the 0041 table.
 - **Home LCP ~63 ms over budget** (V47, pre-existing). A preview measurement (V53) is still blocked:
   previews have no environment variables and no protection bypass.
 - **Four found in testing were fixed before the PR** (28 Sep, at Kelvin's request): links to the draft
@@ -179,7 +184,8 @@ seeded. Held: "publish this" on two never-publish claims.
 2. **V76 (2) and (3):** preview environment variables and a protection bypass, if preview measurement
    (V53, V47) is wanted before Sprint 14.
 3. **The brief's "It's the site where ___" sentence and references** (asked 26 Sep), still open.
-4. **The radio prices:** excluding VAT, as every price on the site is shown?
+4. **V80:** may I record 0001–0040 in the migration ledger, so `--pending` becomes safe?
+5. **V79:** approve rewiring the form rate limiter onto the 0041 table, so the privacy notice is true.
 
 Decided on 28 Sep: remove certificate verification (V03/V04, its own branch after this one); real
 testimonials only (V15); school bus enquiry-only (V24); merge this branch by PR.
