@@ -114,9 +114,10 @@
    beside the frame for the whole hold, then leave with the step. */
 .pinned-act[data-pinned='on'] .pinned-step > * {
   position: sticky;
-  top: 0;
-  min-height: 100vh;
-  min-height: 100svh;
+  /* Below the sticky header (ADR-0008), not under it. */
+  top: var(--header-h, 0px);
+  min-height: calc(100vh - var(--header-h, 0px));
+  min-height: calc(100svh - var(--header-h, 0px));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -131,9 +132,9 @@
   grid-row: 1;
   align-self: start;
   position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
+  top: var(--header-h, 0px);
+  height: calc(100vh - var(--header-h, 0px));
+  height: calc(100svh - var(--header-h, 0px));
   margin-bottom: 0;
   max-width: none;
   display: grid;

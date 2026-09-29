@@ -143,7 +143,7 @@ export function MobileNav() {
             ref={panelRef}
             id="mobile-nav-panel"
             tabIndex={-1}
-            className="enter-from-right absolute inset-y-0 right-0 flex w-full max-w-sm flex-col overflow-y-auto border-l border-border-hairline-inverse bg-brand-navy"
+            className="glass-sheet enter-from-right absolute inset-y-0 right-0 flex w-full max-w-sm flex-col overflow-y-auto border-l border-border-hairline-inverse"
           >
             <div className="flex items-center justify-between border-b border-border-hairline-inverse px-5 py-3">
               <span className="font-mono text-label uppercase tracking-[0.08em] text-text-secondary-inverse">
