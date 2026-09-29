@@ -235,9 +235,13 @@ not imitate it.
 
 **Self-hosted since Sprint 4.** The faces were moved off `next/font`, which emits no
 `<link rel="preload" as="font">` (register V41), to `public/fonts/`. `app/globals.css` declares eight
-woff2 files as unicode-range subsets; an English or Kiswahili page fetches exactly **2**, Archivo
-latin (90,096 B) and IBM Plex Mono latin (10,060 B), and `app/layout.tsx` preloads exactly those
-two. `font-display: swap` is set, and the metric-matched `Archivo Fallback` / `IBM Plex Mono
+woff2 files as unicode-range subsets; an English or Kiswahili page fetches exactly **2**, and
+`app/layout.tsx` preloads exactly those two: the Archivo latin **core** (45,456 B) and the IBM Plex
+Mono latin **core** (7,152 B). Until V47 (29 September 2026) they were the full latin files, 90,096 B
+and 10,060 B. Archivo now omits the condensed half of its width axis (62–100%, unused), and each
+latin face is split into a preloaded core and a **rest** file fetched only for a page using an
+accented Latin-1 letter or a rarer symbol. Both changes are pixel-identical at every weight and width
+the site sets; `scripts/fonts/build-webfonts.py` rebuilds them deterministically from upstream. `font-display: swap` is set, and the metric-matched `Archivo Fallback` / `IBM Plex Mono
 Fallback` faces (values copied from what `next/font` computed) are why the swap does not shift the
 layout.
 

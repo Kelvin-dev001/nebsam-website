@@ -114,6 +114,11 @@ third-party-branded.
 
 - The `wdth` axis makes the Archivo file 90 KB. Dropping it would roughly halve that, but the width
   axis *is* the display/body distinction — the typographic idea would go with it. Accepted.
+  **Amended 29 September 2026 (register V47):** the axis stays, and so does the idea. Only its
+  *condensed* half (62–100%), which nothing on the site sets, was removed. That is lossless: no
+  rescaling, advance widths unchanged, pixel-identical at every weight and width used. With a
+  core/rest split of the latin face, the preloaded Archivo file is 45,456 B. The same typeface, a
+  lighter file; see `docs/PERFORMANCE_BASELINE.md` §14.
 - No `Card` primitive exists yet. Deliberate: brief 6.6 prohibits card grids as the default answer,
   so one gets built when a surface genuinely needs it.
 

@@ -75,3 +75,8 @@ unreliable rig is not grounds for rewriting the brief. Revisit once a preview me
 A preview-deployment measurement showing the budget missed by a margin that survives repetition. At
 that point the options are the 89 KB Archivo variable font — which reopens ADR-0002 and must be
 measured rather than assumed — the render-blocking CSS, and only then the budget numbers themselves.
+
+**Taken, 29 September 2026 (register V47):** the font option, as a lossless change. The preloaded
+fonts went from 100 KB to 52.6 KB, and Home and Coverage came inside the 2.5 s LCP budget. Measured on
+the local production build (medians of repeated Lighthouse runs), not yet on a preview deployment.
+See `docs/PERFORMANCE_BASELINE.md` §14.

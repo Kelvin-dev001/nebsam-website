@@ -141,7 +141,10 @@ on dark. **Focus ring follows the section, 2px with 2px offset** — a `#3D8BFF`
 
 **Typography — Archivo + IBM Plex Mono. Two families, two delivered files** (budget ≤3). Display and
 body are one superfamily separated by **optical width** (`wdth 118` vs `wdth 100`), not two families.
-Mono is telemetry only. Sentence case headings, always.
+Mono is telemetry only. Sentence case headings, always. **The font files are built, not edited**:
+`scripts/fonts/build-webfonts.py` (V47) cuts Archivo's unused condensed widths and splits each latin
+face into a preloaded core and an on-demand rest file, pixel-identically. A revision ships under a new
+filename, because `/fonts` is served immutable.
 
 **Radius: instruments are not rounded** — `data 2px`, `control 6px`, `panel 10px`. Never 0.
 
