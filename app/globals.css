@@ -4,6 +4,8 @@
    ignores an @import after any rule. */
 @import '../components/motion/pinned-sequence.css';
 @import '../components/motion/micro-interactions.css';
+/* Cards and glass (ADR-0008), for the same one-stylesheet reason. */
+@import '../components/ui/surfaces.css';
 
 @tailwind base;
 @tailwind components;
@@ -208,6 +210,17 @@
     --radius-control: 6px; /* buttons, inputs */
     --radius-panel: 10px; /* large panels */
 
+    /* --- Cards and glass (ADR-0008; rules in components/ui/surfaces.css) --- */
+    --brand-navy-rgb: 10 14 54; /* brand-navy as channels, for translucent fills */
+    --glass-alpha: 0.85; /* set by contrast over a WHITE backdrop, not by taste */
+    --shadow-card: 0 1px 2px rgb(10 14 54 / 0.05), 0 12px 32px -12px rgb(10 14 54 / 0.18);
+    --shadow-card-dark: 0 16px 40px -16px rgb(0 0 0 / 0.55);
+
+    /* --- Layout ------------------------------------------------------------ */
+    /* The sticky header's height: 44px controls, 12px above and below, and a
+       1px rule. Anchor jumps and the pinned stage offset by it. */
+    --header-h: 4.3125rem;
+
     /* --- Motion (PART 17) ------------------------------------------------- */
     --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -228,6 +241,11 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    /* The header is sticky, so an anchor jump (skip link, #branch ids) must
+       land below it rather than under it: with 1rem of air, because scroll
+       positions snap to whole pixels and a target at a fractional offset
+       otherwise tucked half a pixel under the header's rule (measured). */
+    scroll-padding-top: calc(var(--header-h) + 1rem);
   }
 
   body {
