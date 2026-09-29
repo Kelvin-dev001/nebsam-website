@@ -34,14 +34,14 @@
 }
 
 /* On navy. Raised navy with a hairline and a one-pixel top highlight: the
-   surface step from brand-navy is only 1.08:1, so the edge is what reads.
+   surface step from brand-navy is only 1.08:1, so the edge is what reads. NO
+   outer shadow — DESIGN_SYSTEM §5: on navy a shadow reads as smudge, so dark
+   surfaces lift with a border and a raised fill instead.
    Text on #121741: white 17.15, secondary 10.89, signal 5.17. */
 .card-dark {
   background-color: var(--brand-navy-raised);
   border-color: var(--border-hairline-inverse);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.06),
-    var(--shadow-card-dark);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
 
 /* ── Glass ───────────────────────────────────────────────────────────────────
