@@ -270,7 +270,8 @@ npm run db:apply -- --status        # which migrations are applied, which are pe
 npm run db:apply -- 0045_name.sql   # apply ONE migration by name
 npm run db:apply -- --pending       # apply every pending migration, in order (safe since V80)
 npm run storage:init                # create/repair the PRIVATE uploads bucket, and assert it is private
-npx prettier --check .              # formatting, whole repo (.prettierignore says what is left out)
+npm run format:check                # formatting, whole repo (.prettierignore says what is left out)
+npm run format                      # apply it
 ```
 
 **Test fixtures are a script, never a migration.** Migrations run everywhere in order, including
@@ -303,7 +304,8 @@ have no environment variables and sit behind Vercel Authentication.
 **ESLint + Prettier + `tsc --noEmit` must pass before any commit.** Line endings are LF in every
 working copy (`.gitattributes`), whatever a machine's `core.autocrlf` says: a CRLF checkout made
 Prettier report every file as unformatted. `.prettierignore` leaves out `content-source/`, markdown
-and generated files. Prettier is not yet pinned in `package.json` (V84), so `npx` fetches it.
+and generated files. Prettier is pinned at 3.9.9 in `package.json` (V84): use the npm scripts, and
+change the version only on purpose, since a new Prettier can reformat unchanged files.
 
 ## 12. Files, naming and git
 
