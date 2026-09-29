@@ -1,6 +1,6 @@
 import { Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
-import { getProductCategories, getProducts } from '@/lib/content';
+import { getProducts } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, jsonLdGraph } from '@/lib/seo/schema';
 import { ROUTES, VAT_LABEL } from '@/lib/constants';
@@ -48,10 +48,7 @@ function formatKes(amount: number): string {
 }
 
 export default async function ProductsIndexPage() {
-  const [{ data: rows }, { data: categories }] = await Promise.all([
-    getProducts(),
-    getProductCategories(),
-  ]);
+  const { data: rows } = await getProducts();
 
   const products = rows.flatMap((p) =>
     p.slug && p.name ? [{ ...p, slug: p.slug, name: p.name }] : [],
@@ -141,13 +138,6 @@ export default async function ProductsIndexPage() {
               ))}
             </div>
           )}
-
-          {categories.length > 0 ? (
-            <p className="mt-12 text-body-sm text-text-secondary">
-              {categories.length} product categories are defined; pages for each arrive with the
-              shop in Sprint 7.
-            </p>
-          ) : null}
         </Shell>
       </Section>
     </main>
