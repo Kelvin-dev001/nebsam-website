@@ -54,14 +54,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         */}
         <link
           rel="preload"
-          href="/fonts/archivo-latin.woff2"
+          href="/fonts/archivo-latin-core-v2.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/plex-mono-latin.woff2"
+          href="/fonts/plex-mono-latin-core.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"

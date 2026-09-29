@@ -470,3 +470,48 @@ list, sent in every page's HTML, got shorter. Product pages grew 0.4 kB of first
 Raw JSON: `perf-2026-09-28-s12b-t5/`, under `~/.claude/projects/C--Projects-nebsam-website/`.
 **Lesson for the scripts:** checking only that a report file exists lets a dead server produce "ok".
 Reject any report that carries `runtimeError`.
+
+---
+
+## 14. V47 closed — the fonts, 29 September 2026
+
+Kelvin asked for Home and Coverage to be brought inside the LCP budget. Lighthouse mobile medians,
+local production build, `develop` against `sprint/12k-lcp`:
+
+| Page | Before | After | Change |
+|---|---|---|---|
+| `/` | 2,714 ms (5 runs) | **2,360 ms** (5); 2,427 / 2,437 on two later 3-run checks under load | −277 to −354 ms |
+| `/about/coverage` | 2,714 ms (5) | **2,426 ms** (5); 2,438 / 2,434 under load | −276 to −288 ms |
+| `/products/inrico-t-521` | 2,567 ms (5) | **2,287 ms** (5) | −280 ms |
+
+Performance 97–98 at the medians, CLS 0 in every run but one (0.119, in a run under heavy machine load
+with TBT 341 ms; six further runs of that page were 0.000).
+
+**What decided LCP, measured rather than supposed.** Lighthouse's model counts every request started
+before the page's first paint. On these pages that is about 250 KB, and the largest item was the
+89 KB Archivo latin file (High priority, preloaded). Real-browser throttled runs on this machine
+varied too much to rank causes (first paint 1.7–3.1 s for the same build), so the lever was chosen
+from the model and then confirmed by repeated runs. The first cut bought about 8 ms of LCP per KB.
+
+**What changed** (`scripts/fonts/build-webfonts.py`, deterministic, rebuilds from upstream):
+1. **Archivo drops the condensed half of its width axis** (62–100%), which nothing on the site sets.
+   Removing one side of an axis rescales nothing: advance widths are unchanged, and all 24
+   weight × width × size combinations the site uses render pixel-identically. Restricting the weight
+   axis too would have saved 7 KB more but moved spacing by up to one unit, so it was not done.
+2. **Each latin face is split into CORE and REST.** CORE (preloaded) holds ASCII, the Latin-1 symbols
+   without the accented letters, general punctuation, € and ™. The site's text uses 92 distinct
+   characters, all in CORE. REST is fetched only by a page using an accented Latin-1 letter or a rarer
+   symbol, which is the mechanism the latin-ext and vietnamese faces already used. Kept glyphs are
+   untouched: CORE renders pixel-identically to the upstream file.
+
+Result: the preloaded fonts went from 100,156 B to **52,608 B** (Archivo 45,456 + Plex Mono 7,152).
+A typical page still delivers 2 font files. A page with an accented letter delivers 3, which is inside
+the ≤3 budget; only accented letters in *both* body and mono text would make 4. Verified in the
+browser: é pulls the Archivo rest file, Š latin-ext, Kikuyu ũ vietnamese, and each renders in Archivo.
+The one cost is that kerning between a core letter and an accented one (say "Té") is lost, because
+they now come from different files.
+
+**Not yet done:** a preview-deployment measurement (§7.1, V53). Previews have no database environment
+and sit behind Vercel Authentication, so they cannot yet render these pages as production will. The
+margin here is 60–140 ms on a noisy local rig; confirm it on a preview or production once one can
+render real content.
