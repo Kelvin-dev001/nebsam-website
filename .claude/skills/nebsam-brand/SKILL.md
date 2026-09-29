@@ -146,8 +146,15 @@ sequence · motion for its own sake · emoji as UI iconography.
 Not Inter with a purple gradient. Not the AI-design cluster: cream + high-contrast serif +
 terracotta; near-black + one acid accent; fake-broadsheet hairline columns.
 
-**No `Card` primitive exists yet, deliberately.** Build one when a surface genuinely needs it, not
-pre-emptively.
+**`Card` exists since ADR-0008** (`components/ui/card.tsx`, tone light/dark by ground): branch
+cards, the product buy box, download cards. A card is for a discrete thing the reader acts on, never
+for a list meant to be compared (catalogue, blog, specs, FAQs stay ruled lists). Light cards carry
+the one shadow token; dark cards lift with a hairline and a top highlight, never a shadow.
+
+**Glass (ADR-0008) only where content passes behind:** the sticky header and the menu sheet. Set
+the opacity by contrast over a WHITE backdrop, not by eye: at 85% the focus ring is 3.72, at 72% it
+fails; an outlined control (`border-strong-inverse`) needs 96%. Check any new glass surface the same
+way, and record it in `DESIGN_SYSTEM.md` §3.6.
 
 ## 8. Before you finish a surface
 

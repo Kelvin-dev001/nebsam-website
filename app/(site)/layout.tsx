@@ -22,11 +22,16 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <JsonLd json={graph} />
-      <Header />
-      {children}
-      <Footer />
-      <WhatsAppButton />
-      <CookieNotice />
+      {/* site-shell: navy behind the glass header at rest (components/ui/surfaces.css).
+          A plain div, no transform or filter, so the fixed WhatsApp button and
+          cookie notice keep the viewport as their containing block. */}
+      <div className="site-shell">
+        <Header />
+        {children}
+        <Footer />
+        <WhatsAppButton />
+        <CookieNotice />
+      </div>
     </>
   );
 }

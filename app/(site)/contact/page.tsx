@@ -1,4 +1,5 @@
 import { Section, Shell } from '@/components/layout/section';
+import { Card } from '@/components/ui/card';
 import { JsonLd } from '@/components/seo/json-ld';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { EnquiryForm } from '@/components/forms/enquiry-form';
@@ -117,9 +118,10 @@ export default function ContactPage() {
             .
           </p>
 
-          <ul className="mt-8 grid gap-x-10 gap-y-8 border-t border-border-hairline pt-8 md:grid-cols-3">
+          {/* Branch cards (brief 9.5, ADR-0008). */}
+          <ul className="mt-8 grid gap-5 md:grid-cols-3">
             {BRANCHES.map((branch) => (
-              <li key={branch.slug} id={branch.slug}>
+              <Card as="li" key={branch.slug} id={branch.slug}>
                 <h3 className="font-display-tight text-h3 text-text-primary">{branch.name}</h3>
                 <address className="mt-3 not-italic text-body text-text-secondary">
                   {branch.address}
@@ -148,7 +150,7 @@ export default function ContactPage() {
                     Open in Maps
                   </a>
                 </p>
-              </li>
+              </Card>
             ))}
           </ul>
         </Shell>

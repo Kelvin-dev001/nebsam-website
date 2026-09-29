@@ -185,6 +185,34 @@ Two rules follow, and they are why 0.6 is safe: **the stage sits on the dark gro
 colours appear only in the active step**. The progress rail's fill is `text-secondary-inverse` on
 navy (11.81) and its track `border-hairline-inverse` (1.26, decorative).
 
+### 3.6 Glass and cards (ADR-0008)
+
+Glass is measured against the WORST backdrop it can cross, which is white: blur only averages what
+is behind. Ratios are for the foreground on navy `#0A0E36` at the stated opacity, composited over
+`#FFFFFF`.
+
+| Foreground | Glass | Ratio | Needs | Verdict |
+|---|---|---|---|---|
+| `text-inverse` `#FFFFFF` | navy 85% (header ≥1024px, menu sheet ≥640px) | **12.32** | 4.5 | PASS |
+| `text-secondary-inverse` `#C3CEEA` | navy 85% | **7.82** | 4.5 | PASS |
+| focus ring `brand-signal` `#3D8BFF` | navy 85% | **3.72** | 3 | PASS |
+| `border-strong-inverse` `#5A6B94` | navy 85% | **2.33** | 3 | **FAIL: no outlined control on 85% glass** |
+| `border-strong-inverse` `#5A6B94` | navy 96% (header <1024px) | **3.22** | 3 | PASS |
+| focus ring `brand-signal` `#3D8BFF` | navy 72% | **2.32** | 3 | **FAIL: why 85% is the floor** |
+
+The fourth row is why the header is near-solid below 1024px, where the outlined menu button shows,
+and why the cookie notice (outlined Decline button) stays solid.
+
+Cards: the light card is white, so every light-ground ratio in §3.1 applies unchanged (`text-secondary`
+6.94, `brand-signal-ink` 6.56). The dark card is `brand-navy-raised` `#121741`:
+
+| Foreground | Background | Ratio | Verdict |
+|---|---|---|---|
+| `text-inverse` `#FFFFFF` | `brand-navy-raised` | **17.15** | PASS |
+| `text-secondary-inverse` `#C3CEEA` | `brand-navy-raised` | **10.89** | PASS |
+| focus ring / primary hairline `#3D8BFF` | `brand-navy-raised` | **5.17** | PASS |
+| `brand-navy-raised` card | `brand-navy` ground | 1.08 | surface step only; the hairline and top highlight carry the edge |
+
 ---
 
 ## 4. Typography
@@ -250,7 +278,9 @@ default 4/8/12 scale everyone ships.
 Not `0` — that is the broadsheet default brief 6.3 also warns against.
 
 **Elevation** — dark sections use borders and a raised surface rather than shadow; shadow on navy
-reads as smudge. The prototype uses no shadow at all.
+reads as smudge. Since ADR-0008 one shadow exists, `--shadow-card`, on LIGHT cards only: a 1px
+contact shadow plus a soft 32px lift, tinted navy. The dark card lifts with a hairline, the raised
+fill and a 1px inset top highlight, never an outer shadow.
 
 ---
 
@@ -270,10 +300,13 @@ reads as smudge. The prototype uses no shadow at all.
 | `PinnedSequence` | `components/motion/pinned-sequence.tsx` | Level 4 pinned stage, ADR-0006. Sprint 12b T3; `spans` added in T4 |
 | `TelemetryPanel` | `components/home/telemetry-panel.tsx` | static instrument face for the home set piece's frames 1–4; same panel, plate and mono rows as the readout; no amber |
 | `EnquirySuccess` | `components/forms/enquiry-success.tsx` | the confirmation that replaces an enquiry form; takes focus on its heading so it is read out, and settles in (`enter-rise`). T5 |
+| `Card` | `components/ui/card.tsx` | ADR-0008. `tone` light / dark, follows the ground; `as` for the element (`li` for branches). Server Component. Styles in `components/ui/surfaces.css` |
 
-**No `Card` was built.** Brief 6.6 prohibits uniform rounded-card grids as the default answer, and
-the layout does not need one. A card will be added when a surface genuinely requires it, not
-pre-emptively.
+**`Card` exists since ADR-0008 (29 September 2026), and only where a surface genuinely needs it:**
+branch cards (brief 9.5), the product buy box, and download cards once there are documents. Brief
+6.6 still prohibits uniform rounded-card grids, so the catalogue, blog, hardware lists, spec tables
+and FAQs stay ruled lists. A card is for a discrete thing the reader acts on, not for a list meant
+to be compared.
 
 ### 6.1 `data-section` is the hook the system keys off
 

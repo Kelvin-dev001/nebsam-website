@@ -17,14 +17,19 @@ import { COMPANY, whatsappUrl } from '@/lib/company';
  * Desktop nav is a plain link row, not a hover mega menu: hover-only reveals
  * are the most common keyboard trap on a site this size, and the sub-links are
  * all reachable from the section index pages and the footer anyway.
+ *
+ * Sticky, and frosted glass from 1024px (ADR-0008): the one surface on the
+ * site with page content genuinely passing behind it. Its height is the
+ * `--header-h` token, which the pinned stage and anchor jumps offset by, so the
+ * two cannot drift apart. `glass-header` is in components/ui/surfaces.css.
  */
 export function Header() {
   return (
     <header
       data-section="dark"
-      className="border-b border-border-hairline-inverse bg-brand-navy text-text-inverse"
+      className="glass-header sticky top-0 z-40 h-[var(--header-h)] border-b border-border-hairline-inverse text-text-inverse"
     >
-      <div className="mx-auto flex w-full max-w-shell items-center justify-between gap-4 px-5 py-3 md:px-8">
+      <div className="mx-auto flex h-full w-full max-w-shell items-center justify-between gap-4 px-5 md:px-8">
         <a
           href={ROUTES.home}
           className="flex shrink-0 items-center rounded-control bg-white/95 px-2 py-1.5"

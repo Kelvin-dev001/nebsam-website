@@ -74,10 +74,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           between two utilities and was verified failing here, leaving the link
           clipped to 1x1 while focused. This element is always laid out and
           sits above the viewport until focused, which has no race to lose.
+          `-top-1`, not `top-0`: its height is fractional, so parked exactly at
+          y=0 its antialiased bottom edge painted a blue sliver above the logo
+          on every page (measured at 4x). 4px further up clears it.
         */}
         <a
           href="#main"
-          className="absolute left-4 top-0 z-50 -translate-y-full rounded-control bg-brand-signal-ink px-4 py-3 text-white transition-transform duration-micro ease-in-out-quad focus:translate-y-4 motion-reduce:transition-none"
+          className="absolute -top-1 left-4 z-50 -translate-y-full rounded-control bg-brand-signal-ink px-4 py-3 text-white transition-transform duration-micro ease-in-out-quad focus:translate-y-4 motion-reduce:transition-none"
         >
           Skip to content
         </a>

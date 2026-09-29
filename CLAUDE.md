@@ -168,6 +168,14 @@ is complete and static. **Shared motion CSS goes into the one global stylesheet*
 the top of `app/globals.css` (`pinned-sequence.css`, `micro-interactions.css`) — **never a CSS
 module**: on Home a module became a second render-blocking stylesheet (V77).
 
+**Cards and glass (ADR-0008).** One `Card` (`components/ui/card.tsx`, light/dark by ground) for a
+discrete thing the reader acts on: branch cards, the product buy box, download cards. Never for a
+list meant to be compared (catalogue, blog, specs, FAQs) — that is the prohibited card grid. Glass is
+the sticky header (85% navy + blur from 1024px, 96% below) and the menu sheet (from 640px), **opacity
+set by contrast over a WHITE backdrop**, never by eye: an outlined control needs 96%, which is why the
+cookie notice stays solid. Surface CSS is `components/ui/surfaces.css`, @imported like the motion CSS.
+The header height is `--header-h`; anything sticky or anchored offsets by it.
+
 ## 7. SEO / LLM checklist per page type
 
 Use the **`nebsam-seo`** skill. Full plan: `docs/SEO_LLM_STRATEGY.md`.

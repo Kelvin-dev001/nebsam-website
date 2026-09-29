@@ -1,4 +1,5 @@
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
+import { Card } from '@/components/ui/card';
 import type { PublicBranch, PublicCoverageLocation } from '@/types/content';
 
 /**
@@ -51,9 +52,10 @@ export function Coverage({
           Branches
         </h3>
 
-        <ul className="mt-4 grid gap-x-10 gap-y-8 border-t border-border-hairline pt-8 md:grid-cols-3">
+        {/* Branch cards (brief 9.5, ADR-0008). */}
+        <ul className="mt-4 grid gap-5 md:grid-cols-3">
           {branches.map((branch) => (
-            <li key={branch.id}>
+            <Card as="li" key={branch.id}>
               <h4 className="font-display-tight text-h3 text-text-primary">{branch.name}</h4>
               {branch.address ? (
                 <p className="mt-2 text-body text-text-secondary">{branch.address}</p>
@@ -74,7 +76,7 @@ export function Coverage({
                   </li>
                 ))}
               </ul>
-            </li>
+            </Card>
           ))}
         </ul>
 

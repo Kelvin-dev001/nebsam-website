@@ -1,0 +1,116 @@
+/* ============================================================================
+   CARDS AND GLASS — ADR-0008.
+
+   Imported into app/globals.css, never loaded on its own (V77: a second
+   stylesheet is a second render-blocking request).
+
+   A deliberately small vocabulary. Brief 6.6 prohibits "uniform rounded-card
+   grids" and "glass on everything", and lists both among the ways this project
+   fails, so each surface below is named for the place it is used, and nowhere
+   else gets it by accident.
+   ========================================================================= */
+
+/* ── Card ────────────────────────────────────────────────────────────────────
+   For a discrete, self-contained thing the reader acts on: a branch (brief
+   9.5 asks for branch cards), the buy box on a product page, a download (9.4).
+   Not for lists meant to be compared line by line: the catalogue, the blog,
+   specification tables and FAQs stay as ruled lists.
+
+   Radius is `panel` (10px). Instruments are not rounded further than that. */
+.card {
+  border-radius: var(--radius-panel);
+  border-width: 1px;
+  border-style: solid;
+  padding: 1.5rem;
+}
+
+/* On paper or white. White fill; the hairline is decorative, the shadow is
+   what lifts it off a white section. Every text colour keeps its light-ground
+   ratio, because the fill IS the light ground. */
+.card-light {
+  background-color: var(--surface);
+  border-color: var(--border-hairline);
+  box-shadow: var(--shadow-card);
+}
+
+/* On navy. Raised navy with a hairline and a one-pixel top highlight: the
+   surface step from brand-navy is only 1.08:1, so the edge is what reads. NO
+   outer shadow — DESIGN_SYSTEM §5: on navy a shadow reads as smudge, so dark
+   surfaces lift with a border and a raised fill instead.
+   Text on #121741: white 17.15, secondary 10.89, signal 5.17. */
+.card-dark {
+  background-color: var(--brand-navy-raised);
+  border-color: var(--border-hairline-inverse);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+/* ── Glass ───────────────────────────────────────────────────────────────────
+   Only where page content genuinely passes behind the surface, which is the
+   only place glass reads as glass rather than as a slightly lighter box.
+
+   OPACITY IS SET BY CONTRAST, NOT TASTE. Blur only averages what is behind, so
+   the worst case is the surface crossing a WHITE section. At 85% navy over
+   white: white text 12.32, secondary text 7.82, the #3D8BFF focus ring 3.72.
+   At 72% the ring fell to 2.32 and failed. `--glass-alpha` carries the value.
+
+   Below 1024px the header is near-solid (96%) with no blur: the menu button's
+   outline is border-strong-inverse, which needs 3:1 and only clears it at 96%
+   over white (3.22), and a mid-range phone should not pay for a blur it
+   barely shows. The cookie notice stays solid for the same outline reason.
+
+   ⚠ backdrop-filter makes the header the CONTAINING BLOCK for any `fixed`
+   descendant. The mobile menu overlay (`fixed inset-0`) is rendered inside the
+   header, and would shrink to 69px tall if both were active. They never are:
+   the blur starts at 1024px and the menu is `lg:hidden` from 1024px. Keep
+   those two breakpoints together, or move the menu out of the header. */
+.glass-header {
+  background-color: rgb(var(--brand-navy-rgb) / 0.96);
+}
+
+.glass-sheet {
+  background-color: var(--brand-navy);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  @media (min-width: 1024px) {
+    .glass-header {
+      background-color: rgb(var(--brand-navy-rgb) / var(--glass-alpha));
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      backdrop-filter: blur(14px) saturate(140%);
+    }
+  }
+
+  /* The menu sheet: from 640px it is a 384px panel with the dimmed page
+     beside and beneath it. Narrower, it covers the whole screen and the blur
+     would buy nothing. */
+  @media (min-width: 640px) {
+    .glass-sheet {
+      background-color: rgb(var(--brand-navy-rgb) / var(--glass-alpha));
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      backdrop-filter: blur(14px) saturate(140%);
+    }
+  }
+}
+
+/* The glass header's backdrop AT REST. A sticky header sits in normal flow, so
+   at the top of a page what is behind it is the page itself, which is white:
+   85% navy over white read as a slate band above every navy hero (seen, not
+   supposed). The site shell paints navy in exactly the top header-height
+   strip, so at rest the header matches the hero, and once the page scrolls it
+   is real content behind the glass. Transparent everywhere else, so nothing
+   else on any page changes. */
+.site-shell {
+  background-image: linear-gradient(var(--brand-navy), var(--brand-navy));
+  background-repeat: no-repeat;
+  background-size: 100% var(--header-h);
+}
+
+/* A reader who has asked for less transparency gets solid surfaces. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-header,
+  .glass-sheet {
+    background-color: var(--brand-navy);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
