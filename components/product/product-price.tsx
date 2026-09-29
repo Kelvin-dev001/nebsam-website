@@ -37,8 +37,10 @@ export function ProductPrice({ product }: { product: PublicProduct }) {
   // end with one too ("…Reviewed annually."), which rendered as "..".
   const feeNote = product.recurring_fee_note?.trim().replace(/\.+$/, '');
 
+  // No outer margin: the product page places this inside the buy-box card
+  // (ADR-0008), whose padding does the spacing.
   return (
-    <div className="mt-8">
+    <div>
       {hasPrice ? (
         <>
           <p className="font-display text-h2 text-text-inverse">

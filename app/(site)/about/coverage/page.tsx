@@ -1,4 +1,5 @@
 import { Section, Shell } from '@/components/layout/section';
+import { Card } from '@/components/ui/card';
 import { JsonLd } from '@/components/seo/json-ld';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { CoverageMap } from '@/components/about/coverage-map';
@@ -147,9 +148,11 @@ export default async function CoveragePage() {
             Three offices. These are the only Nebsam addresses.
           </p>
 
-          <ul className="mt-8 grid gap-x-10 gap-y-8 border-t border-border-hairline pt-8 md:grid-cols-3">
+          {/* Branch cards (brief 9.5, ADR-0008): each office is a thing you act
+              on (call, get directions), so each is its own surface. */}
+          <ul className="mt-8 grid gap-5 md:grid-cols-3">
             {branches.map((branch) => (
-              <li key={branch.slug} id={branch.slug}>
+              <Card as="li" key={branch.slug} id={branch.slug}>
                 <h3 className="font-display-tight text-h3 text-text-primary">{branch.name}</h3>
                 <address className="mt-3 not-italic text-body text-text-secondary">
                   {branch.address}
@@ -184,7 +187,7 @@ export default async function CoveragePage() {
                     </a>
                   </p>
                 ) : null}
-              </li>
+              </Card>
             ))}
           </ul>
         </Shell>
