@@ -21,9 +21,14 @@ import { ZoomArea } from '@/components/ui/zoom-area';
  * `frameClassName`, usually an aspect-ratio class. A document, which must not
  * be cropped, passes `cover={false}` and keeps its own height.
  *
- * `afterLoad` holds the photo back until the page has loaded, showing its own
- * blur in the frame meanwhile (components/ui/after-load.tsx says why). Only for
- * a static import, which is what carries the blur.
+ * `afterLoad` holds the photo back until the page has loaded (components/ui/
+ * after-load.tsx says why); the empty frame stands in meanwhile.
+ *
+ * NO BLUR PLACEHOLDER, measured: a static import's blur data travels twice,
+ * in the HTML and in the RSC payload, for every photo on the page, and on Home
+ * that was part of a 15.5 KB (gzipped) HTML growth that cost LCP. The frame's
+ * neutral ground (media.css) stands in instead, and blurDataURL is stripped
+ * from the object handed to next/image so it is not serialised at all.
  */
 type ZoomImageProps = ImageProps & {
   mode?: 'whole' | 'area';
@@ -31,7 +36,7 @@ type ZoomImageProps = ImageProps & {
   frameClassName?: string;
   /** Fill the frame and crop to it (photographs), or keep the image's own height (documents). */
   cover?: boolean;
-  /** Fetch the photo only after the page has loaded (AfterLoad). Static imports only. */
+  /** Fetch the photo only after the page has loaded (AfterLoad). */
   afterLoad?: boolean;
 };
 
@@ -45,37 +50,12 @@ export function ZoomImage({
   ...image
 }: ZoomImageProps) {
   const fit = cover ? 'h-full w-full object-cover' : 'h-auto w-full';
-  // A static import carries its own blur placeholder (lib/media/*), so the
-  // frame shows the photo's colours while the file arrives.
-  const placeholder = typeof image.src === 'object' ? 'blur' : undefined;
-  const photo = (
-    <Image
-      placeholder={placeholder}
-      {...image}
-      alt={alt}
-      className={`${fit} ${className}`.trim()}
-    />
-  );
-  const blur =
-    typeof image.src === 'object' && 'blurDataURL' in image.src ? image.src.blurDataURL : undefined;
-  // The stand-in is the photo's own 8px blur, softened and overscaled so its
-  // edges never show, filling the same frame: no layout shift when it swaps.
-  const img =
-    afterLoad && blur ? (
-      <AfterLoad
-        fallback={
-          <div
-            aria-hidden="true"
-            className="h-full w-full scale-110 bg-cover bg-center blur-lg"
-            style={{ backgroundImage: `url(${blur})` }}
-          />
-        }
-      >
-        {photo}
-      </AfterLoad>
-    ) : (
-      photo
-    );
+  const src =
+    typeof image.src === 'object' && 'blurDataURL' in image.src
+      ? { src: image.src.src, width: image.src.width, height: image.src.height }
+      : image.src;
+  const photo = <Image {...image} src={src} alt={alt} className={`${fit} ${className}`.trim()} />;
+  const img = afterLoad ? <AfterLoad fallback={null}>{photo}</AfterLoad> : photo;
 
   if (mode === 'area') return <ZoomArea className={frameClassName}>{img}</ZoomArea>;
 

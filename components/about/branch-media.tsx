@@ -30,7 +30,7 @@ export function BranchMedia({ slug, town }: { slug: string; town: string }) {
     );
   }
 
-  // Held back until the page has loaded, at quality 60. On Contact the cards
+  // Held back until the page has loaded (AfterLoad), at quality 60. On Contact the cards
   // sit close enough to the top that the browser fetched all three photos
   // before first paint, and that cost ~560 ms of LCP, past the 2.5 s budget
   // (Sprint 12n, measured with and without them). At card size, about 370px

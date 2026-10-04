@@ -27,6 +27,9 @@
 .zoom-frame {
   position: relative;
   overflow: hidden;
+  /* What shows while a photo arrives: no blur placeholder (zoom-image.tsx). A
+     caller's bg-* utility overrides it, since utilities load after this file. */
+  background-color: var(--surface-raised);
   /* Keeps the clip inside the frame's own radius when one is applied. */
   isolation: isolate;
 }

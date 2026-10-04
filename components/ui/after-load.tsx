@@ -14,9 +14,9 @@ import { useEffect, useState, type ReactNode } from 'react';
  * the 2.5 s budget. Waiting for `load` moves them out of that window, and on a
  * real slow connection puts the bandwidth where the reader is looking first.
  *
- * NO LAYOUT SHIFT: the fallback occupies the same frame (the caller passes the
- * photo's own blur). WITHOUT JAVASCRIPT the photo is still there, in
- * <noscript>, so nothing depends on the script but the timing.
+ * NO LAYOUT SHIFT: the caller's frame has its size already, so the photo
+ * arrives into a box that does not move. WITHOUT JAVASCRIPT the photo is still
+ * there, in <noscript>, so nothing depends on the script but the timing.
  */
 export function AfterLoad({ children, fallback }: { children: ReactNode; fallback: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
