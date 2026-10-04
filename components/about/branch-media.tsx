@@ -30,15 +30,16 @@ export function BranchMedia({ slug, town }: { slug: string; town: string }) {
     );
   }
 
-  // Quality 60, not the default 75. On Contact the cards sit close enough to
-  // the top that the browser fetches all three photos before first paint, and
-  // Lighthouse's mobile model charges LCP for every byte fetched then: at 75
-  // they pushed Contact to 2.9 s against a 2.5 s budget (Sprint 12n). At card
-  // size, about 370px wide, 60 is visually the same.
+  // Held back until the page has loaded, at quality 60. On Contact the cards
+  // sit close enough to the top that the browser fetched all three photos
+  // before first paint, and that cost ~560 ms of LCP, past the 2.5 s budget
+  // (Sprint 12n, measured with and without them). At card size, about 370px
+  // wide, quality 60 is visually the same as the default 75.
   return (
     <ZoomImage
       src={photo.src}
       alt={photo.alt}
+      afterLoad
       quality={60}
       sizes="(min-width: 768px) 33vw, 100vw"
       frameClassName={frame}

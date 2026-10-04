@@ -1,4 +1,5 @@
 import Image, { type ImageProps } from 'next/image';
+import { AfterLoad } from '@/components/ui/after-load';
 import { ZoomArea } from '@/components/ui/zoom-area';
 
 /**
@@ -19,6 +20,10 @@ import { ZoomArea } from '@/components/ui/zoom-area';
  * With `cover` (the default) the photograph fills a frame sized by
  * `frameClassName`, usually an aspect-ratio class. A document, which must not
  * be cropped, passes `cover={false}` and keeps its own height.
+ *
+ * `afterLoad` holds the photo back until the page has loaded, showing its own
+ * blur in the frame meanwhile (components/ui/after-load.tsx says why). Only for
+ * a static import, which is what carries the blur.
  */
 type ZoomImageProps = ImageProps & {
   mode?: 'whole' | 'area';
@@ -26,12 +31,15 @@ type ZoomImageProps = ImageProps & {
   frameClassName?: string;
   /** Fill the frame and crop to it (photographs), or keep the image's own height (documents). */
   cover?: boolean;
+  /** Fetch the photo only after the page has loaded (AfterLoad). Static imports only. */
+  afterLoad?: boolean;
 };
 
 export function ZoomImage({
   mode = 'whole',
   frameClassName = '',
   cover = true,
+  afterLoad = false,
   className = '',
   alt,
   ...image
@@ -40,7 +48,7 @@ export function ZoomImage({
   // A static import carries its own blur placeholder (lib/media/*), so the
   // frame shows the photo's colours while the file arrives.
   const placeholder = typeof image.src === 'object' ? 'blur' : undefined;
-  const img = (
+  const photo = (
     <Image
       placeholder={placeholder}
       {...image}
@@ -48,6 +56,26 @@ export function ZoomImage({
       className={`${fit} ${className}`.trim()}
     />
   );
+  const blur =
+    typeof image.src === 'object' && 'blurDataURL' in image.src ? image.src.blurDataURL : undefined;
+  // The stand-in is the photo's own 8px blur, softened and overscaled so its
+  // edges never show, filling the same frame: no layout shift when it swaps.
+  const img =
+    afterLoad && blur ? (
+      <AfterLoad
+        fallback={
+          <div
+            aria-hidden="true"
+            className="h-full w-full scale-110 bg-cover bg-center blur-lg"
+            style={{ backgroundImage: `url(${blur})` }}
+          />
+        }
+      >
+        {photo}
+      </AfterLoad>
+    ) : (
+      photo
+    );
 
   if (mode === 'area') return <ZoomArea className={frameClassName}>{img}</ZoomArea>;
 
