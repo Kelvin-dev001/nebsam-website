@@ -68,8 +68,8 @@ Seven further radio models are held as an "other models — request price" secti
 - `price_kes` stores the VAT-exclusive figure. `VAT_RATE` is a single constant in
   `lib/constants.ts`, so a VAT-inclusive toggle can be added later without touching data.
   The current rate is unconfirmed — **V06**.
-- **Confirmed prices (2025):** Inrico T-521 **KES 22,000** · S-100 **KES 30,000** · S-200
-  **KES 30,000** · TM-7 **KES 30,000**.
+- **Confirmed prices (2025):** Inrico T-521 **KES 22,000** · S-200 **KES 30,000** · TM-7
+  **KES 30,000**. (The S-100 is no longer sold: deleted by 0048, 4 Oct 2026.)
 - **Recurring costs are disclosed on the product page, not at checkout.** PoC radios carry an
   **annual CAK licence renewal of KES 3,000 per device**. `recurring_fee_kes`,
   `recurring_fee_period` and `recurring_fee_note` render next to the price and are carried into the
@@ -214,7 +214,6 @@ dominates, the cart is not the product page's job and the design should follow t
 | Current VAT rate | **V06** |
 | Prices for 7 radio models and every non-radio product | ~10 rows in the spec annexe |
 | Whether the Inrico T-290 is still sold | spec annexe |
-| Whether the KES 3,000 renewal applies to the DR10 gateway | spec annexe |
 | CAK licensing obligation and cost for the five short-range radios | spec annexe |
 | The brochure's "Hybrid Car Alarm + Hybrid Tracker package (optional)" — a bundling and pricing claim that may need a kit concept | audit **A07** |
 | School bus pricing model — per bus, per student, per term, per module? | **V24** |

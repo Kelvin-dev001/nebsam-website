@@ -130,11 +130,11 @@ seven are held as a single "other models — request price" section on
 | Model | Price (excl. VAT) | Launch | Notes |
 |---|---|---|---|
 | Inrico T-521 | **KES 22,000** | **Full page** | + KES 3,000/yr CAK renewal |
-| Inrico S-100 | **KES 30,000** | **Full page** | + KES 3,000/yr |
+| ~~Inrico S-100~~ | — | **Withdrawn** | No longer sold (4 Oct 2026); page deleted by 0048 |
 | Inrico S-200 | **KES 30,000** | **Full page** | + KES 3,000/yr |
 | Inrico TM-7 | **KES 30,000** | **Full page** | Mobile/base unit. + KES 3,000/yr |
 | Inrico T-290 | Request price | Held | **Absent from the 2025 price list** — confirm whether still sold before building at all |
-| Inrico DR10 gateway | Request price | Held | PoC + LMR convergence. Whether the KES 3,000 renewal applies is unconfirmed |
+| ~~Inrico DR10 gateway~~ | — | **Withdrawn** | No longer sold (4 Oct 2026); page deleted by 0048 |
 | Baofeng BF-888s, UV-5R, UV-9R Plus, UV-82 | Request price | Held | Short-range. **CAK licensing obligation and cost unknown for all five** — a compliance question for the customer, not just a pricing gap |
 | Kenwood TK-3000 | Request price | Held | Also: authorised dealer status unconfirmed |
 
