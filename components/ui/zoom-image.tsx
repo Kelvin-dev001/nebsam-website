@@ -37,7 +37,17 @@ export function ZoomImage({
   ...image
 }: ZoomImageProps) {
   const fit = cover ? 'h-full w-full object-cover' : 'h-auto w-full';
-  const img = <Image {...image} alt={alt} className={`${fit} ${className}`.trim()} />;
+  // A static import carries its own blur placeholder (lib/media/*), so the
+  // frame shows the photo's colours while the file arrives.
+  const placeholder = typeof image.src === 'object' ? 'blur' : undefined;
+  const img = (
+    <Image
+      placeholder={placeholder}
+      {...image}
+      alt={alt}
+      className={`${fit} ${className}`.trim()}
+    />
+  );
 
   if (mode === 'area') return <ZoomArea className={frameClassName}>{img}</ZoomArea>;
 
