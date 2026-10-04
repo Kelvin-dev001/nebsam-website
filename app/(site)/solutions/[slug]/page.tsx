@@ -4,6 +4,7 @@ import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { ButtonLink } from '@/components/ui/button';
 import { JsonLd } from '@/components/seo/json-ld';
 import { ProseSections } from '@/components/solution/prose-sections';
+import { SolutionPhoto } from '@/components/solution/solution-photo';
 import { SolutionFaqs } from '@/components/solution/solution-faqs';
 import { SolutionHardware } from '@/components/solution/solution-hardware';
 import { SolutionIndustries } from '@/components/solution/solution-industries';
@@ -240,7 +241,7 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
         </Shell>
       </Section>
 
-      <ProseSections sections={sections} />
+      <ProseSections sections={sections} afterIntro={<SolutionPhoto slug={slug} />} />
 
       {/* 6 — Hardware options, from product_solutions. Renders nothing for a
           solution with no published products joined to it, which is still the

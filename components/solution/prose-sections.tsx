@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import type { SolutionSections } from '@/types/content';
 
@@ -18,7 +19,18 @@ import type { SolutionSections } from '@/types/content';
  * subheads are four different structures, not one component with four titles.
  */
 
-export function ProseSections({ sections }: { sections: SolutionSections }) {
+/**
+ * `afterIntro` renders straight after "What it is" (the solution photo band,
+ * 12n), and only when that section exists: without it the band would sit in
+ * the first screen on a phone, where a deferred photo becomes the LCP element.
+ */
+export function ProseSections({
+  sections,
+  afterIntro,
+}: {
+  sections: SolutionSections;
+  afterIntro?: ReactNode;
+}) {
   const { what_it_is, problem, who_its_for, how_it_works, what_you_get, installation_support } =
     sections;
 
@@ -27,25 +39,28 @@ export function ProseSections({ sections }: { sections: SolutionSections }) {
       {/* 1 — What it is. Light, wide measure: this is the paragraph a reader
           who arrived from a search result reads before deciding to stay. */}
       {what_it_is?.length ? (
-        <Section tone="light">
-          <Shell>
-            <div className="max-w-prose">
-              <Eyebrow>What it is</Eyebrow>
-              {what_it_is.map((para, i) => (
-                <p
-                  key={i}
-                  className={
-                    i === 0
-                      ? 'mt-4 text-body-lg text-text-primary'
-                      : 'mt-4 text-body text-text-secondary'
-                  }
-                >
-                  {para}
-                </p>
-              ))}
-            </div>
-          </Shell>
-        </Section>
+        <>
+          <Section tone="light">
+            <Shell>
+              <div className="max-w-prose">
+                <Eyebrow>What it is</Eyebrow>
+                {what_it_is.map((para, i) => (
+                  <p
+                    key={i}
+                    className={
+                      i === 0
+                        ? 'mt-4 text-body-lg text-text-primary'
+                        : 'mt-4 text-body text-text-secondary'
+                    }
+                  >
+                    {para}
+                  </p>
+                ))}
+              </div>
+            </Shell>
+          </Section>
+          {afterIntro}
+        </>
       ) : null}
 
       {/* 2 — The problem, on paper. Deliberately the quiet ground: this section
