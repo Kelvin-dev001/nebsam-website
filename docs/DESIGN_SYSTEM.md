@@ -213,6 +213,15 @@ Cards: the light card is white, so every light-ground ratio in §3.1 applies unc
 | focus ring / primary hairline `#3D8BFF` | `brand-navy-raised` | **5.17** | PASS |
 | `brand-navy-raised` card | `brand-navy` ground | 1.08 | surface step only; the hairline and top highlight carry the edge |
 
+Image placeholder (4 Oct 2026). The caption sits on a solid patch of the ground, so the grid never
+runs behind the text:
+
+| Foreground | Background | Ratio | Verdict |
+|---|---|---|---|
+| `text-secondary` `#4C5A75` caption | `surface-raised` `#F1F4FA` | **6.30** | PASS |
+| `state-warn-ink` `#8A5406` shot-list note (development only) | `surface-raised` | **5.69** | PASS |
+| `border-hairline` grid | `surface-raised` | decorative | no ratio required |
+
 ---
 
 ## 4. Typography
@@ -305,6 +314,9 @@ fill and a 1px inset top highlight, never an outer shadow.
 | `TelemetryPanel` | `components/home/telemetry-panel.tsx` | static instrument face for the home set piece's frames 1–4; same panel, plate and mono rows as the readout; no amber |
 | `EnquirySuccess` | `components/forms/enquiry-success.tsx` | the confirmation that replaces an enquiry form; takes focus on its heading so it is read out, and settles in (`enter-rise`). T5 |
 | `Card` | `components/ui/card.tsx` | ADR-0008. `tone` light / dark, follows the ground; `as` for the element (`li` for branches). Server Component. Styles in `components/ui/surfaces.css` |
+| `ZoomImage` | `components/ui/zoom-image.tsx` | `next/image` in a clipping frame with hover zoom, `whole` (CSS only) or `area` (2× loupe, `ZoomArea` client component). `cover={false}` for documents. Styles in `components/ui/media.css`; motion in ANIMATION_SYSTEM Level 1. 4 Oct 2026 |
+| `ImagePlaceholder` | `components/ui/image-placeholder.tsx` | Brief PART 18. Blueprint-paper block (surface-raised + 24px hairline grid) with a mono caption; the shot-list note shows in development only. Every use is in the ASSET_MAP shot list. 4 Oct 2026 |
+| `BranchMedia` | `components/about/branch-media.tsx` | The branch card's 16:9 photo, bled to the card edge, from `BRANCH_PHOTOS` in `lib/media.ts`; the branch `ImagePlaceholder` where there is none |
 
 **`Card` exists since ADR-0008 (29 September 2026), and only where a surface genuinely needs it:**
 branch cards (brief 9.5), the product buy box, and download cards once there are documents. Brief

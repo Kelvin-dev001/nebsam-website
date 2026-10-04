@@ -9,6 +9,31 @@ Generated during setup. Re-run and update at each sprint that touches media.
 > below: the ECTS image set, and the fact that several product images do not map to any confirmed
 > product name.
 
+## Photography in use, and Kelvin's rules (4 Oct 2026)
+
+**Rules, from Kelvin on 4 October 2026:**
+- **Never use the old site's product photos.** Everything under "Products" in "What already exists"
+  below (`sr-*`, `xlr-*`, the tracker, alarm and camera shots) is retired as a source. Product
+  imagery comes only from photographs Nebsam supplies.
+- **The old site's premises set shows the Mombasa branch:** `showroom`, `reception`, `main-entrance`,
+  `service-bay` (and `customer-parking`, `customer-care`, same set), all 1280×720.
+- Photographs zoom on hover (`ZoomImage`, DESIGN_SYSTEM §6).
+
+Every photograph the site ships is registered in **`lib/media.ts`**, with its alt text and real
+dimensions. Pages look photos up there; nothing hard-codes a path.
+
+| File | Source | Used on | Notes |
+|---|---|---|---|
+| `public/images/branches/mombasa-branch-entrance.jpg` | the old site's `main-entrance.jpeg`, renamed | Mombasa branch card: Home, Contact, Coverage | 1280×720, no EXIF. Served as AVIF: 7 KB at 384w, 25 KB at 828w, 38 KB at 1080w. The sign names the company and nobody is in frame. **`reception.jpeg` is not used: a customer is visible through the glass** |
+| `public/certificates/kebs-permit-terms.jpg` | Sprint 11 crop | `/about/certifications` | Now with the 2× loupe; desktop requests a 44rem source so the magnified text is real pixels |
+
+**Placeholders in use** (`ImagePlaceholder`, brief PART 18): the **Nairobi** and **Nakuru** branch
+cards, until their photographs arrive (shot list row "Coverage" below).
+
+**Still to come from Kelvin** (promised 4 Oct 2026 "tomorrow"): client logos (with V12 permission),
+all six certificate scans, platform screenshots. The pictures folder he shared on Google Drive could
+not be read yet: it is not shared as "Anyone with the link".
+
 ## Brand asset — analysed Sprint 0
 
 `brand/logo/nebsam_transparent_logo.png` — 1254×1254, 625 KB. Decoded and pixel-sampled directly.
