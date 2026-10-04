@@ -1,15 +1,22 @@
+import { HeroPhoto } from '@/components/home/hero-photo';
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { ButtonLink } from '@/components/ui/button';
 import { Reveal } from '@/components/motion/reveal';
 import { BRANCHES, SHORT_DESCRIPTION, whatsappUrl } from '@/lib/company';
 
 /**
- * HERO — homepage section 1, carrying the signature element (section 4).
+ * HERO — homepage section 1.
  *
- * The composition is Sprint 1's, approved at that gate: left-weighted and
- * asymmetric, with the readout as the dominant object rather than a
- * photograph. Photography does atmosphere in a narrow band, which inverts the
- * convention instead of joining it.
+ * SPRINT 12n (ADR-0009, amending ADR-0002): THE PHOTOGRAPH ARRIVES. Brief 9.1
+ * asks for "real cinematic vehicle/fleet photography, telemetry overlay", and
+ * Nebsam has now supplied the picture (Kelvin chose the dusk highway on
+ * 4 Oct 2026). Still left-weighted and asymmetric: the text keeps the left
+ * column on solid navy, and the photo fills the right from lg, or follows the
+ * text below lg. Composition and the LCP reasoning are in hero-photo.tsx.
+ *
+ * Sprint 1's composition, kept here as the record: the readout was the
+ * dominant object rather than a photograph, with photography as atmosphere in
+ * a narrow band. That band was cut for weight (ADR-0002, "What was removed").
  *
  * WHAT CHANGED IN SPRINT 4. The prototype hard-coded a wa.me number, a tel:
  * number and the company description. CLAUDE.md §4 is explicit that a phone
@@ -46,9 +53,13 @@ export function Hero() {
   const callNumber = nairobi?.phones[0];
 
   return (
-    <Section tone="dark" bleed className="relative overflow-hidden">
-      <Shell className="relative z-10 pb-10 pt-14 md:pb-16 md:pt-24">
-        <div className="max-w-[52rem]">
+    <Section
+      tone="dark"
+      bleed
+      className="relative overflow-hidden lg:flex lg:min-h-[44rem] lg:items-center"
+    >
+      <Shell className="relative z-10 w-full pb-10 pt-14 md:pb-16 md:pt-24 lg:py-24">
+        <div className="hero-copy">
           <Reveal index={0}>
             <Eyebrow dot>{BRANCHES.map((b) => b.name).join(' · ')}</Eyebrow>
           </Reveal>
@@ -60,9 +71,11 @@ export function Hero() {
               360px phone it ran to seven lines and pushed "Talk to us on
               WhatsApp" under the cookie bar on a first visit (measured 28 Sep
               2026). At h1 size it is five lines and the action clears the bar;
-              from lg it returns to display size, four lines at 1440.
+              from lg it returned to display size. Since 12n the text column
+              ends where the hero's solid scrim ends (media.css .hero-copy),
+              so display size waits for xl, where that column is wide enough.
             */}
-            <h1 className="mt-5 font-display text-h1 md:text-md-h1 lg:text-md-display">
+            <h1 className="mt-5 font-display text-h1 md:text-md-h1 xl:text-md-display">
               {"Know where your vehicles are, what they're doing, and when something goes wrong."}
             </h1>
           </Reveal>
@@ -115,6 +128,8 @@ export function Hero() {
           </Reveal>
         </div>
       </Shell>
+
+      <HeroPhoto />
     </Section>
   );
 }
