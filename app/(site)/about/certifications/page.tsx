@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { ZoomImage } from '@/components/ui/zoom-image';
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
@@ -152,13 +152,18 @@ export default async function CertificationsPage() {
 
                   {certification.image ? (
                     <figure className="m-0">
-                      <Image
+                      {/* The loupe: hover to read the permit's terms at twice the size.
+                          `sizes` asks for twice the 22rem it displays at on desktop, so
+                          the magnified text is drawn from real pixels, not upscaled. */}
+                      <ZoomImage
+                        mode="area"
+                        cover={false}
                         src={certification.image}
                         alt={`Extract from the ${certification.name} issued to Nebsam by ${certification.issuer}, showing the mark number, the dates, and the commodity, brand and standard it covers.`}
                         width={1231}
                         height={1107}
-                        sizes="(min-width: 768px) 22rem, 100vw"
-                        className="h-auto w-full border border-border-hairline"
+                        sizes="(min-width: 768px) 44rem, 100vw"
+                        frameClassName="border border-border-hairline"
                       />
                       <figcaption className="mt-3 text-body-sm text-text-secondary">
                         An extract from the permit. The contact details, QR code and signature are
