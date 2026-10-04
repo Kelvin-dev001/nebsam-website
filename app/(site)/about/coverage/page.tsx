@@ -1,4 +1,5 @@
 import { Section, Shell } from '@/components/layout/section';
+import { BranchMedia } from '@/components/about/branch-media';
 import { Card } from '@/components/ui/card';
 import { JsonLd } from '@/components/seo/json-ld';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
@@ -152,7 +153,8 @@ export default async function CoveragePage() {
               on (call, get directions), so each is its own surface. */}
           <ul className="mt-8 grid gap-5 md:grid-cols-3">
             {branches.map((branch) => (
-              <Card as="li" key={branch.slug} id={branch.slug}>
+              <Card as="li" key={branch.slug} id={branch.slug} className="zoom-group">
+                <BranchMedia slug={branch.slug} town={branch.town || branch.name} />
                 <h3 className="font-display-tight text-h3 text-text-primary">{branch.name}</h3>
                 <address className="mt-3 not-italic text-body text-text-secondary">
                   {branch.address}

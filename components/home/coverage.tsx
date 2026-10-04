@@ -1,4 +1,5 @@
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
+import { BranchMedia } from '@/components/about/branch-media';
 import { Card } from '@/components/ui/card';
 import type { PublicBranch, PublicCoverageLocation } from '@/types/content';
 
@@ -55,7 +56,8 @@ export function Coverage({
         {/* Branch cards (brief 9.5, ADR-0008). */}
         <ul className="mt-4 grid gap-5 md:grid-cols-3">
           {branches.map((branch) => (
-            <Card as="li" key={branch.id}>
+            <Card as="li" key={branch.id} className="zoom-group">
+              <BranchMedia slug={branch.slug ?? ''} town={branch.town ?? branch.name ?? 'Nebsam'} />
               <h4 className="font-display-tight text-h3 text-text-primary">{branch.name}</h4>
               {branch.address ? (
                 <p className="mt-2 text-body text-text-secondary">{branch.address}</p>
