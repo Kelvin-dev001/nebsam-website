@@ -140,7 +140,7 @@ device each existing product image shows]]`
 | Trust band | Technicians at work — installation in progress, uniformed, real vehicle | 3–4 shots, 1600×1067 | **HIGH** |
 | About / team | Team group shot + 4–6 individual portraits for leadership and blog authors | 1200×1200 portraits | MEDIUM |
 | Products | One clean studio shot per confirmed product, consistent background and lighting | 1600×1600, square, transparent or neutral | **HIGH** — the merged product pages sell from these |
-| Radios | 11 model shots (Inrico T-521, S-100, S-200, T-290, TM-7, DR10; Baofeng 888s, UV-5R, UV-9R+, UV-82; Kenwood TK-3000) | 1600×1600 | MEDIUM |
+| Radios | 9 model shots (Inrico T-521, S-200, T-290, TM-7; Baofeng 888s, UV-5R, UV-9R+, UV-82; Kenwood TK-3000). The S-100 and DR10 are no longer sold (0048) | 1600×1600 | MEDIUM |
 | School bus | RFID/biometric terminal at a bus entrance, alcohol sensor in cab, bus interior — **no identifiable children without written parental consent** | 1600×1067 | MEDIUM |
 | Container e-seal | E-seal fitted to a container door, port or ICD context | 1600×1067 | MEDIUM |
 | Speed governor | Unit installed, plus a PSV/matatu context shot | 1600×1067 | MEDIUM |
