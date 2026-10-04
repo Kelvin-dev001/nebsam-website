@@ -1,10 +1,10 @@
 import { ImagePlaceholder } from '@/components/ui/image-placeholder';
 import { ZoomImage } from '@/components/ui/zoom-image';
-import { BRANCH_PHOTOS } from '@/lib/media';
+import { BRANCH_PHOTOS } from '@/lib/media/branches';
 
 /**
  * The photograph at the top of a branch card, or the branch placeholder where
- * Nebsam has not supplied one yet (lib/media.ts says which is which).
+ * Nebsam has not supplied one yet (lib/media/branches.ts says which is which).
  *
  * It bleeds to the card's edges: the negative margins cancel the card's 1.5rem
  * padding (components/ui/surfaces.css) and the top corners follow its radius,
@@ -30,12 +30,17 @@ export function BranchMedia({ slug, town }: { slug: string; town: string }) {
     );
   }
 
+  // Held back until the page has loaded (AfterLoad), at quality 60. On Contact the cards
+  // sit close enough to the top that the browser fetched all three photos
+  // before first paint, and that cost ~560 ms of LCP, past the 2.5 s budget
+  // (Sprint 12n, measured with and without them). At card size, about 370px
+  // wide, quality 60 is visually the same as the default 75.
   return (
     <ZoomImage
       src={photo.src}
       alt={photo.alt}
-      width={photo.width}
-      height={photo.height}
+      afterLoad
+      quality={60}
       sizes="(min-width: 768px) 33vw, 100vw"
       frameClassName={frame}
     />

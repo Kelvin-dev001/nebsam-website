@@ -159,7 +159,13 @@ export async function getBlogPosts(options?: {
   limit?: number;
 }): Promise<Result<PublicBlogPost[]>> {
   return query(async (db) => {
-    let q = db.from('public_blog_posts').select('*').order('published_at', { ascending: false });
+    // Title breaks ties: the seven launch articles share one publish time, and
+    // without a second key "the latest three" was whatever order Postgres chose.
+    let q = db
+      .from('public_blog_posts')
+      .select('*')
+      .order('published_at', { ascending: false })
+      .order('title', { ascending: true });
     if (options?.categorySlug) q = q.eq('category_slug', options.categorySlug);
     if (options?.limit) q = q.limit(options.limit);
     const { data, error } = await q;

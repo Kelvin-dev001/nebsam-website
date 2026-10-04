@@ -515,3 +515,38 @@ they now come from different files.
 and sit behind Vercel Authentication, so they cannot yet render these pages as production will. The
 margin here is 60–140 ms on a noisy local rig; confirm it on a preview or production once one can
 render real content.
+
+## 15. Sprint 12n — photography, paired against develop, 4 October 2026
+
+The photo hero, four new Home sections and photos on all three branch cards. Lighthouse 12, mobile
+preset, simulated throttling, five interleaved pairs per route: `sprint/12n-visual-pass` at `ec25c89`
+on :3101 against `develop` at `b909b72` on :3102. Each was built in its own git worktree, because a
+`next dev` left running in the main checkout since 30 September shares `.next` and corrupted
+production builds there ("Cannot find module './5873.js'"). `benchmarkIndex` 2,465–3,430.
+
+| Route | 12n | develop | Change |
+|---|---|---|---|
+| `/` | **2,322 ms** | 2,358 ms | −36 ms |
+| `/contact` | **2,408 ms** | 2,501 ms | −93 ms |
+| `/about/coverage` | **2,354 ms** | 2,437 ms | −83 ms |
+
+Performance 98–99 on 12n; Accessibility and SEO 100; CLS 0 in every run. Best Practices 96 on
+`/contact` on BOTH builds (a CSP issue in Chrome's Issues panel), so it predates 12n.
+
+**How it got there, measured rather than supposed.** The first complete 12n build was over budget
+(Home 2,627, Contact 2,620, Coverage 2,396 paired against develop's 2,398 / 2,461 / 2,471).
+
+1. **Branch photos.** A build with them switched off gave Contact 2,239 ms against 2,802 with them:
+   about 560 ms. A lazy image near the viewport is fetched at first layout, before first paint, so
+   Lighthouse charges for it. `AfterLoad` renders them once `load` fires.
+2. **Home's pre-paint bytes.** 254 KB against develop's 211 KB: the hero photo (24 KB, fetched
+   early even when lazy) and 15.5 KB more gzipped HTML. Part of that HTML was every photo's blur data,
+   serialised twice (HTML and RSC payload). The hero now uses `AfterLoad` too, and the blur
+   placeholders are gone. Home HTML went from 35.4 to 30.5 KB gzipped; the remaining 10.6 KB over
+   develop is the four sections' content.
+3. **Not a fix, but measured:** `next/link` in the new sections prefetched 216 KB of other pages as
+   Home scrolled on a phone. They use plain anchors, like the rest of the public site.
+
+**Measurement hazard, recorded.** On battery, Windows throttled this machine to a `benchmarkIndex`
+of 540–1,100, and every run inflated by 0.5–1 s. Twenty runs were discarded. Check
+`Win32_Battery.BatteryStatus` (2 = on mains) before measuring.

@@ -19,20 +19,39 @@ Generated during setup. Re-run and update at each sprint that touches media.
   `service-bay` (and `customer-parking`, `customer-care`, same set), all 1280×720.
 - Photographs zoom on hover (`ZoomImage`, DESIGN_SYSTEM §6).
 
-Every photograph the site ships is registered in **`lib/media.ts`**, with its alt text and real
-dimensions. Pages look photos up there; nothing hard-codes a path.
+Every photograph the site ships is registered in **`lib/media/<group>.ts`** (alt text, static import) and
+listed in **`assets/photos/manifest.json`** (source, origin, crops, review). Files are made by
+`scripts/images/prepare-photos.py` (ADR-0009); nothing hard-codes a path.
 
-| File | Source | Used on | Notes |
+**Sprint 12n (4 Oct 2026): Kelvin's Drive folder "website pictures", 56 files**, reviewed one by
+one (ADR-0009 §Context). In use after 12n, all under `assets/photos/`:
+
+| File | Origin | Used on | Notes |
 |---|---|---|---|
-| `public/images/branches/mombasa-branch-entrance.jpg` | the old site's `main-entrance.jpeg`, renamed | Mombasa branch card: Home, Contact, Coverage | 1280×720, no EXIF. Served as AVIF: 7 KB at 384w, 25 KB at 828w, 38 KB at 1080w. The sign names the company and nobody is in frame. **`reception.jpeg` is not used: a customer is visible through the glass** |
-| `public/certificates/kebs-permit-terms.jpg` | Sprint 11 crop | `/about/certifications` | Now with the 2× loupe; desktop requests a 44rem source so the magnified text is real pixels |
+| `home/hero-dusk-highway-{wide,portrait}.jpg` | AI-generated | Home hero | Kelvin's choice of three. 16:9 from 640px, 4:5 below |
+| `home/solutions-coastal-van-portrait.jpg` | AI-generated | Home Solutions | The mock phone screen is cropped out and its leader line healed out |
+| `branches/nairobi-branch-hq-wide.jpg` | photograph | Nairobi branch card | Two plates blurred; three people too small to identify |
+| `branches/mombasa-branch-entrance-wide.jpg` | photograph | Mombasa branch card | Old site's `main-entrance.jpeg`, unchanged, moved from `public/` in 12n |
+| `branches/nakuru-branch-front-wide.jpg` | photograph | Nakuru branch card | Left half of a two-photo composite. Fascia prints a Mombasa number (V89) |
+| `industries/*-portrait.jpg` (6) | AI-generated | Home industries row | Logistics, PSV, fuel and hazardous, school transport (no children), construction, security |
+| `products/*-square.jpg` (4) | manufacturer | Home Shop | Anti-Jammer Tracker, Hybrid Pro Max Tracker, Hybrid ProMax Car Alarm, Inrico S-200. Kelvin: real packaging |
+| `blog/*-wide.jpg` (3) | AI-generated | Home Resources | Fuel siphoning (garbled bumper text cropped out), container e-seal, PoC radio |
+| `public/certificates/kebs-permit-terms.jpg` | scan crop | `/about/certifications` | Sprint 11 crop; the 2× loupe since 12m |
 
-**Placeholders in use** (`ImagePlaceholder`, brief PART 18): the **Nairobi** and **Nakuru** branch
-cards, until their photographs arrive (shot list row "Coverage" below).
+**Supplied, reviewed and held for Sprints 12o/12p:** the remaining 14 product shots, 9 industry
+scenes (the other 7 sectors, plus a second NGO and a second security scene), 3 article covers
+(anti-jamming, geofencing, immobilisation) and both other hero options. The Nairobi reception
+composite is for About.
+
+**Supplied and NOT used** (Kelvin, 4 Oct 2026, "leave them out"): seven solution images. AI
+technicians in Nebsam-branded uniforms (fuel monitoring, vehicle security); an AI workshop technician
+(key programming); a "Kenya Police Service Recovery Yard" (recovery); traffic police, a realistic
+plate and a "Mombasa Express" livery (speed limiters); customs officers and a UASC container (cargo);
+an invented control room (AI video telematics). Also the telematics cover (Gemini watermark, invented
+livery, control room). Brief 3.6: AI never shows Nebsam staff, premises, vehicles or the platform.
 
 **Still to come from Kelvin** (promised 4 Oct 2026 "tomorrow"): client logos (with V12 permission),
-all six certificate scans, platform screenshots. The pictures folder he shared on Google Drive could
-not be read yet: it is not shared as "Anyone with the link".
+all six certificate scans, platform screenshots.
 
 ## Brand asset — analysed Sprint 0
 
@@ -161,7 +180,7 @@ device each existing product image shows]]`
 |---|---|---|---|
 | Homepage hero | Cinematic fleet/vehicle photography, Kenyan road context | 2400×1350, landscape, room for text overlay left or lower-third | **HIGH** |
 | Homepage platform section | Nebsam-branded platform screenshots: fleet map, vehicle list, alerts, reports | 1920 wide, no customer data | **HIGH** |
-| Coverage | Branch exteriors — Nairobi (Kiambu Rd), Mombasa (Makupa), Nakuru (Lower Bedi Rd) | 2000×1333 each | **HIGH** |
+| ~~Coverage~~ | ~~Branch exteriors~~ **Supplied 4 Oct 2026**, all three in use (12n) | — | done |
 | Trust band | Technicians at work — installation in progress, uniformed, real vehicle | 3–4 shots, 1600×1067 | **HIGH** |
 | About / team | Team group shot + 4–6 individual portraits for leadership and blog authors | 1200×1200 portraits | MEDIUM |
 | Products | One clean studio shot per confirmed product, consistent background and lighting | 1600×1600, square, transparent or neutral | **HIGH** — the merged product pages sell from these |

@@ -222,6 +222,19 @@ runs behind the text:
 | `state-warn-ink` `#8A5406` shot-list note (development only) | `surface-raised` | **5.69** | PASS |
 | `border-hairline` grid | `surface-raised` | decorative | no ratio required |
 
+Photographs and the Sprint 12n Home sections (4 Oct 2026). **No text sits on an unscreened photo**:
+the hero's text column ends inside the scrim's solid part (`.hero-copy`, measured at 56% of the
+viewport at 1024 and 1440), and its overlay panel is solid. So these are plain pairings:
+
+| Foreground | Background | Ratio | Verdict |
+|---|---|---|---|
+| `text-inverse` hero headline | solid scrim, `brand-navy` | **18.60** | PASS |
+| `text-secondary-inverse` hero sub-line and Shop text | `brand-navy` | **11.81** | PASS |
+| `brand-signal` "All products" link | `brand-navy` | **5.61** | PASS |
+| overlay values `text-inverse` / labels `text-secondary-inverse` / "Reporting" `state-ok` | solid `brand-navy-raised` panel | **17.15 / 10.89 / 9.31** | PASS |
+| `brand-signal-ink` "All articles" link | `surface-raised` (Resources) | **5.96** | PASS |
+| `text-primary` article titles | `surface-raised` | **16.49** | PASS |
+
 ---
 
 ## 4. Typography
@@ -314,9 +327,11 @@ fill and a 1px inset top highlight, never an outer shadow.
 | `TelemetryPanel` | `components/home/telemetry-panel.tsx` | static instrument face for the home set piece's frames 1–4; same panel, plate and mono rows as the readout; no amber |
 | `EnquirySuccess` | `components/forms/enquiry-success.tsx` | the confirmation that replaces an enquiry form; takes focus on its heading so it is read out, and settles in (`enter-rise`). T5 |
 | `Card` | `components/ui/card.tsx` | ADR-0008. `tone` light / dark, follows the ground; `as` for the element (`li` for branches). Server Component. Styles in `components/ui/surfaces.css` |
-| `ZoomImage` | `components/ui/zoom-image.tsx` | `next/image` in a clipping frame with hover zoom, `whole` (CSS only) or `area` (2× loupe, `ZoomArea` client component). `cover={false}` for documents. Styles in `components/ui/media.css`; motion in ANIMATION_SYSTEM Level 1. 4 Oct 2026 |
+| `ZoomImage` | `components/ui/zoom-image.tsx` | `next/image` in a clipping frame with hover zoom, `whole` (CSS only) or `area` (2× loupe, `ZoomArea` client component). `cover={false}` for documents; `afterLoad` defers the photo until the page has loaded (`AfterLoad`). No blur placeholder; the frame's `surface-raised` ground stands in. Styles in `components/ui/media.css`; motion in ANIMATION_SYSTEM Level 1. 4 Oct 2026 |
 | `ImagePlaceholder` | `components/ui/image-placeholder.tsx` | Brief PART 18. Blueprint-paper block (surface-raised + 24px hairline grid) with a mono caption; the shot-list note shows in development only. Every use is in the ASSET_MAP shot list. 4 Oct 2026 |
-| `BranchMedia` | `components/about/branch-media.tsx` | The branch card's 16:9 photo, bled to the card edge, from `BRANCH_PHOTOS` in `lib/media.ts`; the branch `ImagePlaceholder` where there is none |
+| `BranchMedia` | `components/about/branch-media.tsx` | The branch card's 16:9 photo, bled to the card edge, from `BRANCH_PHOTOS` in `lib/media/branches.ts`; the branch `ImagePlaceholder` where there is none |
+| `HeroPhoto` | `components/home/hero-photo.tsx` | ADR-0009. One art-directed `<picture>` (4:5 / 16:9) that sits under the hero text below `lg` and fills the hero behind a solid-then-fading navy scrim from `lg`; the solid `TelemetryPanel` overlay with its caption inside. `.hero-copy` caps the text inside the solid part. 12n |
+| Home previews | `components/home/{solutions,shop,industries,resources}-preview.tsx` | 12n. Solutions: one held photo beside a ruled list (grid areas put the heading first on phones). Shop: four products, photo on white, no card chrome. Industries: a scroll-snap row below `lg`, six across from `lg`. Resources: one lead article and two rows. All composed differently on purpose (brief 6.6) |
 
 **`Card` exists since ADR-0008 (29 September 2026), and only where a surface genuinely needs it:**
 branch cards (brief 9.5), the product buy box, and download cards once there are documents. Brief

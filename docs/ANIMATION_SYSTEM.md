@@ -90,6 +90,18 @@ zoom outright** (the backstop would only make it snap); the loupe stays, because
 the hand and is how the small print is read. Verified 4 Oct 2026 in Playwright: `scale(1.05)` on hover
 and on focus-within, `none` under `reducedMotion: 'reduce'`.
 
+#### Photo settle on scroll (Sprint 12n, ADR-0009)
+
+`.photo-reveal` in `components/ui/media.css`, on the Home Solutions photo, the industry tiles and the
+article covers. The image eases from `scale: 1.08` to `1` across `entry 0%` to `cover 45%` of its view
+timeline. It is tied to scroll position, so it never plays to an empty screen; it never touches
+opacity, so nothing is hidden; and it moves the individual `scale` property, so it composes with the
+hover zoom's `transform`. It runs only where `animation-timeline: view()` is supported (Chromium,
+Safari) and **only under `prefers-reduced-motion: no-preference`**. Applying it and letting the
+backstop shorten it would not work: 0.01ms means nothing on a scroll timeline. Not used on the hero
+(it must sit still under the text) or on product photos (a product should not move while it is
+being looked at).
+
 Rejected in the T5 gate, and why: desktop nav hover (core navigation, tens of times a visit), form
 errors and focus rings (must be instant), the menu's exit (delays navigation), hiding the anonymous
 suggestion's contact fields (user-caused, and height is layout), an animated "Sending…" (decoration

@@ -24,15 +24,29 @@ export function TelemetryPanel({
   context,
   rows,
   status,
+  caption,
+  solid = false,
   children,
 }: {
   context: string;
   rows: PanelRow[];
   status?: { text: string; ok?: boolean };
+  /** The "Illustration" caption, inside the panel, for a panel shown on its own (the hero). */
+  caption?: string;
+  /**
+   * Fully opaque. The stage frames sit on navy, where 70% is enough; over a
+   * PHOTOGRAPH the ground under the text is unknown, so the hero's panel is
+   * solid and every ratio is the plain one on brand-navy-raised (DESIGN_SYSTEM
+   * §3.6: white 17.15, secondary 10.89).
+   */
+  solid?: boolean;
   children?: React.ReactNode;
 }) {
+  const ground = solid ? 'bg-brand-navy-raised' : 'bg-brand-navy-raised/70';
   return (
-    <div className="rounded-data border border-border-hairline-inverse bg-brand-navy-raised/70 p-3 font-mono text-mono tabular sm:p-4">
+    <div
+      className={`rounded-data border border-border-hairline-inverse ${ground} p-3 font-mono text-mono tabular sm:p-4`}
+    >
       <p className="flex flex-wrap items-baseline gap-x-3 text-text-secondary-inverse">
         <span className="text-text-inverse">{PLATE}</span>
         <span className="uppercase tracking-[0.06em] opacity-70">{context}</span>
@@ -59,6 +73,12 @@ export function TelemetryPanel({
         >
           <span aria-hidden="true" className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
           {status.text}
+        </p>
+      ) : null}
+
+      {caption ? (
+        <p className="mt-3 border-t border-border-hairline-inverse pt-2 text-label uppercase tracking-[0.08em] text-text-secondary-inverse">
+          {caption}
         </p>
       ) : null}
     </div>

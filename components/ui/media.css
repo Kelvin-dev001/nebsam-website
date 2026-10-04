@@ -27,6 +27,9 @@
 .zoom-frame {
   position: relative;
   overflow: hidden;
+  /* What shows while a photo arrives: no blur placeholder (zoom-image.tsx). A
+     caller's bg-* utility overrides it, since utilities load after this file. */
+  background-color: var(--surface-raised);
   /* Keeps the clip inside the frame's own radius when one is applied. */
   isolation: isolate;
 }
@@ -85,4 +88,89 @@
 .image-placeholder > * {
   background-color: var(--surface-raised);
   padding: 0.125rem 0.5rem;
+}
+
+/* ── The Home hero (ADR-0009) ───────────────────────────────────────────────
+   One <picture> that changes role by breakpoint (components/home/hero-photo.tsx).
+
+   Below lg the photo sits UNDER the text, and the scrim only blends its top
+   edge into the navy above it: no text is ever on the photograph there.
+
+   From lg the photo fills the hero and the scrim is SOLID navy across the
+   text column, fading out over the photo from 56% to 82%. `.hero-copy` caps
+   the text so it always ends inside the solid part, whatever the width. So
+   every ratio on the hero is the plain one on brand-navy (white 18.60,
+   text-secondary-inverse 11.81), not a guess about the pixels behind it.
+   The fade is a legibility screen, not the decorative blue gradient brief 6.6
+   prohibits: it carries no colour of its own and ends in the photograph. */
+.hero-scrim {
+  background: linear-gradient(to bottom, var(--brand-navy) 0%, rgb(10 14 54 / 0) 28%);
+}
+/* The width lives here at EVERY breakpoint, not in a Tailwind max-w utility:
+   utilities load after this file, so a utility on the same element would
+   silently override the lg cap below (it did, in the first 12n build). */
+.hero-copy {
+  max-width: 52rem;
+}
+.hero-overlay {
+  left: 1rem;
+  bottom: 0;
+  transform: translateY(45%);
+}
+@media (min-width: 640px) {
+  .hero-overlay {
+    left: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .hero-scrim {
+    background: linear-gradient(
+      90deg,
+      var(--brand-navy) 0%,
+      var(--brand-navy) 56%,
+      rgb(10 14 54 / 0.6) 66%,
+      rgb(10 14 54 / 0) 82%
+    );
+  }
+  .hero-overlay {
+    left: auto;
+    bottom: auto;
+    transform: none;
+    top: 2.5rem;
+    right: max(2rem, calc((100vw - 78rem) / 2 + 2rem));
+  }
+  .hero-copy {
+    max-width: min(46rem, calc(56vw - max(2rem, calc((100vw - 78rem) / 2 + 2rem))));
+  }
+}
+
+/* ── Photo settle on scroll (Sprint 12n) ────────────────────────────────────
+   A photograph eases from 108% to 100% while it enters the viewport, tied to
+   scroll position rather than to time, so it never plays to an empty screen
+   and never hides anything: nothing here touches opacity, and a photo that
+   loads already in view is drawn at whatever point the scroll puts it.
+
+   It moves the individual `scale` property, not `transform`, so it composes
+   with the hover zoom above instead of fighting it.
+
+   Scroll-driven animations are in Chromium and Safari; elsewhere the rule is
+   skipped and the photo simply sits still. Reduced motion: never applied, not
+   merely shortened, because the backstop's 0.01ms has no meaning on a scroll
+   timeline. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .photo-reveal img {
+      animation: photo-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+  }
+}
+@keyframes photo-settle {
+  from {
+    scale: 1.08;
+  }
+  to {
+    scale: 1;
+  }
 }
