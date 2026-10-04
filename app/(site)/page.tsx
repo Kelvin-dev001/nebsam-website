@@ -5,7 +5,20 @@ import { KebsResult } from '@/components/home/kebs-result';
 import { HowWeWork } from '@/components/home/how-we-work';
 import { Coverage } from '@/components/home/coverage';
 import { ConversionClose } from '@/components/home/conversion-close';
-import { getBranches, getCertifications, getCoverageLocations } from '@/lib/content';
+import { SolutionsPreview } from '@/components/home/solutions-preview';
+import { ShopPreview } from '@/components/home/shop-preview';
+import { IndustriesPreview } from '@/components/home/industries-preview';
+import { ResourcesPreview } from '@/components/home/resources-preview';
+import {
+  getBlogPosts,
+  getBranches,
+  getCertifications,
+  getCoverageLocations,
+  getIndustries,
+  getProductCategories,
+  getProducts,
+  getSolutions,
+} from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { ROUTES } from '@/lib/constants';
 
@@ -48,6 +61,14 @@ import { ROUTES } from '@/lib/constants';
  * brief 9.1 §3 and §4 in one pinned set piece (ADR-0006), which must sit on
  * the dark ground. The Thesis copy seeds its beats; the hero's jamming readout
  * is its peak. Still seven sections. Brief: docs/design/sets/home-BRIEF.md.
+ *
+ * SPRINT 12n (ADR-0009): THE FOUR DEFERRALS LAND, now that their content and
+ * Nebsam's photographs exist: §5 Solutions, §7 Shop, §8 Industries and §12
+ * Resources. Eleven sections. §6 Platform is still cut (V13) and §11 Customer
+ * proof still absent (V15): real, or absent. The hero gains its photograph.
+ *
+ * TONE RHYTHM since 12n: dark → paper → dark → paper → light → dark → light →
+ * dark → light → paper → dark. No two neighbours share a ground.
  */
 
 /**
@@ -82,11 +103,17 @@ export default async function HomePage() {
   // views, and awaiting them in sequence would add two round trips to the
   // server render for no reason — on a page whose LCP budget is 2.5s on a
   // throttled mobile connection.
-  const [certifications, branches, coverage] = await Promise.all([
-    getCertifications(),
-    getBranches(),
-    getCoverageLocations(),
-  ]);
+  const [certifications, branches, coverage, solutions, featured, categories, industries, posts] =
+    await Promise.all([
+      getCertifications(),
+      getBranches(),
+      getCoverageLocations(),
+      getSolutions(),
+      getProducts({ featuredOnly: true }),
+      getProductCategories(),
+      getIndustries(),
+      getBlogPosts({ limit: 3 }),
+    ]);
 
   return (
     <main id="main">
@@ -94,8 +121,12 @@ export default async function HomePage() {
       <ProofBand />
       <OneVehicle />
       <KebsResult certifications={certifications.data} />
+      <SolutionsPreview solutions={solutions.data} />
+      <ShopPreview featured={featured.data} categories={categories.data} />
+      <IndustriesPreview industries={industries.data} />
       <HowWeWork />
       <Coverage branches={branches.data} coverage={coverage.data} />
+      <ResourcesPreview posts={posts.data} />
       <ConversionClose />
     </main>
   );
