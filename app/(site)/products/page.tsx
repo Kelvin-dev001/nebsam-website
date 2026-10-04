@@ -1,4 +1,6 @@
 import { Section, Shell } from '@/components/layout/section';
+import { ZoomImage } from '@/components/ui/zoom-image';
+import { PRODUCT_PHOTOS } from '@/lib/media/products';
 import { JsonLd } from '@/components/seo/json-ld';
 import { getProducts } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -115,10 +117,31 @@ export default async function ProductsIndexPage() {
                   <ul className="mt-4 border-t border-border-hairline">
                     {items.map((p) => (
                       <li key={p.id} className="border-b border-border-hairline">
+                        {/*
+                          A ruled list with a small photo at the start of each
+                          row (plan D3): still a list to compare, not a card
+                          grid (ADR-0008). The photo's alt is empty because the
+                          row's link already names the product; read aloud, it
+                          would be the name twice. AfterLoad keeps the photos
+                          out of the first-paint window.
+                        */}
                         <a
                           href={ROUTES.product(p.slug)}
-                          className="group grid gap-x-8 gap-y-2 py-6 md:grid-cols-[20rem_1fr_10rem]"
+                          className="zoom-group group grid grid-cols-[4rem_minmax(0,1fr)] items-start gap-x-5 gap-y-2 py-6 md:grid-cols-[4rem_18rem_minmax(0,1fr)_9rem] md:gap-x-8"
                         >
+                          <span className="row-span-3 md:row-span-1">
+                            {PRODUCT_PHOTOS[p.slug] ? (
+                              <ZoomImage
+                                afterLoad
+                                src={PRODUCT_PHOTOS[p.slug].src}
+                                alt=""
+                                sizes="4rem"
+                                frameClassName="aspect-square rounded-control border border-border-hairline bg-surface"
+                              />
+                            ) : (
+                              <span className="block aspect-square rounded-control bg-surface-raised" />
+                            )}
+                          </span>
                           <h3 className="font-display-tight text-h3 text-text-primary underline-offset-4 group-hover:underline">
                             {p.name}
                           </h3>
