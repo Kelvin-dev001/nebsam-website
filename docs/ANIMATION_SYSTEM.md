@@ -72,6 +72,24 @@ render-blocking request (V77). Transform and opacity only; existing tokens only.
 browser without it renders the final state at once. Reduced motion needs no rule of its own: the
 backstop below makes every transition 0.01ms, so each entrance lands in under a frame.
 
+#### Hover zoom on photographs (Kelvin, 4 October 2026)
+
+`components/ui/zoom-image.tsx`, styles in `components/ui/media.css` (@imported like the rest). Asked
+for as "enlarges the whole image or a specific area when the mouse cursor moves over it", so two
+modes:
+
+| Mode | Used on | What moves | Why |
+|---|---|---|---|
+| `whole` | branch photographs (Home, Contact, Coverage); the default for place and editorial photos | `scale(1.05)` at 600ms `outQuart`, on the photo's own hover or on hover / keyboard focus inside a `zoom-group` card | The picture answers the same gesture as the card it belongs to. Pure CSS, no JavaScript |
+| `area` | the KEBS permit extract; product photographs once they exist | a 2× loupe, 240ms `outQuart`; the zoomed area follows the pointer through `--zoom-x` / `--zoom-y` set by `ZoomArea` | A reader can inspect the fine print on a document or a device. The one client component, ~0.3 KB |
+
+**Hover-capable pointers only** (`(hover: hover) and (pointer: fine)`): on touch a zoom would stick
+after a tap and hide part of the picture. Nothing is behind the zoom, so touch and keyboard users
+lose nothing. The frame clips, so it never moves layout. **Reduced motion removes the whole-image
+zoom outright** (the backstop would only make it snap); the loupe stays, because it moves only with
+the hand and is how the small print is read. Verified 4 Oct 2026 in Playwright: `scale(1.05)` on hover
+and on focus-within, `none` under `reducedMotion: 'reduce'`.
+
 Rejected in the T5 gate, and why: desktop nav hover (core navigation, tens of times a visit), form
 errors and focus rings (must be instant), the menu's exit (delays navigation), hiding the anonymous
 suggestion's contact fields (user-caused, and height is layout), an animated "Sending…" (decoration

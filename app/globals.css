@@ -6,6 +6,8 @@
 @import '../components/motion/micro-interactions.css';
 /* Cards and glass (ADR-0008), for the same one-stylesheet reason. */
 @import '../components/ui/surfaces.css';
+/* Photographs: hover zoom and the image placeholder (4 Oct 2026). */
+@import '../components/ui/media.css';
 
 @tailwind base;
 @tailwind components;

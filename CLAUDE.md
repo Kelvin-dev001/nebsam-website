@@ -171,6 +171,13 @@ is complete and static. **Shared motion CSS goes into the one global stylesheet*
 the top of `app/globals.css` (`pinned-sequence.css`, `micro-interactions.css`) — **never a CSS
 module**: on Home a module became a second render-blocking stylesheet (V77).
 
+**Photographs (4 Oct 2026).** Every shipped photo is registered in `lib/media.ts` (alt text, real
+dimensions) and rendered through `ZoomImage` (`components/ui/zoom-image.tsx`): `whole` eases the photo
+in on hover (CSS only), `area` is a 2× loupe for documents and devices. Hover-capable pointers only;
+reduced motion drops the whole-image zoom. Styles in `components/ui/media.css`, @imported like the
+motion CSS. A missing photo is an `ImagePlaceholder` (brief PART 18), never stock. **Never the old
+site's product photos** (Kelvin); its premises photos are the **Mombasa** branch.
+
 **Cards and glass (ADR-0008).** One `Card` (`components/ui/card.tsx`, light/dark by ground) for a
 discrete thing the reader acts on: branch cards, the product buy box, download cards. Never for a
 list meant to be compared (catalogue, blog, specs, FAQs) — that is the prohibited card grid. Glass is

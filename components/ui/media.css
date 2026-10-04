@@ -1,0 +1,88 @@
+/*
+ * Photographs: hover zoom, and the placeholder that stands in for a missing one.
+ *
+ * Hover zoom — Kelvin's request of 4 October 2026: "Enlarges the whole image or
+ * a specific area when the mouse cursor moves over it."
+ *
+ * Two zoom modes, both in components/ui/zoom-image.tsx:
+ *
+ *   .zoom-whole  the whole photograph eases in a little. For editorial and
+ *                place photographs. Pure CSS, no JavaScript.
+ *   .zoom-area   a loupe: the image doubles and the enlarged area follows the
+ *                pointer. For product photographs, where a buyer wants to read
+ *                a port or a label. zoom-area.tsx sets --zoom-x and --zoom-y.
+ *
+ * HOVER-CAPABLE POINTERS ONLY. On a phone a tap is a tap, and a zoom that
+ * sticks after a tap hides part of the picture until the next one. Touch gets
+ * the whole image, unzoomed, which loses nothing: no content is behind the
+ * zoom, so keyboard and touch users see everything a mouse user sees.
+ *
+ * transform is the only property that moves (ANIMATION_SYSTEM Level 1). The
+ * frame clips, so the enlarged image never changes layout: no CLS.
+ *
+ * Global classes, @imported at the top of app/globals.css like the motion and
+ * surface CSS: one stylesheet per route, never a second request (V77).
+ */
+
+.zoom-frame {
+  position: relative;
+  overflow: hidden;
+  /* Keeps the clip inside the frame's own radius when one is applied. */
+  isolation: isolate;
+}
+
+.zoom-frame img {
+  display: block;
+  transform-origin: var(--zoom-x, 50%) var(--zoom-y, 50%);
+  transition: transform 600ms var(--ease-out-quart);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* The whole image: on its own hover, or when the link or card around it is
+     hovered or keyboard-focused, so the picture answers the same gesture as
+     the thing it belongs to. */
+  .zoom-whole:hover img,
+  .zoom-group:hover .zoom-whole img,
+  .zoom-group:focus-visible .zoom-whole img,
+  .zoom-group:focus-within .zoom-whole img {
+    transform: scale(1.05);
+  }
+
+  /* The loupe. Quicker in, because it follows the hand. */
+  .zoom-area {
+    cursor: zoom-in;
+  }
+  .zoom-area[data-zooming] img {
+    transform: scale(2);
+    transition-duration: 240ms;
+  }
+}
+
+/* REDUCED MOTION. The global backstop would make the whole-image zoom snap,
+   which is still an unrequested change of scale, so it is removed outright.
+   The loupe stays: it moves only while the hand does, at the hand's speed,
+   and it is the way to read the small print on a device. */
+@media (prefers-reduced-motion: reduce) {
+  .zoom-whole img {
+    transform: none !important;
+  }
+}
+
+/* ── Image placeholder (brief PART 18) ──────────────────────────────────────
+   Blueprint paper: the surface-raised ground with a 24px hairline grid, the
+   same paper the site's light sections use, so a missing photograph reads as
+   a deliberate blank rather than a broken image. The hairline is decorative
+   (no ratio required); the caption sits on a solid patch of the ground, so
+   its contrast is the plain text-secondary on surface-raised pairing, 6.30. */
+.image-placeholder {
+  background-color: var(--surface-raised);
+  background-image:
+    linear-gradient(var(--border-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-hairline) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+}
+.image-placeholder > * {
+  background-color: var(--surface-raised);
+  padding: 0.125rem 0.5rem;
+}
