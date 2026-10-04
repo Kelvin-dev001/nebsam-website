@@ -16,8 +16,14 @@
       "origin": "ai-generated",
       "review": "Generic articulated truck on a highway at dusk. No branding, blank plates, no people. Chosen by Kelvin over options 1 and 3 on 4 Oct 2026.",
       "crops": {
-        "wide": { "ratio": "16:9", "focus": [0.62, 0.55] },
-        "portrait": { "ratio": "4:5", "focus": [0.74, 0.55] }
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.62, 0.55]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.74, 0.55]
+        }
       }
     },
     {
@@ -28,7 +34,12 @@
       "review": "Panel van on a coastal road. The box leaves out the mock 'Fleet Tracking' phone screen on the right, which would read as the Nebsam app (brief 3.6: AI never depicts the platform). Its leader line, which would now point at nothing, is healed out. The map pin over the van stays: it is a symbol, not data. Blank plate.",
       "heal": [[0.52, 0.304, 0.716, 0.326]],
       "box": [0.13, 0.0, 0.715, 1.0],
-      "crops": { "portrait": { "ratio": "4:5", "focus": [0.55, 0.5] } }
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.55, 0.5]
+        }
+      }
     },
     {
       "id": "branch-nairobi",
@@ -41,7 +52,12 @@
         [0.664, 0.533, 0.677, 0.552]
       ],
       "box": [0.0, 0.08, 1.0, 0.68],
-      "crops": { "wide": { "ratio": "16:9", "focus": [0.45, 0.5] } }
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.45, 0.5]
+        }
+      }
     },
     {
       "id": "branch-nakuru",
@@ -50,7 +66,12 @@
       "origin": "photograph",
       "review": "The original is two photos side by side; the box keeps the shopfront. No people. The fascia sign prints 0769 063 333, which lib/company.ts gives as a Mombasa number, while the Nakuru card lists +254 725 221122 (register V89). The posters print 0759 000 111, the published WhatsApp number.",
       "box": [0.0, 0.0, 0.5, 1.0],
-      "crops": { "wide": { "ratio": "16:9", "focus": [0.5, 0.26] } }
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.5, 0.26]
+        }
+      }
     },
     {
       "id": "industry-psv",
@@ -58,7 +79,12 @@
       "out": "industries/public-service-vehicles",
       "origin": "ai-generated",
       "review": "Minibus on a city avenue. No plate visible, no operator name. Passengers are generated, not real people.",
-      "crops": { "portrait": { "ratio": "4:5", "focus": [0.45, 0.55] } }
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.45, 0.55]
+        }
+      }
     },
     {
       "id": "industry-logistics",
@@ -66,7 +92,12 @@
       "out": "industries/logistics-and-transport",
       "origin": "ai-generated",
       "review": "Container truck in a port yard. Blank plate, no shipping-line marks on the container.",
-      "crops": { "portrait": { "ratio": "4:5", "focus": [0.5, 0.55] } }
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.5, 0.55]
+        }
+      }
     },
     {
       "id": "industry-fuel",
@@ -74,7 +105,12 @@
       "out": "industries/fuel-and-hazardous-transport",
       "origin": "ai-generated",
       "review": "Fuel tanker from behind on a highway. Hazard placards only, no company name, no plate.",
-      "crops": { "portrait": { "ratio": "4:5", "focus": [0.6, 0.55] } }
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.6, 0.55]
+        }
+      }
     },
     {
       "id": "industry-school",
@@ -82,7 +118,12 @@
       "out": "industries/school-transport",
       "origin": "ai-generated",
       "review": "School bus at a campus gate with an adult inspecting it. NO children in frame (brief 16.1). No school name; the sign carries a generic motto.",
-      "crops": { "portrait": { "ratio": "4:5", "focus": [0.62, 0.55] } }
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.62, 0.55]
+        }
+      }
     },
     {
       "id": "industry-construction",
@@ -90,7 +131,12 @@
       "out": "industries/construction-and-heavy-equipment",
       "origin": "ai-generated",
       "review": "Excavator loading a tipper on a building site. No plates or company marks.",
-      "crops": { "portrait": { "ratio": "4:5", "focus": [0.5, 0.55] } }
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.5, 0.55]
+        }
+      }
     },
     {
       "id": "industry-security",
@@ -98,7 +144,12 @@
       "out": "industries/security-companies",
       "origin": "ai-generated",
       "review": "Patrol vehicle and a guard with a radio. The plate reads only 'PATROL'; no company name.",
-      "crops": { "portrait": { "ratio": "4:5", "focus": [0.45, 0.55] } }
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.45, 0.55]
+        }
+      }
     },
     {
       "id": "product-anti-jammer-tracker",
@@ -106,7 +157,11 @@
       "out": "products/anti-jammer-tracker",
       "origin": "manufacturer",
       "review": "Device with its retail box. Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
-      "crops": { "square": { "ratio": "1:1" } },
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
       "maxEdge": 1200
     },
     {
@@ -115,7 +170,11 @@
       "out": "products/hybrid-pro-max-tracker",
       "origin": "manufacturer",
       "review": "Device, key remotes and retail box. Kelvin, 4 Oct 2026: real packaging.",
-      "crops": { "square": { "ratio": "1:1" } },
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
       "maxEdge": 1200
     },
     {
@@ -124,7 +183,11 @@
       "out": "products/hybrid-promax-car-alarm",
       "origin": "manufacturer",
       "review": "Alarm kit with vibrating key remotes and retail box. Kelvin, 4 Oct 2026: real packaging.",
-      "crops": { "square": { "ratio": "1:1" } },
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
       "maxEdge": 1200
     },
     {
@@ -133,7 +196,11 @@
       "out": "products/inrico-s-200",
       "origin": "manufacturer",
       "review": "Manufacturer's product shot of the Inrico S-200 handset.",
-      "crops": { "square": { "ratio": "1:1" } },
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
       "maxEdge": 1200
     },
     {
@@ -143,7 +210,12 @@
       "origin": "ai-generated",
       "review": "Silhouettes siphoning a tanker at dusk; nobody identifiable. The box drops the bumper, where the generator wrote garbled lettering.",
       "box": [0.04, 0.0, 0.93, 0.88],
-      "crops": { "wide": { "ratio": "16:9", "focus": [0.5, 0.45] } }
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.5, 0.45]
+        }
+      }
     },
     {
       "id": "cover-e-seal",
@@ -151,7 +223,12 @@
       "out": "blog/what-is-a-container-e-seal",
       "origin": "ai-generated",
       "review": "A port worker checking an e-seal on a container door. No shipping-line marks, no plates. The faint 'Cargo secured' overlay is an illustration, not data.",
-      "crops": { "wide": { "ratio": "16:9", "focus": [0.5, 0.5] } }
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.5, 0.5]
+        }
+      }
     },
     {
       "id": "cover-poc-radio",
@@ -159,7 +236,231 @@
       "out": "blog/what-is-a-poc-radio",
       "origin": "ai-generated",
       "review": "Two depot workers on radios. Generic workwear, no Nebsam branding, so not presented as Nebsam staff.",
-      "crops": { "wide": { "ratio": "16:9", "focus": [0.5, 0.5] } }
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.5, 0.5]
+        }
+      }
+    },
+    {
+      "id": "product-hybrid-car-alarm",
+      "src": "Products/Car Alarm Category/Hybrid Car Alarm.png",
+      "out": "products/hybrid-car-alarm",
+      "origin": "manufacturer",
+      "review": "Alarm kit, key remotes, app screen and retail box. The box prints \"One Way Car Alarm System\"; the page keeps the canonical name. Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-hybrid-plus-car-alarm",
+      "src": "Products/Car Alarm Category/Hybrid Plus Car Alarm.png",
+      "out": "products/hybrid-plus-car-alarm",
+      "origin": "manufacturer",
+      "review": "Alarm kit with GPS unit and retail box. Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-hybrid-pro-plus-car-alarm",
+      "src": "Products/Car Alarm Category/Hybrid Pro Car Alarm.png",
+      "out": "products/hybrid-pro-plus-car-alarm",
+      "origin": "manufacturer",
+      "review": "Mapped by elimination: the only alarm photo without a product of its name, and the only alarm product without a photo. The box prints \"Hybrid Pro Car Alarm System\" with anti-jamming, tracking and immobiliser icons, which matches the Hybrid Pro Plus (the Hybrid Plus with Anti-Jammer GPS). Kelvin to confirm the label (12o report). Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-hybrid-promax-plus-car-alarm",
+      "src": "Products/Car Alarm Category/Hybrid Promax Plus Car Alarm Kit.png",
+      "out": "products/hybrid-promax-plus-car-alarm",
+      "origin": "manufacturer",
+      "review": "Alarm kit with two vibrating LCD key remotes, GPS unit and retail box. Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-hybrid-pro-tracker",
+      "src": "Products/Car Tracker category/Hybrid Pro Tracker.png",
+      "out": "products/hybrid-pro-tracker",
+      "origin": "manufacturer",
+      "review": "Tracking unit with harness and retail box. Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-hybrid-tracker",
+      "src": "Products/Car Tracker category/Hybrid Tracker.png",
+      "out": "products/hybrid-tracker",
+      "origin": "manufacturer",
+      "review": "Tracking unit with harness and retail box. Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-recovery-tracker",
+      "src": "Products/Car Tracker category/Recovery Tracker.png",
+      "out": "products/recovery-tracker",
+      "origin": "manufacturer",
+      "review": "Wireless back-up unit and retail box. The box prints \"3 Years Battery Life\"; the page keeps the source hedge \"up to 3 years\". Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-standard-tracker",
+      "src": "Products/Car Tracker category/Standard Tracker.png",
+      "out": "products/standard-tracker",
+      "origin": "manufacturer",
+      "review": "Tracker, wiring, relay and retail box. Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-inrico-t-521",
+      "src": "Products/Radios/Inrico T521 Two-Way Radio Front and Back.png",
+      "out": "products/inrico-t-521",
+      "origin": "manufacturer",
+      "review": "Manufacturer's product shot. Front and back of the handset.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-baofeng-bf-888s",
+      "src": "Products/Radios/baofeng 888s.png",
+      "out": "products/baofeng-bf-888s",
+      "origin": "manufacturer",
+      "review": "Manufacturer's product shot. Two handsets in chargers, with the box.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-baofeng-uv-5r",
+      "src": "Products/Radios/baofeng uv5r.png",
+      "out": "products/baofeng-uv-5r",
+      "origin": "manufacturer",
+      "review": "Manufacturer's product shot.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-baofeng-uv-82",
+      "src": "Products/Radios/baofeng uv82.png",
+      "out": "products/baofeng-uv-82",
+      "origin": "manufacturer",
+      "review": "Manufacturer's product shot.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-kenwood-tk-3000",
+      "src": "Products/Radios/kenwood.png",
+      "out": "products/kenwood-tk-3000",
+      "origin": "manufacturer",
+      "review": "Manufacturer's product shot.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-inrico-tm-7",
+      "src": "Products/Radios/tm7.png",
+      "out": "products/inrico-tm-7",
+      "origin": "manufacturer",
+      "review": "Manufacturer's product shot. Front panel and rear connectors of the mobile unit.",
+      "crops": {
+        "square": {
+          "ratio": "1:1"
+        }
+      },
+      "maxEdge": 1200
+    },
+    {
+      "id": "solution-vehicle-tracking",
+      "src": "Solutions/Vehicle tracking/Coastal Fleet Tracking in Mombasa.png",
+      "out": "solutions/vehicle-tracking",
+      "origin": "ai-generated",
+      "review": "The same source as home-solutions, cut for the solution page band: the mock phone screen is boxed out and its leader line healed out; the map pin over the van stays as a symbol. 3:2 rather than 21:9, because the van fills the height of what is left once the phone is cut away.",
+      "heal": [[0.52, 0.304, 0.716, 0.326]],
+      "box": [0.13, 0.0, 0.715, 1.0],
+      "crops": {
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.55, 0.55]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.55, 0.5]
+        }
+      }
+    },
+    {
+      "id": "solution-radio-communication",
+      "src": "Solutions/Radio communication/Connected Fleet Communications.png",
+      "out": "solutions/radio-communication",
+      "origin": "ai-generated",
+      "review": "Two depot workers on radios, trucks behind. Kept by Kelvin (not among the seven left out). The laptop screen showed a fleet map that could read as the Nebsam platform (brief 3.6), so it is blurred. The cap carries a small white mark too small to read; no Nebsam branding anywhere.",
+      "blur": [[0.29, 0.565, 0.478, 0.795]],
+      "crops": {
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.5]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.75, 0.5]
+        }
+      }
     }
   ]
 }

@@ -174,3 +174,15 @@
     scale: 1;
   }
 }
+
+/* A hint that names a pointer gesture, shown only where that gesture exists
+   (the product loupe's "Hover to magnify"). Hidden from touch, where it would
+   describe something the reader cannot do. */
+.hover-only {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hover-only {
+    display: block;
+  }
+}

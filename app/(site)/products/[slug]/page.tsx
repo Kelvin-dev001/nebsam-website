@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
-import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { JsonLd } from '@/components/seo/json-ld';
+import { ProductHero } from '@/components/product/product-hero';
 import { ProductSpecs } from '@/components/product/product-specs';
-import { ProductPrice } from '@/components/product/product-price';
-import { Card } from '@/components/ui/card';
 import { getProductBySlug, getProducts } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, jsonLdGraph, productSchema } from '@/lib/seo/schema';
+import { SITE_URL } from '@/lib/company';
 import { ROUTES } from '@/lib/constants';
+import { PRODUCT_PHOTOS } from '@/lib/media/products';
 import { productFeatures } from '@/types/content';
 
 /**
@@ -101,6 +101,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const name = product.name;
 
   const features = productFeatures(product.features);
+  const photo = PRODUCT_PHOTOS[slug];
   const trail = [
     { name: 'Home', path: ROUTES.home },
     { name: 'Products', path: ROUTES.products },
@@ -118,6 +119,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       description: product.summary ?? '',
       path: ROUTES.product(slug),
       ...(typeof product.price_kes === 'number' ? { priceKes: product.price_kes } : {}),
+      // The photo the page shows, as an absolute URL (Product rich results).
+      ...(photo ? { image: [`${SITE_URL}${photo.src.src}`] } : {}),
     }),
     breadcrumbSchema(trail),
   ]);
@@ -126,30 +129,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <main id="main">
       <JsonLd json={graph} />
 
-      <Section tone="dark" bleed>
-        <Shell className="pb-12 pt-10 md:pb-16 md:pt-14">
-          <Breadcrumbs trail={trail} tone="dark" />
-
-          <h1 className="mt-6 max-w-[26ch] font-display text-h1 text-text-inverse md:text-md-display">
-            {name}
-          </h1>
-
-          {/* The buy box is a card (ADR-0008): price, renewal, installation and
-              the action belong together, and beside the summary on desktop. */}
-          <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-start">
-            {product.summary ? (
-              <p className="max-w-prose text-body-lg text-text-secondary-inverse">
-                {product.summary}
-              </p>
-            ) : (
-              <span />
-            )}
-            <Card tone="dark">
-              <ProductPrice product={product} />
-            </Card>
-          </div>
-        </Shell>
-      </Section>
+      <ProductHero product={product} name={name} photo={photo} trail={trail} />
 
       {product.body ? (
         <Section tone="light">

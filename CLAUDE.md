@@ -95,7 +95,8 @@ question:
 
 **Confirmed product names — build against these, never re-decide:** Standard Tracker (never "Basic
 Tracker") · Hybrid Car Alarm (never "Hybrid Alarm") · Hybrid ProMax Car Alarm (vibrating key remote)
-· Hybrid ProMax Plus Car Alarm (vibrating remote + Anti-Jammer GPS) · Hybrid Dashcam **and** AI
+· Hybrid ProMax Plus Car Alarm (vibrating remote + Anti-Jammer GPS) · Hybrid Pro Tracker (Hybrid Tracker
+plus the illegal-door-opening call alert; `hybrid-pro-tracker`, confirmed by Kelvin 4 Oct 2026) · Hybrid Dashcam **and** AI
 Vehicle Video Telematics are **two separate products** · Nebsam Digital Solutions (K) Ltd, plural.
 
 **Never publish:** "50,000 customers" · "#1 … in Kenya" · "strongest active vehicle protection
