@@ -171,12 +171,18 @@ is complete and static. **Shared motion CSS goes into the one global stylesheet*
 the top of `app/globals.css` (`pinned-sequence.css`, `micro-interactions.css`) — **never a CSS
 module**: on Home a module became a second render-blocking stylesheet (V77).
 
-**Photographs (4 Oct 2026).** Every shipped photo is registered in `lib/media.ts` (alt text, real
-dimensions) and rendered through `ZoomImage` (`components/ui/zoom-image.tsx`): `whole` eases the photo
-in on hover (CSS only), `area` is a 2× loupe for documents and devices. Hover-capable pointers only;
-reduced motion drops the whole-image zoom. Styles in `components/ui/media.css`, @imported like the
-motion CSS. A missing photo is an `ImagePlaceholder` (brief PART 18), never stock. **Never the old
-site's product photos** (Kelvin); its premises photos are the **Mombasa** branch.
+**Photographs (ADR-0009).** Made by `scripts/images/prepare-photos.py` from
+`assets/photos/manifest.json` (source, origin, crops, blur, review) and committed under
+`assets/photos/`. They are statically imported in `lib/media/<group>.ts` (home, branches,
+industries, products, articles; types in `types.ts`): alt text, real dimensions, blur placeholder.
+**One module per group, never a barrel**: Next bundles every image a page's code imports into that
+page's client chunk. Render through `ZoomImage`: `whole` eases in on hover (CSS only),
+`area` is a 2× loupe for documents and devices. Styles in `components/ui/media.css`, @imported like
+the motion CSS. A missing photo is an `ImagePlaceholder` (brief PART 18), never stock. **AI-generated
+scenes fill gaps only, and never show Nebsam staff (including a Nebsam-branded uniform), premises,
+vehicles or the platform, nor imply police, customs or named-company ties.** No identifiable person
+without consent, no readable plate, no children. **Never the old site's product photos** (Kelvin);
+its premises photos are the **Mombasa** branch. Text never sits on an unscreened photo.
 
 **Cards and glass (ADR-0008).** One `Card` (`components/ui/card.tsx`, light/dark by ground) for a
 discrete thing the reader acts on: branch cards, the product buy box, download cards. Never for a
