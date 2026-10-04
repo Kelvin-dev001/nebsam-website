@@ -66,6 +66,19 @@ const RULES = [
     // "Hybrid Car Alarm" is canonical and must not match "Hybrid Alarm".
     patterns: [/\bbasic\s+tracker\b/i, /\bhybrid\s+alarm\b/i],
   },
+  {
+    label: 'Discontinued radio',
+    reference: 'Kelvin, 4 Oct 2026; migration 0048',
+    // Anchored to the brand or the slug: a bare "DR10" or "S-100" is too short
+    // to be safe against minified code.
+    patterns: [
+      /\binrico\s+s-?100\b/i,
+      /\binrico-s-100\b/i,
+      /\binrico\s+dr-?10\b/i,
+      /\binrico-dr10-gateway\b/i,
+      /\bdr10\s+(poc\s+and\s+lmr\s+)?gateway\b/i,
+    ],
+  },
 ];
 
 function walk(dir, out = []) {
