@@ -550,3 +550,28 @@ Performance 98–99 on 12n; Accessibility and SEO 100; CLS 0 in every run. Best 
 **Measurement hazard, recorded.** On battery, Windows throttled this machine to a `benchmarkIndex`
 of 540–1,100, and every run inflated by 0.5–1 s. Twenty runs were discarded. Check
 `Win32_Battery.BatteryStatus` (2 = on mains) before measuring.
+
+## 16. Sprint 12o — product and solution photos, paired against develop, 4 October 2026
+
+All 18 products get a photo (in the product title band with the 2x loupe, and as catalogue
+thumbnails), the Hybrid Pro Tracker page is new, and Vehicle Tracking and Radio Communication get a
+photo band. Five interleaved pairs per route: `sprint/12o-product-photos` at `0d44c2d` on :3101,
+`develop` at `f7609fa` on :3102, each built in its own worktree. `benchmarkIndex` 1,856–3,295.
+
+| Route | 12o | develop |
+|---|---|---|
+| `/products` | **2,359 ms** | 2,222 ms |
+| `/products/hybrid-pro-tracker` | **2,235 ms** | 1,969 ms |
+| `/products/inrico-t-521` | **2,226 ms** | 2,232 ms |
+| `/solutions/vehicle-tracking` | **2,258 ms** | 2,265 ms |
+| `/solutions/radio-communication` | **2,353 ms** | 2,300 ms |
+
+Every route is inside the budget. Accessibility, Best Practices and SEO are 100 on all five.
+Performance is 98–99 except `/products/hybrid-pro-tracker`, at 83–99 on BOTH builds because of
+V94. That page's CLS reached 0.124 (develop 0.118): a late web-font swap re-wraps the display H1.
+It predates 12o; CLS was 0 on the other four. The photos are held back until `load`
+(`AfterLoad`), so they stay out of the pre-paint window.
+
+**A discarded round.** The first paired round ran with `benchmarkIndex` down to 450. The cause was
+an orphaned `next dev` from 30 September spinning a full core (V92). It was stopped with Kelvin's
+approval and the round re-run. Rule kept: check for stray `node` processes before measuring.

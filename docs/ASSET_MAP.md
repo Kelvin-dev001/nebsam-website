@@ -38,10 +38,16 @@ one (ADR-0009 §Context). In use after 12n, all under `assets/photos/`:
 | `blog/*-wide.jpg` (3) | AI-generated | Home Resources | Fuel siphoning (garbled bumper text cropped out), container e-seal, PoC radio |
 | `public/certificates/kebs-permit-terms.jpg` | scan crop | `/about/certifications` | Sprint 11 crop; the 2× loupe since 12m |
 
-**Supplied, reviewed and held for Sprints 12o/12p:** the remaining 14 product shots, 9 industry
-scenes (the other 7 sectors, plus a second NGO and a second security scene), 3 article covers
-(anti-jamming, geofencing, immobilisation) and both other hero options. The Nairobi reception
-composite is for About.
+**Sprint 12o (4 Oct 2026):** all **18 products** now have a photo (`products/*-square.jpg`, on the
+product page with the 2x loupe and in the catalogue rows). Two solution bands
+(`solutions/{vehicle-tracking,radio-communication}-{wide,portrait}.jpg`). The radio band's laptop
+screen is blurred, because it showed a fleet map that could read as the Nebsam platform. The
+**Hybrid Pro Plus Car Alarm** uses the box labelled "Hybrid Pro Car Alarm System", mapped by
+elimination and by its icons (V93).
+
+**Supplied, reviewed and held for Sprint 12p:** 9 industry scenes (the other 7 sectors, plus a
+second NGO and a second security scene), 3 article covers (anti-jamming, geofencing,
+immobilisation) and both other hero options. The Nairobi reception composite is for About.
 
 **Supplied and NOT used** (Kelvin, 4 Oct 2026, "leave them out"): seven solution images. AI
 technicians in Nebsam-branded uniforms (fuel monitoring, vehicle security); an AI workshop technician
