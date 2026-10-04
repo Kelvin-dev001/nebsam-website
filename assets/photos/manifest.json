@@ -1,0 +1,165 @@
+{
+  "about": "Input to scripts/images/prepare-photos.py. Every photo the site ships, where it came from, how it is cut, and what the privacy and accuracy review found. Sources are Kelvin's Drive folder 'website pictures' (zip of 4 Oct 2026), kept in the git-ignored media-inbox/drive/. Kelvin confirmed on 4 Oct 2026 that every photo is Nebsam's to publish and that anyone recognisable agreed to appear. 'origin' is what the image is, so a reader of this file never mistakes an illustration for a photograph: photograph (taken of a real place), manufacturer (the maker's or Nebsam's product shot), ai-generated (gap-fill under brief 3.6: never Nebsam staff, premises, vehicles or platform).",
+  "copied": [
+    {
+      "file": "branches/mombasa-branch-entrance-wide.jpg",
+      "origin": "photograph",
+      "from": "the old site's public/images/main-entrance.jpeg, unchanged (1280x720, no EXIF); used since Sprint 12m, moved here in 12n",
+      "review": "The Mombasa branch entrance, Makupa. Kelvin, 4 Oct 2026: the old site's premises set is the Mombasa branch. Nobody in frame; the truck's plate is not visible. NOT made by the script, so a re-run never touches it."
+    }
+  ],
+  "photos": [
+    {
+      "id": "home-hero",
+      "src": "Homepage/Hero band-section/Dusk Highway Truck Journey-option 2.png",
+      "out": "home/hero-dusk-highway",
+      "origin": "ai-generated",
+      "review": "Generic articulated truck on a highway at dusk. No branding, blank plates, no people. Chosen by Kelvin over options 1 and 3 on 4 Oct 2026.",
+      "crops": {
+        "wide": { "ratio": "16:9", "focus": [0.62, 0.55] },
+        "portrait": { "ratio": "4:5", "focus": [0.74, 0.55] }
+      }
+    },
+    {
+      "id": "home-solutions",
+      "src": "Solutions/Vehicle tracking/Coastal Fleet Tracking in Mombasa.png",
+      "out": "home/solutions-coastal-van",
+      "origin": "ai-generated",
+      "review": "Panel van on a coastal road. The box leaves out the mock 'Fleet Tracking' phone screen on the right, which would read as the Nebsam app (brief 3.6: AI never depicts the platform). Its leader line, which would now point at nothing, is healed out. The map pin over the van stays: it is a symbol, not data. Blank plate.",
+      "heal": [[0.52, 0.304, 0.716, 0.326]],
+      "box": [0.13, 0.0, 0.715, 1.0],
+      "crops": { "portrait": { "ratio": "4:5", "focus": [0.55, 0.5] } }
+    },
+    {
+      "id": "branch-nairobi",
+      "src": "Branches/nairobi 1.png",
+      "out": "branches/nairobi-branch-hq",
+      "origin": "photograph",
+      "review": "The Nairobi HQ, Kiambu Road. Three people in frame, each about 30px tall at full size, side-on or from behind: not identifiable. The car's rear plate and the motorbike's plate are blurred. The box trims the gravel foreground: it was most of the frame, and fine texture is what costs bytes on a branch card (Contact LCP, 12n).",
+      "blur": [
+        [0.492, 0.551, 0.509, 0.571],
+        [0.664, 0.533, 0.677, 0.552]
+      ],
+      "box": [0.0, 0.08, 1.0, 0.68],
+      "crops": { "wide": { "ratio": "16:9", "focus": [0.45, 0.5] } }
+    },
+    {
+      "id": "branch-nakuru",
+      "src": "Branches/nakuru.png",
+      "out": "branches/nakuru-branch-front",
+      "origin": "photograph",
+      "review": "The original is two photos side by side; the box keeps the shopfront. No people. The fascia sign prints 0769 063 333, which lib/company.ts gives as a Mombasa number, while the Nakuru card lists +254 725 221122 (register V89). The posters print 0759 000 111, the published WhatsApp number.",
+      "box": [0.0, 0.0, 0.5, 1.0],
+      "crops": { "wide": { "ratio": "16:9", "focus": [0.5, 0.26] } }
+    },
+    {
+      "id": "industry-psv",
+      "src": "Industries/Public service vehicles/Colourful Minibus on a Bustling City Avenue.png",
+      "out": "industries/public-service-vehicles",
+      "origin": "ai-generated",
+      "review": "Minibus on a city avenue. No plate visible, no operator name. Passengers are generated, not real people.",
+      "crops": { "portrait": { "ratio": "4:5", "focus": [0.45, 0.55] } }
+    },
+    {
+      "id": "industry-logistics",
+      "src": "Industries/Logistics/logistics.jpg",
+      "out": "industries/logistics-and-transport",
+      "origin": "ai-generated",
+      "review": "Container truck in a port yard. Blank plate, no shipping-line marks on the container.",
+      "crops": { "portrait": { "ratio": "4:5", "focus": [0.5, 0.55] } }
+    },
+    {
+      "id": "industry-fuel",
+      "src": "Industries/fuel and hazardous/Fuel Tanker on the Nairobi Highway.png",
+      "out": "industries/fuel-and-hazardous-transport",
+      "origin": "ai-generated",
+      "review": "Fuel tanker from behind on a highway. Hazard placards only, no company name, no plate.",
+      "crops": { "portrait": { "ratio": "4:5", "focus": [0.6, 0.55] } }
+    },
+    {
+      "id": "industry-school",
+      "src": "Industries/school transport/School Bus Safety Inspection at Campus Gate.png",
+      "out": "industries/school-transport",
+      "origin": "ai-generated",
+      "review": "School bus at a campus gate with an adult inspecting it. NO children in frame (brief 16.1). No school name; the sign carries a generic motto.",
+      "crops": { "portrait": { "ratio": "4:5", "focus": [0.62, 0.55] } }
+    },
+    {
+      "id": "industry-construction",
+      "src": "Industries/construction/construction.png",
+      "out": "industries/construction-and-heavy-equipment",
+      "origin": "ai-generated",
+      "review": "Excavator loading a tipper on a building site. No plates or company marks.",
+      "crops": { "portrait": { "ratio": "4:5", "focus": [0.5, 0.55] } }
+    },
+    {
+      "id": "industry-security",
+      "src": "Industries/security companies/security 2.jpg",
+      "out": "industries/security-companies",
+      "origin": "ai-generated",
+      "review": "Patrol vehicle and a guard with a radio. The plate reads only 'PATROL'; no company name.",
+      "crops": { "portrait": { "ratio": "4:5", "focus": [0.45, 0.55] } }
+    },
+    {
+      "id": "product-anti-jammer-tracker",
+      "src": "Products/Car Tracker category/Anti-jammer tracker.png",
+      "out": "products/anti-jammer-tracker",
+      "origin": "manufacturer",
+      "review": "Device with its retail box. Kelvin, 4 Oct 2026: 'These are our real boxes'; printed text and marks are the packaging's own.",
+      "crops": { "square": { "ratio": "1:1" } },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-hybrid-pro-max-tracker",
+      "src": "Products/Car Tracker category/Hybrid Promax Tracker.png",
+      "out": "products/hybrid-pro-max-tracker",
+      "origin": "manufacturer",
+      "review": "Device, key remotes and retail box. Kelvin, 4 Oct 2026: real packaging.",
+      "crops": { "square": { "ratio": "1:1" } },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-hybrid-promax-car-alarm",
+      "src": "Products/Car Alarm Category/Hybrid Promax Car Alarm.png",
+      "out": "products/hybrid-promax-car-alarm",
+      "origin": "manufacturer",
+      "review": "Alarm kit with vibrating key remotes and retail box. Kelvin, 4 Oct 2026: real packaging.",
+      "crops": { "square": { "ratio": "1:1" } },
+      "maxEdge": 1200
+    },
+    {
+      "id": "product-inrico-s-200",
+      "src": "Products/Radios/inrico s200.png",
+      "out": "products/inrico-s-200",
+      "origin": "manufacturer",
+      "review": "Manufacturer's product shot of the Inrico S-200 handset.",
+      "crops": { "square": { "ratio": "1:1" } },
+      "maxEdge": 1200
+    },
+    {
+      "id": "cover-fuel-siphoning",
+      "src": "blog/fuel siphoning/fuel siphoning.jpg",
+      "out": "blog/how-fuel-siphoning-is-detected",
+      "origin": "ai-generated",
+      "review": "Silhouettes siphoning a tanker at dusk; nobody identifiable. The box drops the bumper, where the generator wrote garbled lettering.",
+      "box": [0.04, 0.0, 0.93, 0.88],
+      "crops": { "wide": { "ratio": "16:9", "focus": [0.5, 0.45] } }
+    },
+    {
+      "id": "cover-e-seal",
+      "src": "blog/e-seal/Container Inspection at a Busy Port.png",
+      "out": "blog/what-is-a-container-e-seal",
+      "origin": "ai-generated",
+      "review": "A port worker checking an e-seal on a container door. No shipping-line marks, no plates. The faint 'Cargo secured' overlay is an illustration, not data.",
+      "crops": { "wide": { "ratio": "16:9", "focus": [0.5, 0.5] } }
+    },
+    {
+      "id": "cover-poc-radio",
+      "src": "blog/POC radio/Fleet Communication at the Truck Depot.png",
+      "out": "blog/what-is-a-poc-radio",
+      "origin": "ai-generated",
+      "review": "Two depot workers on radios. Generic workwear, no Nebsam branding, so not presented as Nebsam staff.",
+      "crops": { "wide": { "ratio": "16:9", "focus": [0.5, 0.5] } }
+    }
+  ]
+}
