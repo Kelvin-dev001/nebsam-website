@@ -1,6 +1,6 @@
 # SPRINT 12n — PHOTOGRAPHY AND THE HOME VISUAL PASS
 
-**Branch:** `sprint/12n-visual-pass`, cut from `develop` at `b909b72`. Not merged.
+**Branch:** `sprint/12n-visual-pass`, cut from `develop` at `b909b72`. Merged into `develop` on 4 October 2026, with Kelvin's approval.
 **Date:** 4 October 2026
 **Asked for:** Kelvin's point 6 ("make the site generally beautiful and visually appealing … employ
 all best practices for 2026 website design"). Plan: `docs/design/S12N_VISUAL_PASS_PLAN.md`, approved
@@ -80,24 +80,27 @@ None to the project. Pillow runs the pipeline script, as fontTools runs the font
 
 ## PERFORMANCE
 
-Lighthouse 12, mobile preset, simulated throttling, warmed server. Medians are given only for runs
-whose `benchmarkIndex` was about 2,300 or above.
+**Final, paired against `develop`** (PERFORMANCE_BASELINE §15). Lighthouse 12, mobile preset,
+simulated throttling, five interleaved pairs per route, each build in its own worktree,
+`benchmarkIndex` 2,465–3,430.
 
-| Route | LCP median | Runs | Perf | CLS | Notes |
-|---|---|---|---|---|---|
-| `/` | **2,195 ms** ✅ (29 Sep: 2,360) | 5 | 98 | 0 | LCP element: the H1. Taken before the plain-anchor and registry-split changes, both of which only removed JS |
-| `/about/coverage` | **2,348 ms** ✅ | 3 | 98–99 | 0 | Taken before the branch photos went to quality 60 |
-| `/contact` | **2,876 ms** ❌ | 5 | 95 | 0 | With the branch photos at quality 75 (64 KB fetched before first paint). Now 38 KB, and **not re-measured** (below) |
+| Route | 12n | develop | Budget |
+|---|---|---|---|
+| `/` | **2,322 ms** | 2,358 ms | ✅ |
+| `/contact` | **2,408 ms** | 2,501 ms | ✅ |
+| `/about/coverage` | **2,354 ms** | 2,437 ms | ✅ |
 
-**Not measurable since:** the laptop went on battery (30%, then 17%, discharging). The benchmark
-index fell to 540–1,100, and twenty further runs were discarded.
-
+- Lighthouse Performance 98–99, Accessibility 100, SEO 100, CLS 0 in every run. Best Practices
+  100, except Contact at 96 on both builds (a CSP issue that predates 12n).
+- **How:** the first complete build was over budget. A build with the photos switched off showed
+  the branch photos cost Contact ~560 ms. Two changes fixed it: those photos and the hero photo now
+  render after `load` (`AfterLoad`, no layout shift, `<noscript>` fallback), and the blur
+  placeholders are gone (their data shipped twice per photo). Home HTML went from 35.4 to 30.5 KB
+  gzipped.
 - Transfer weight, phone: Home 244 KB at first view and 712 KB fully scrolled (budget 1.5 MB);
   Contact 292 KB (budget 1.0 MB).
 - Largest delivered image: 56 KB (budget 250 KB).
 - First-load JS: Home 114 kB, Contact 138 kB, Coverage 109 kB (budget 180 kB).
-- Lighthouse Accessibility 100 and SEO 100 on all three. Best Practices 100, except Contact at 96:
-  a CSP issue in Chrome's Issues panel that is not image-related. Check whether it predates 12n.
 
 ## ACCESSIBILITY
 
@@ -116,7 +119,8 @@ index fell to 540–1,100, and twenty further runs were discarded.
 
 ## KNOWN ISSUES / RISKS
 
-- **Contact LCP** may still exceed 2.5 s (above).
+- **A `next dev` running in the main checkout since 30 September shares `.next` with production
+  builds and corrupts them** (V92). Measurements were taken in separate worktrees.
 - **V54b:** a rebuild serves stale database reads (still open).
 - **V88:** Coverage overflows by 12 px at 768 px (pre-existing).
 - **AI-generated scenes** are used as gap-fill for the hero, industries and covers. They are honest
@@ -124,15 +128,16 @@ index fell to 540–1,100, and twenty further runs were discarded.
 
 ## DECISIONS NEEDED FROM THE HUMAN
 
-1. **Plug the laptop in**, so Contact and Coverage can be re-measured. If Contact is still over
-   2.5 s, choose: smaller branch thumbnails on phones, or accept the photos' cost on that one page.
-2. **V89:** which number is right for Nakuru?
-3. **V91:** is the Hybrid Pro Tracker sold?
-4. **Merge** `sprint/12n-visual-pass` into `develop`?
+1. ~~Plug the laptop in~~ Done; re-measured above.
+2. **V89:** Kelvin said "okay", read as no change. Which number is right for Nakuru is still open.
+3. ~~V91~~ Answered: it is sold. Confirm the name and the slug `hybrid-pro-tracker` before 12o
+   mints it.
+4. ~~Merge~~ Approved by Kelvin on 4 October 2026.
+5. **V92:** stop the old `next dev` server (port 3000).
 
 ## RECOMMENDED NEXT STEP
 
-Re-measure Contact on mains power, then **Sprint 12o**: product photos on all product pages (with
+**Sprint 12o**: product photos on all product pages (with
 the 2× loupe) and in the catalogue rows, and photo bands on the solutions whose images were kept.
 
 **STOPPING HERE FOR REVIEW.**

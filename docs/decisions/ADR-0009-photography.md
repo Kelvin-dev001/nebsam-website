@@ -51,16 +51,23 @@ readable plate, no children, no customer data on a screen.
 **3. One pipeline.** `scripts/images/prepare-photos.py` cuts every photo from the manifest:
 focal-point crops per breakpoint, blur for plates, a masked heal for drawn-on lines, and EXIF and
 GPS stripped. Files are deterministic and committed under `assets/photos/`, then statically
-imported, so next/image knows real dimensions (CLS 0) and has a blur placeholder. A revision ships
+imported, so next/image knows real dimensions (CLS 0). No blur placeholder (see 4). A revision ships
 under a new name.
 
 **4. Art direction by breakpoint, for the budget.** The Home hero is one `<picture>`: 4:5 on phones
 and 16:9 from 640 px. Below `lg` it sits under the text, so the headline stays the LCP element on the
 throttled mobile profile the budget is measured on. From `lg` it fills the hero behind a navy scrim
 that is solid under the text, and the text column is capped to end inside it (`.hero-copy`). So the
-hero's contrast is the plain navy ratios, not a guess about pixels. The photo is lazy, because an
-eager image is fetched before first paint and Lighthouse charges about 8 ms of LCP per KB of that
-(PERFORMANCE_BASELINE §14).
+hero's contrast is the plain navy ratios, not a guess about pixels.
+
+**Photos that are not the point of the page load after it** (`AfterLoad`, 12n): the hero photo and
+the branch-card photos. A lazy image near the viewport is still fetched at first layout, before
+first paint, and that cost LCP. Measured with and without: the branch photos cost Contact about
+560 ms. The empty frame stands in, its size fixed so nothing shifts, and `<noscript>` keeps every
+photo for readers without JavaScript. **There are no blur placeholders**: each photo's blur data
+travelled twice (HTML and RSC payload) and was part of a 15.5 KB gzipped HTML growth on Home. After
+both changes, paired against `develop`, 12n is faster on Home, Contact and Coverage
+(PERFORMANCE_BASELINE §15).
 
 **5. Motion stays Level 1.** Hover zoom (12m), plus a scroll-tied settle of 108% to 100% on entering
 photos (`.photo-reveal`). It moves the `scale` property only, never opacity, so it hides nothing.
