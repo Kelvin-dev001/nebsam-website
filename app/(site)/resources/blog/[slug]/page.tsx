@@ -1,3 +1,7 @@
+import { Fragment } from 'react';
+import { ZoomImage } from '@/components/ui/zoom-image';
+import { SITE_URL } from '@/lib/company';
+import { ARTICLE_COVERS } from '@/lib/media/articles';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Section, Shell } from '@/components/layout/section';
@@ -74,10 +78,22 @@ export async function generateMetadata({
   const { data: post } = await getBlogPostBySlug(slug);
   const title = post?.seo_title ?? post?.title;
   if (!post || !title) return {};
+  const cover = ARTICLE_COVERS[slug];
   return buildMetadata({
     title,
     description: post.seo_description ?? post.excerpt ?? '',
     path: ROUTES.blogPost(slug),
+    // The article's own share image: its cover, cut to 40:21 (V45).
+    ...(cover
+      ? {
+          ogImage: {
+            url: `${SITE_URL}${cover.og.path}`,
+            width: cover.og.width,
+            height: cover.og.height,
+            alt: cover.alt,
+          },
+        }
+      : {}),
   });
 }
 
@@ -88,6 +104,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const title = post.title;
 
   const paragraphs = (post.body ?? '').split(/\n{2,}/).filter((p) => p.trim() !== '');
+  const cover = ARTICLE_COVERS[slug];
 
   /**
    * The solution this article sends the reader to, if it has one and if that
@@ -129,6 +146,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             authorName: post.author_name,
             datePublished: post.published_at,
             dateModified: post.updated_at ?? post.published_at,
+            ...(cover ? { image: `${SITE_URL}${cover.src.src}` } : {}),
           }),
         ]
       : []),
@@ -184,9 +202,26 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="max-w-prose">
             {post.excerpt ? <p className="text-body-lg text-text-primary">{post.excerpt}</p> : null}
             {paragraphs.map((para, i) => (
-              <p key={i} className="mt-4 text-body text-text-secondary">
-                {para}
-              </p>
+              <Fragment key={i}>
+                <p className="mt-4 text-body text-text-secondary">{para}</p>
+                {/*
+                  The cover, after the lede and the first paragraph rather than
+                  under the title: there it would sit in a phone's first screen,
+                  and a photo that arrives after load there becomes the LCP
+                  element (ADR-0009). Here it is below the fold, so AfterLoad
+                  can hold it back. The answer the article opens with comes
+                  first either way.
+                */}
+                {i === 0 && cover ? (
+                  <ZoomImage
+                    afterLoad
+                    src={cover.src}
+                    alt={cover.alt}
+                    sizes="(min-width: 768px) 40rem, 100vw"
+                    frameClassName="photo-reveal my-8 aspect-video rounded-panel"
+                  />
+                ) : null}
+              </Fragment>
             ))}
 
             {/*
