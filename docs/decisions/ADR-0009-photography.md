@@ -84,6 +84,14 @@ It runs where scroll-driven animations exist and never under reduced motion.
    invented control room (AI video telematics).
 3. **Hero:** option 2, the dusk highway.
 
+**Decision 2 amended, 5 October 2026 (Sprint 12q).** Kelvin: "reuse the seven solutions photos that
+we dropped". Five are reused, each cut until it complies: the Nebsam lettering, the officer, the
+plate, the operator livery, the "certified" sticker and the control room are cropped, blurred or
+filled out (`assets/photos/manifest.json` records each). The brief still decides what may ship, so
+two stay out. In recovery (a police yard, its crest, a "Recovery team" jacket, on a page that says
+Nebsam is not a recovery service) and cargo (customs officers and gate, a real shipping line's
+container), the problem is the scene itself (V90).
+
 ## Also not used, and why
 
 - The telematics cover carries Gemini's watermark, an invented "Nairobi Freight Logistics" livery and

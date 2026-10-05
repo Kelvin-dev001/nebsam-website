@@ -57,12 +57,20 @@ Nairobi reception interior; the half with a visible face is not used.
 **Held, unused:** the second NGO scene, the second security scene, hero option 1, and the Nairobi
 exterior composite.
 
-**Supplied and NOT used** (Kelvin, 4 Oct 2026, "leave them out"): seven solution images. AI
-technicians in Nebsam-branded uniforms (fuel monitoring, vehicle security); an AI workshop technician
-(key programming); a "Kenya Police Service Recovery Yard" (recovery); traffic police, a realistic
-plate and a "Mombasa Express" livery (speed limiters); customs officers and a UASC container (cargo);
-an invented control room (AI video telematics). Also the telematics cover (Gemini watermark, invented
-livery, control room). Brief 3.6: AI never shows Nebsam staff, premises, vehicles or the platform.
+**Sprint 12q (5 Oct 2026), the seven left out in 12n:** Kelvin, "reuse the seven solutions photos
+that we dropped". **Five reused, each cut so it complies** (brief 3.6, PART 18):
+- **Fuel monitoring and vehicle security:** cropped just clear of the "nebsam Digital Solutions"
+  lettering on the AI technicians' shirts. On fuel, the tracker's "FMB" label is blurred too.
+- **Key programming:** without the blank fade made for text.
+- **Speed governors:** the traffic officer and the government sign are cut away. The plate
+  (KDG 742X) and a "Speed governor certified" sticker are blurred. The "Mombasa Express" livery is
+  repainted out of the bonnet with the pipeline's new `fill`.
+- **AI video telematics:** the truck half only, without the control room or the icon arc.
+
+**Still not used:** recovery (a Kenya Police Service yard and crest, an officer, a "Recovery team"
+jacket) and cargo (customs officers and gate, a UASC container, a mock status panel). In both the
+problem is the scene, not a corner of it (V90). Also the supplied telematics cover (Gemini
+watermark, invented livery, control room).
 
 **Still to come from Kelvin** (promised 4 Oct 2026 "tomorrow"): client logos (with V12 permission),
 all six certificate scans, platform screenshots.
