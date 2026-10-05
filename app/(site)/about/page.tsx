@@ -1,3 +1,5 @@
+import { PhotoBand } from '@/components/ui/photo-band';
+import { ABOUT_PHOTO } from '@/lib/media/about';
 import { Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
@@ -146,6 +148,11 @@ export default function AboutPage() {
           </dl>
         </Shell>
       </Section>
+
+      {/* The Nairobi head office reception (ADR-0009): a photograph of the
+          real premises, nobody in frame. Below the fold on a phone, so it
+          loads after the page. */}
+      <PhotoBand photo={ABOUT_PHOTO} />
 
       <Section tone="paper">
         <Shell>

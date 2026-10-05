@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { PhotoBand } from '@/components/ui/photo-band';
+import { INDUSTRY_PHOTOS } from '@/lib/media/industries';
 import { notFound } from 'next/navigation';
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { ButtonLink } from '@/components/ui/button';
@@ -175,6 +177,13 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
             </div>
           </Shell>
         </Section>
+      ) : null}
+
+      {/* The sector's photo (ADR-0009), one section below the title band so it
+          is below the fold on a phone and loads after the page. Only with an
+          intro above it: without one it would land in the first screen. */}
+      {paragraphs.length > 0 && INDUSTRY_PHOTOS[slug] ? (
+        <PhotoBand photo={INDUSTRY_PHOTOS[slug]} />
       ) : null}
 
       {solutions.data.length > 0 ? (
