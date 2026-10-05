@@ -110,7 +110,11 @@ export default async function CoveragePage() {
 
       <Section tone="light">
         <Shell>
-          <div className="grid gap-12 md:grid-cols-[minmax(0,34rem)_minmax(0,1fr)] md:gap-16">
+          {/* Two columns from lg, not md (V88). At 768px the 34rem map and the
+              gap left the text column 96px, narrower than one word of its h2
+              at display size, so the page scrolled sideways by 12px. Between
+              768 and 1023 the map now sits above the text. */}
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,34rem)_minmax(0,1fr)] lg:gap-16">
             <CoverageMap
               branches={branches.map((b) => ({ name: b.town || b.name, lat: b.lat, lng: b.lng }))}
               towns={towns.map((t) => ({ name: t.name, lat: t.lat, lng: t.lng }))}
