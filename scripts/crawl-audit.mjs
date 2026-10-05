@@ -17,6 +17,9 @@
  *   9. No [[NEEDS_VERIFICATION]] token on any public page
  *  10. No page indexed that should be noindex
  *
+ * Plus, since the restart, a real share image on every indexable page
+ * (CLAUDE.md §7; V45 went unnoticed for two sprints without it).
+ *
  * ── "With JavaScript disabled" is the whole point, and it is free here ──────
  *
  * `fetch` runs no JavaScript. So every assertion below is made against the
@@ -137,6 +140,9 @@ function extract(html, url) {
   const og = {
     title: html.match(/<meta[^>]+property="og:title"[^>]+content="([^"]*)"/i)?.[1] ?? null,
     image: html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]*)"/i)?.[1] ?? null,
+    width: html.match(/<meta[^>]+property="og:image:width"[^>]+content="([^"]*)"/i)?.[1] ?? null,
+    height: html.match(/<meta[^>]+property="og:image:height"[^>]+content="([^"]*)"/i)?.[1] ?? null,
+    twitterCard: html.match(/<meta[^>]+name="twitter:card"[^>]+content="([^"]*)"/i)?.[1] ?? null,
   };
 
   return {
@@ -364,6 +370,48 @@ function checkTokens() {
   }
 }
 
+/**
+ * SHARE IMAGES (added in the Sprint 13 restart, after V45 closed in 12p).
+ *
+ * CLAUDE.md §7 asks for a real share image on every page, and V45 was the
+ * site-wide default being a 225x225 logo for two sprints without anything
+ * failing. So: every indexable page names an og:image, the file loads as an
+ * image, and the large Twitter card is only claimed for an image big enough
+ * to carry it. The image URLs are absolute on the production domain, so they
+ * are fetched from the server under test instead: the domain still serves the
+ * old site until cutover. A size other than 1200x630 is a note, not a
+ * failure: two article covers are cut at 40:21 from sources too small for it.
+ */
+async function checkShareImages() {
+  const checked = new Map(); // url -> problem message, or null when fine
+  for (const [path, page] of pages) {
+    if (page.status !== 200 || /noindex/i.test(page.robots ?? '')) continue;
+    const { image, width, height, twitterCard } = page.og ?? {};
+    if (!image) {
+      fail('share', `${path} has no og:image`);
+      continue;
+    }
+    if (!checked.has(image)) {
+      const local = `${base}${new URL(image, base).pathname}`;
+      const res = await fetch(local).catch(() => null);
+      const type = res?.headers.get('content-type') ?? '';
+      checked.set(
+        image,
+        !res || res.status !== 200 || !type.startsWith('image/')
+          ? `og:image ${image} returns ${res ? `${res.status} ${type}` : 'no response'}`
+          : null,
+      );
+    }
+    if (checked.get(image)) fail('share', `${path} — ${checked.get(image)}`);
+    if (width !== '1200' || height !== '630') {
+      note('share', `${path} share image is ${width ?? '?'}x${height ?? '?'}, not 1200x630`);
+    }
+    if (twitterCard === 'summary_large_image' && (Number(width) < 300 || Number(height) < 157)) {
+      fail('share', `${path} claims a large Twitter card for a ${width}x${height} image`);
+    }
+  }
+}
+
 function checkImages() {
   for (const [path, page] of pages) {
     if (page.status !== 200 || !page.imagesWithoutAlt) continue;
@@ -550,6 +598,7 @@ checkNoindex();
 checkTokens();
 checkImages();
 checkSchema();
+await checkShareImages();
 await checkRedirectHops();
 await checkLlmsTxt();
 
