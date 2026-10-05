@@ -14,29 +14,28 @@ const DESCRIPTION_MIN = 110;
 const DESCRIPTION_MAX = 155;
 
 /**
- * Share image.
+ * Share image (V45, closed in Sprint 12p).
  *
- * ⚠️ The only asset available is 225x225 — verified, not assumed. The target is
- * 1200x630 (docs/ASSET_MAP.md shot list, register V45).
- *
- * The dimensions declared here are the ACTUAL ones. Declaring 1200x630 for a
- * 225x225 file would be metadata contradicting the asset, which is the same
- * class of error as schema contradicting the page.
- *
- * Because the image is below Twitter's 300x157 minimum for a large card, the
- * card type degrades to `summary` until a real one exists. Replace the file,
- * update these three values, and `twitterCard` flips back automatically.
+ * The site default is the Home hero photograph cut to exactly 1200x630 with the
+ * logo plaque, made by scripts/images/prepare-photos.py into public/og/ so the
+ * URL is stable for crawlers. Articles pass their own (lib/media/articles.ts).
+ * The dimensions declared are the file's real ones: declaring a size the file
+ * does not have is metadata contradicting the asset.
  */
 export const OG_IMAGE = {
-  url: `${SITE_URL}/images/site-og-image.png`,
-  width: 225,
-  height: 225,
+  url: `${SITE_URL}/og/site.jpg`,
+  width: 1200,
+  height: 630,
   alt: `${COMPANY.legalName} — vehicle tracking and fleet telematics in Kenya`,
 };
 
 /** A large card needs at least 300x157; below that Twitter falls back anyway. */
-const twitterCard: 'summary' | 'summary_large_image' =
-  OG_IMAGE.width >= 300 && OG_IMAGE.height >= 157 ? 'summary_large_image' : 'summary';
+function twitterCardFor(image: {
+  width: number;
+  height: number;
+}): 'summary' | 'summary_large_image' {
+  return image.width >= 300 && image.height >= 157 ? 'summary_large_image' : 'summary';
+}
 
 interface PageMetaInput {
   /** Without the brand suffix — the builder appends it. */
@@ -112,7 +111,7 @@ export function buildMetadata({
       images: [ogImage],
     },
     twitter: {
-      card: twitterCard,
+      card: twitterCardFor(ogImage),
       title: fullTitle,
       description,
       images: [ogImage.url],
@@ -141,5 +140,5 @@ export const rootMetadata: Metadata = {
     locale: 'en_KE',
     images: [OG_IMAGE],
   },
-  twitter: { card: twitterCard, images: [OG_IMAGE.url] },
+  twitter: { card: twitterCardFor(OG_IMAGE), images: [OG_IMAGE.url] },
 };
