@@ -24,6 +24,12 @@ WHAT EACH ENTRY CAN SAY, applied in this order:
 3. crops   name -> {"ratio": "W:H", "focus": [fx, fy]}. The largest W:H rectangle inside the box,
            centred as near the focus as the edges allow. The focus is a fraction of the BOX.
 4. Longest edge capped at maxEdge (default 2400). Nothing is ever upscaled.
+5. A crop may carry `path` (repo-relative, with filename) to write somewhere other than
+   assets/photos/<out>-<crop>.jpg. Social-share images use it to land in public/og/, at a stable
+   URL a crawler can fetch, at exactly the 1200x630 they are cut to (ratio 40:21, maxEdge 1200).
+6. A crop may carry `stamp`: {"file": <repo-relative PNG>, "width": px, "margin": px}, pasted at
+   the bottom-left with its own transparency. The site share image carries the logo plaque this
+   way: scaled, never redrawn or recoloured (CLAUDE.md §6).
 
 Every output is sRGB JPEG, quality 85, progressive, with NO metadata: EXIF, GPS and any embedded
 provenance are dropped, because a phone photo's EXIF can carry the exact location of the person who
@@ -67,13 +73,17 @@ def fit_ratio(w, h, ratio, focus):
 
 
 def blur_regions(img, boxes):
-    for box in boxes:
+    for item in boxes:
+        # A bare box, or {"box": [...], "radius": px} for a large region: a screen or a panel needs
+        # only enough blur to make its text unreadable. The scaled default flattens a large region
+        # into a featureless block that reads as a sticker.
+        box, fixed = (item['box'], item.get('radius')) if isinstance(item, dict) else (item, None)
         region = frac_box(box, *img.size)
         patch = img.crop(region)
         # Radius scales with the patch, so a large plate is as unreadable as a small one, but
         # stays below a third of it: heavier, and the patch flattens into a grey square that reads
         # as a sticker rather than as part of the photograph.
-        radius = max(3, min(patch.size) // 5)
+        radius = fixed or max(3, min(patch.size) // 5)
         img.paste(patch.filter(ImageFilter.GaussianBlur(radius)), region[:2])
     return img
 
@@ -119,11 +129,17 @@ def build(entry):
     written = []
     for name, spec in entry['crops'].items():
         out = img.crop(fit_ratio(*img.size, spec['ratio'], spec.get('focus', [0.5, 0.5])))
-        edge = entry.get('maxEdge', 2400)
+        edge = spec.get('maxEdge', entry.get('maxEdge', 2400))
         if max(out.size) > edge:
             scale = edge / max(out.size)
             out = out.resize((round(out.width * scale), round(out.height * scale)), Image.LANCZOS)
-        path = os.path.join(OUT_DIR, f"{entry['out']}-{name}.jpg")
+        if 'stamp' in spec:
+            st = spec['stamp']
+            mark = Image.open(os.path.join(ROOT, st['file'])).convert('RGBA')
+            mark = mark.resize((st['width'], round(mark.height * st['width'] / mark.width)), Image.LANCZOS)
+            margin = st.get('margin', 40)
+            out.paste(mark, (margin, out.height - mark.height - margin), mark)
+        path = os.path.join(ROOT, spec['path']) if 'path' in spec else os.path.join(OUT_DIR, f"{entry['out']}-{name}.jpg")
         os.makedirs(os.path.dirname(path), exist_ok=True)
         buf = io.BytesIO()
         out.save(buf, 'JPEG', quality=85, progressive=True, optimize=True)
