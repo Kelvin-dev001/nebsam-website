@@ -4,7 +4,7 @@
     {
       "file": "branches/mombasa-branch-entrance-wide.jpg",
       "origin": "photograph",
-      "from": "the old site's public/images/main-entrance.jpeg, unchanged (1280x720, no EXIF); used since Sprint 12m, moved here in 12n",
+      "from": "the old site's public/images/main-entrance.jpeg (since Sprint 14 in source-assets/legacy-public/images/), unchanged (1280x720, no EXIF); used since Sprint 12m, moved here in 12n",
       "review": "The Mombasa branch entrance, Makupa. Kelvin, 4 Oct 2026: the old site's premises set is the Mombasa branch. Nobody in frame; the truck's plate is not visible. NOT made by the script, so a re-run never touches it."
     }
   ],

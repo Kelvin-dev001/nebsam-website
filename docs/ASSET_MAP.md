@@ -96,7 +96,14 @@ favicon source. Until then the logo can only be placed on light surfaces.
 Derived token system and the full computed contrast table: `docs/DESIGN_SYSTEM.md`.
 
 ## Summary
-- **Existing:** 120 files, **26.9 MB** in `public/`
+> **SPRINT 14 (6 Oct 2026): `public/` now holds 22 files, 1.4 MB, every one of them in use**
+> (fonts, share images, logos, the favicon and the KEBS crop). The other 107, about 22 MB, moved to
+> `source-assets/legacy-public/` with their paths kept: in git, never served. The audit read every
+> file against the code and the database; see `source-assets/README.md`. The Sprint 0 summary and
+> inventory below describe `public/` as it was then, and the paths in them now live under
+> `source-assets/legacy-public/`.
+
+- **Existing (Sprint 0):** 120 files, **26.9 MB** in `public/`
 - **Verdict:** a meaningful amount of usable real photography already exists — certificates, six
   client logos, product shots, premises shots. **Inventory this before commissioning a photographer.**
 - **Every single file needs optimisation.** Nothing here is web-ready at current sizes.
@@ -215,7 +222,7 @@ device each existing product image shows]]`
 | OG image | Branded social share image, per template | 1200×630 | MEDIUM |
 
 ## Full file inventory
-TOTAL: 26.9 MB across 120 files
+Sprint 0, before the Sprint 14 move (note under Summary). TOTAL: 26.9 MB across 120 files
 
 | File | Size | Dimensions | Flag |
 |---|---|---|---|
