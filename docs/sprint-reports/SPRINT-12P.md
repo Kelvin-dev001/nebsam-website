@@ -73,7 +73,10 @@ All templates are inside the budget (PERFORMANCE_BASELINE §17).
 
 ## DECISIONS NEEDED
 
-- Keep or drop the cross-border image?
-- Merge this sprint into `develop`?
+Answered by Kelvin, 5 Oct 2026:
+- The cross-border image: **keep it**.
+- Merge into `develop`: **yes**.
+- Also answered: V89 closed (the Nakuru sign stays as it is), V93 accepted for now, and V90 (the
+  seven dropped solution photos) is to be reused. That last one is Sprint 12q.
 
 **STOPPING HERE FOR REVIEW.**
