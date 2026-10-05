@@ -54,7 +54,7 @@ export function IndustriesPreview({ industries }: { industries: PublicIndustry[]
                 >
                   {photo ? (
                     <ZoomImage
-                      src={photo.src}
+                      src={photo.portrait}
                       alt={photo.alt}
                       sizes="(min-width: 1024px) 13rem, (min-width: 640px) 40vw, 68vw"
                       frameClassName="photo-reveal aspect-[4/5] rounded-panel"

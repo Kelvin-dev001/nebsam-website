@@ -1,3 +1,5 @@
+import { ZoomImage } from '@/components/ui/zoom-image';
+import { INDUSTRY_PHOTOS } from '@/lib/media/industries';
 import { Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
 import { getIndustries } from '@/lib/content';
@@ -74,10 +76,29 @@ export default async function IndustriesIndexPage() {
             <ul className="border-t border-border-hairline">
               {industries.map((i) => (
                 <li key={i.id} className="border-b border-border-hairline">
+                  {/*
+                    A small photo opens the row, as in the catalogue: still a
+                    ruled list, not cards (ADR-0008). Empty alt, because the
+                    link already names the page; AfterLoad keeps the photos out
+                    of the first-paint window.
+                  */}
                   <a
                     href={ROUTES.industry(i.slug)}
-                    className="group grid gap-x-10 gap-y-2 py-7 md:grid-cols-[22rem_1fr]"
+                    className="zoom-group group grid grid-cols-[4rem_minmax(0,1fr)] items-start gap-x-5 gap-y-2 py-7 md:grid-cols-[4rem_20rem_minmax(0,1fr)] md:gap-x-8"
                   >
+                    <span className="row-span-2 md:row-span-1">
+                      {INDUSTRY_PHOTOS[i.slug] ? (
+                        <ZoomImage
+                          afterLoad
+                          src={INDUSTRY_PHOTOS[i.slug].portrait}
+                          alt=""
+                          sizes="4rem"
+                          frameClassName="aspect-[4/5] rounded-control"
+                        />
+                      ) : (
+                        <span className="block aspect-[4/5] rounded-control bg-surface-raised" />
+                      )}
+                    </span>
                     <h2 className="font-display-tight text-h3 text-text-primary underline-offset-4 group-hover:underline">
                       {i.name}
                     </h2>

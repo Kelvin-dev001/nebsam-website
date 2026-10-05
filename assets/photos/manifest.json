@@ -23,6 +23,17 @@
         "portrait": {
           "ratio": "4:5",
           "focus": [0.74, 0.55]
+        },
+        "og": {
+          "ratio": "40:21",
+          "focus": [0.6, 0.55],
+          "maxEdge": 1200,
+          "path": "public/og/site.jpg",
+          "stamp": {
+            "file": "brand/logo/nebsam_transparent_logo.png",
+            "width": 200,
+            "margin": 48
+          }
         }
       }
     },
@@ -83,6 +94,10 @@
         "portrait": {
           "ratio": "4:5",
           "focus": [0.45, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.45, 0.55]
         }
       }
     },
@@ -95,6 +110,10 @@
       "crops": {
         "portrait": {
           "ratio": "4:5",
+          "focus": [0.5, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
           "focus": [0.5, 0.55]
         }
       }
@@ -109,6 +128,10 @@
         "portrait": {
           "ratio": "4:5",
           "focus": [0.6, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.55, 0.55]
         }
       }
     },
@@ -122,6 +145,10 @@
         "portrait": {
           "ratio": "4:5",
           "focus": [0.62, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.6, 0.55]
         }
       }
     },
@@ -134,6 +161,10 @@
       "crops": {
         "portrait": {
           "ratio": "4:5",
+          "focus": [0.5, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
           "focus": [0.5, 0.55]
         }
       }
@@ -148,6 +179,10 @@
         "portrait": {
           "ratio": "4:5",
           "focus": [0.45, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.55]
         }
       }
     },
@@ -214,6 +249,12 @@
         "wide": {
           "ratio": "16:9",
           "focus": [0.5, 0.45]
+        },
+        "og": {
+          "ratio": "40:21",
+          "focus": [0.5, 0.45],
+          "maxEdge": 1200,
+          "path": "public/og/articles/how-fuel-siphoning-is-detected.jpg"
         }
       }
     },
@@ -227,6 +268,12 @@
         "wide": {
           "ratio": "16:9",
           "focus": [0.5, 0.5]
+        },
+        "og": {
+          "ratio": "40:21",
+          "focus": [0.5, 0.5],
+          "maxEdge": 1200,
+          "path": "public/og/articles/what-is-a-container-e-seal.jpg"
         }
       }
     },
@@ -240,6 +287,12 @@
         "wide": {
           "ratio": "16:9",
           "focus": [0.5, 0.5]
+        },
+        "og": {
+          "ratio": "40:21",
+          "focus": [0.5, 0.5],
+          "maxEdge": 1200,
+          "path": "public/og/articles/what-is-a-poc-radio.jpg"
         }
       }
     },
@@ -459,6 +512,234 @@
         "portrait": {
           "ratio": "4:5",
           "focus": [0.75, 0.5]
+        }
+      }
+    },
+    {
+      "id": "industry-agriculture",
+      "src": "Industries/agriculture/agriculture.png",
+      "out": "industries/agriculture",
+      "origin": "ai-generated",
+      "review": "A pickup and a tractor on a farm, workers in the fields. Blank plate, no farm or company name.",
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.3, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.55]
+        }
+      }
+    },
+    {
+      "id": "industry-car-hire-and-rental",
+      "src": "Industries/car hire/car hire.png",
+      "out": "industries/car-hire-and-rental",
+      "origin": "ai-generated",
+      "review": "A row of rental cars and an attendant with a tablet. The box cuts away a mock \"Fleet Online / Location Tracking / Geofence\" panel drawn on the building and its map pin: it read as the Nebsam platform (brief 3.6).",
+      "box": [0.0, 0.0, 0.715, 1.0],
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.55, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.55]
+        }
+      }
+    },
+    {
+      "id": "industry-corporate-fleets",
+      "src": "Industries/corporate fleets/Corporate Fleet Inspection at a Modern Office.png",
+      "out": "industries/corporate-fleets",
+      "origin": "ai-generated",
+      "review": "Company vehicles lined up outside an office block, a man checking a tablet. Blank plates, no company name.",
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.55, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.55]
+        }
+      }
+    },
+    {
+      "id": "industry-cross-border-transport",
+      "src": "Industries/cross-border/cross-border.png",
+      "out": "industries/cross-border-transport",
+      "origin": "ai-generated",
+      "review": "A container truck at a border post (Kenyan flag, a generic \"Goods inspection / Customs control\" sign) with officials checking papers. Context for the sector; no agency named and nothing implies a Nebsam relationship. Blank plate.",
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.72, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.6, 0.55]
+        }
+      }
+    },
+    {
+      "id": "industry-government-and-institutions",
+      "src": "Industries/Government/Official Convoy at Kenyan Government Complex.png",
+      "out": "industries/government-and-institutions",
+      "origin": "ai-generated",
+      "review": "A convoy of white 4x4s at an official compound with a Kenyan flag. No agency, crest or name; blank plates.",
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.3, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.45, 0.55]
+        }
+      }
+    },
+    {
+      "id": "industry-mining",
+      "src": "Industries/Mining/mining.jpg",
+      "out": "industries/mining",
+      "origin": "ai-generated",
+      "review": "A haul truck in an open-pit mine. No company marks.",
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.68, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.62, 0.55]
+        }
+      }
+    },
+    {
+      "id": "industry-ngos-and-humanitarian",
+      "src": "Industries/NGOs/Dusty Village Road Safari-1.png",
+      "out": "industries/ngos-and-humanitarian",
+      "origin": "ai-generated",
+      "review": "A white 4x4 on a village road. No NGO logo on the vehicle (the brief forbids one without permission); blank plate. The second NGO scene is held as an alternate.",
+      "crops": {
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.6, 0.55]
+        },
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.55, 0.55]
+        }
+      }
+    },
+    {
+      "id": "cover-what-is-an-anti-jamming-tracker",
+      "src": "blog/anti-jamming/antijamming.png",
+      "out": "blog/what-is-an-anti-jamming-tracker",
+      "origin": "ai-generated",
+      "review": "A 4x4 on a highway under a diagram of jamming waves and a protected GPS signal, with a close-up of a tracker. The laptop showing a mock tracking app (\"Vehicle Tracked / Anti-Jamming Protected\") is blurred: it read as the Nebsam platform (brief 3.6).",
+      "blur": [
+        {
+          "box": [0.738, 0.632, 0.985, 0.915],
+          "radius": 9
+        }
+      ],
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.5, 0.5]
+        },
+        "og": {
+          "ratio": "40:21",
+          "focus": [0.5, 0.5],
+          "maxEdge": 1200,
+          "path": "public/og/articles/what-is-an-anti-jamming-tracker.jpg"
+        }
+      }
+    },
+    {
+      "id": "cover-what-is-geofencing",
+      "src": "blog/geofencing/Geofence Alert_ Fleet Tracking in Action.png",
+      "out": "blog/what-is-geofencing",
+      "origin": "ai-generated",
+      "review": "A container truck on a road with a geofence boundary drawn around an industrial area. The box cuts away a fleet dashboard, a phone and a list of realistic Kenyan-format plates (KBL 345X, KCN 902Z) that could belong to real vehicles.",
+      "box": [0.44, 0.0, 1.0, 0.66],
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.5, 0.45]
+        },
+        "og": {
+          "ratio": "40:21",
+          "focus": [0.5, 0.45],
+          "maxEdge": 1200,
+          "path": "public/og/articles/what-is-geofencing.jpg"
+        }
+      }
+    },
+    {
+      "id": "cover-what-is-vehicle-immobilisation",
+      "src": "blog/immobilisation/immobilization.png",
+      "out": "blog/what-is-vehicle-immobilisation",
+      "origin": "ai-generated",
+      "review": "A parked 4x4 with a lock symbol and a ring drawn under it. The box cuts away the man holding a phone with a mock \"Immobilised\" app screen; the floating \"Vehicle immobilised\" panel is blurred (a mock app panel, and its \"Recovery support\" line is a claim the article does not make).",
+      "box": [0.29, 0.0, 1.0, 1.0],
+      "blur": [
+        {
+          "box": [0.665, 0.215, 0.86, 0.455],
+          "radius": 9
+        }
+      ],
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.4, 0.55]
+        },
+        "og": {
+          "ratio": "40:21",
+          "focus": [0.4, 0.55],
+          "maxEdge": 1200,
+          "path": "public/og/articles/what-is-vehicle-immobilisation.jpg"
+        }
+      }
+    },
+    {
+      "id": "cover-what-is-telematics",
+      "src": "Homepage/Hero band-section/a commercial vehicle travelling on a modern Kenyan coastal highway-option 3.png",
+      "out": "blog/what-is-telematics",
+      "origin": "ai-generated",
+      "review": "The coastal-highway truck Kelvin did not pick for the hero. Replaces the supplied telematics cover, which carries Gemini’s watermark, an invented \"Nairobi Freight Logistics\" livery and a control room.",
+      "crops": {
+        "wide": {
+          "ratio": "16:9",
+          "focus": [0.62, 0.5]
+        },
+        "og": {
+          "ratio": "40:21",
+          "focus": [0.62, 0.5],
+          "maxEdge": 1200,
+          "path": "public/og/articles/what-is-telematics.jpg"
+        }
+      }
+    },
+    {
+      "id": "about-nairobi-reception",
+      "src": "Branches/naiirobi 2.png",
+      "out": "about/nairobi-reception",
+      "origin": "photograph",
+      "review": "The reception inside the Nairobi HQ: the right half of a two-photo composite. The left half shows a person on the balcony whose face is visible, so it is not used. Nobody in frame.",
+      "box": [0.52, 0.0, 1.0, 1.0],
+      "crops": {
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.55]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.5, 0.55]
         }
       }
     }

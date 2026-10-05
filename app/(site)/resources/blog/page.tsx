@@ -1,3 +1,5 @@
+import { ZoomImage } from '@/components/ui/zoom-image';
+import { ARTICLE_COVERS } from '@/lib/media/articles';
 import { Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
@@ -75,10 +77,29 @@ export default async function BlogIndexPage() {
             <ul className="border-t border-border-hairline">
               {posts.map((post) => (
                 <li key={post.id} className="border-b border-border-hairline">
+                  {/*
+                    A small photo opens the row, as in the catalogue: still a
+                    ruled list, not cards (ADR-0008). Empty alt, because the
+                    link already names the page; AfterLoad keeps the photos out
+                    of the first-paint window.
+                  */}
                   <a
                     href={ROUTES.blogPost(post.slug)}
-                    className="group grid gap-x-10 gap-y-2 py-7 md:grid-cols-[22rem_1fr]"
+                    className="zoom-group group grid grid-cols-[6rem_minmax(0,1fr)] items-start gap-x-5 gap-y-2 py-7 md:grid-cols-[9rem_20rem_minmax(0,1fr)] md:gap-x-8"
                   >
+                    <span className="row-span-2 md:row-span-1">
+                      {ARTICLE_COVERS[post.slug] ? (
+                        <ZoomImage
+                          afterLoad
+                          src={ARTICLE_COVERS[post.slug].src}
+                          alt=""
+                          sizes="9rem"
+                          frameClassName="aspect-video rounded-control"
+                        />
+                      ) : (
+                        <span className="block aspect-video rounded-control bg-surface-raised" />
+                      )}
+                    </span>
                     <div>
                       <h2 className="font-display-tight text-h3 text-text-primary underline-offset-4 group-hover:underline">
                         {post.title}

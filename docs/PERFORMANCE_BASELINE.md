@@ -575,3 +575,34 @@ It predates 12o; CLS was 0 on the other four. The photos are held back until `lo
 **A discarded round.** The first paired round ran with `benchmarkIndex` down to 450. The cause was
 an orphaned `next dev` from 30 September spinning a full core (V92). It was stopped with Kelvin's
 approval and the round re-run. Rule kept: check for stray `node` processes before measuring.
+
+## 17. Sprint 12p — industry bands, article covers, share images, 5 October 2026
+
+Lighthouse 12, mobile preset, 3 runs per route, production build on :3207, `benchmarkIndex`
+1,945–3,472. Every route is inside the budget; CLS 0 throughout.
+
+| Route | LCP median | LCP element |
+|---|---|---|
+| `/about` | 2,204 ms | text |
+| `/industries` | 2,374 ms | text (the cookie notice, as before 12p) |
+| `/industries/public-service-vehicles` | 2,238 ms | text |
+| `/industries/mining` | **2,196 ms** (after the move below) | text |
+| `/industries/agriculture` | **2,251 ms** (after the move) | text |
+| `/industries/school-transport` | 2,204 ms | text |
+| `/resources/blog` | 2,196 ms | text |
+| `/resources/blog/what-is-geofencing` | **2,208 ms** (after the move) | text |
+| `/resources/blog/what-is-telematics` | 2,199 ms | text |
+
+Performance 98–99; Accessibility, Best Practices and SEO 100.
+
+**One rule, learned on two templates.** A photo that renders after `load` must not be in the first
+screen, or it becomes the LCP element when it arrives. Lighthouse still scored that case inside
+budget (geofencing 2,289 ms with the cover as LCP), but on a real slow connection `load` fires late,
+so the real LCP would be late. Two things moved:
+- **The article cover** now follows the second paragraph. After the first, geofencing's short intro
+  left it at 681px.
+- **The industry band** now follows "What applies to this sector". Mining, agriculture and car hire
+  had 125–153px of it on screen.
+
+Every photo on every page that has one now starts below the fold of a 412×823 phone (checked with
+Playwright).

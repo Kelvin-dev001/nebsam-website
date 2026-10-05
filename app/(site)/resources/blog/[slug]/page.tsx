@@ -1,3 +1,7 @@
+import { Fragment } from 'react';
+import { ZoomImage } from '@/components/ui/zoom-image';
+import { SITE_URL } from '@/lib/company';
+import { ARTICLE_COVERS } from '@/lib/media/articles';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Section, Shell } from '@/components/layout/section';
@@ -74,10 +78,22 @@ export async function generateMetadata({
   const { data: post } = await getBlogPostBySlug(slug);
   const title = post?.seo_title ?? post?.title;
   if (!post || !title) return {};
+  const cover = ARTICLE_COVERS[slug];
   return buildMetadata({
     title,
     description: post.seo_description ?? post.excerpt ?? '',
     path: ROUTES.blogPost(slug),
+    // The article's own share image: its cover, cut to 40:21 (V45).
+    ...(cover
+      ? {
+          ogImage: {
+            url: `${SITE_URL}${cover.og.path}`,
+            width: cover.og.width,
+            height: cover.og.height,
+            alt: cover.alt,
+          },
+        }
+      : {}),
   });
 }
 
@@ -88,6 +104,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const title = post.title;
 
   const paragraphs = (post.body ?? '').split(/\n{2,}/).filter((p) => p.trim() !== '');
+  const cover = ARTICLE_COVERS[slug];
+  // The paragraph the cover follows: the second, or the last if there is one.
+  const coverAfter = Math.min(1, paragraphs.length - 1);
 
   /**
    * The solution this article sends the reader to, if it has one and if that
@@ -129,6 +148,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             authorName: post.author_name,
             datePublished: post.published_at,
             dateModified: post.updated_at ?? post.published_at,
+            ...(cover ? { image: `${SITE_URL}${cover.src.src}` } : {}),
           }),
         ]
       : []),
@@ -184,9 +204,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="max-w-prose">
             {post.excerpt ? <p className="text-body-lg text-text-primary">{post.excerpt}</p> : null}
             {paragraphs.map((para, i) => (
-              <p key={i} className="mt-4 text-body text-text-secondary">
-                {para}
-              </p>
+              <Fragment key={i}>
+                <p className="mt-4 text-body text-text-secondary">{para}</p>
+                {/*
+                  The cover, after the lede and the SECOND paragraph rather than
+                  under the title. Measured (12p): after the first paragraph, a
+                  short intro left the cover's top in a phone's first screen,
+                  and arriving after load it became the LCP element, which on a
+                  real slow connection means a late LCP. Two paragraphs down it
+                  is below the fold, so AfterLoad can hold it back. The answer
+                  the article opens with comes first either way.
+                */}
+                {i === coverAfter && cover ? (
+                  <ZoomImage
+                    afterLoad
+                    src={cover.src}
+                    alt={cover.alt}
+                    sizes="(min-width: 768px) 40rem, 100vw"
+                    frameClassName="photo-reveal my-8 aspect-video rounded-panel"
+                  />
+                ) : null}
+              </Fragment>
             ))}
 
             {/*
