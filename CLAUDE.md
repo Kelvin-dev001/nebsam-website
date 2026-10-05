@@ -175,7 +175,7 @@ module**: on Home a module became a second render-blocking stylesheet (V77).
 **Photographs (ADR-0009).** Made by `scripts/images/prepare-photos.py` from
 `assets/photos/manifest.json` (source, origin, crops, blur, review) and committed under
 `assets/photos/`. They are statically imported in `lib/media/<group>.ts` (home, branches,
-industries, products, articles; types in `types.ts`): alt text, real dimensions. **No blur
+industries, products, solutions, articles, about; types in `types.ts`): alt text, real dimensions. **No blur
 placeholders** (their data ships twice per photo), and a photo that is not the point of the page,
 hero or branch card, renders after `load` through `AfterLoad` (ADR-0009 §4).
 **One module per group, never a barrel**: Next bundles every image a page's code imports into that

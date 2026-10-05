@@ -606,3 +606,22 @@ so the real LCP would be late. Two things moved:
 
 Every photo on every page that has one now starts below the fold of a 412×823 phone (checked with
 Playwright).
+
+## 18. Sprint 12q — five more solution bands, 5 October 2026
+
+| Route | LCP median (3 runs) | Page weight | LCP element |
+|---|---|---|---|
+| `/solutions/fuel-monitoring` | 2,383 ms | 255 KB | the opening paragraph |
+| `/solutions/vehicle-security` | 2,382 ms | 260 KB | the opening paragraph |
+| `/solutions/vehicle-key-programming` | 2,354 ms | 258 KB | the opening paragraph |
+| `/solutions/speed-governors` | 2,359 ms | 250 KB | the opening paragraph |
+| `/solutions/ai-video-telematics` | 2,354 ms | 238 KB | the opening paragraph |
+| `/solutions/vehicle-recovery` (control, no photo) | 2,366 ms | 217 KB | the opening paragraph |
+
+Lighthouse 12, mobile preset, production build on :3207, on mains power, `benchmarkIndex`
+2,181–3,488. Performance 98 on every run; Accessibility, Best Practices and SEO 100; CLS 0.
+
+**The control** is the same template without a photo, measured in the same session. The pages
+with a photo land within 17 ms of it either way, so the band costs no LCP. It costs 21–43 KB,
+fetched after `load`. The `/solutions/[slug]` route chunk grows from 1.89 to 2.96 kB gzipped:
+each static import adds a small record to it (lib/media/solutions.ts). First load: 111 kB.
