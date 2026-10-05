@@ -24,6 +24,9 @@ import { Button } from '@/components/ui/button';
  * two fixed elements that would otherwise fight for the same corner.
  *
  * CLS: it is `fixed`, so it displaces nothing when it appears.
+ *
+ * z-30, below the sticky header (z-40), so the open phone menu, which is modal
+ * and lives inside the header, covers the bar instead of the bar covering it.
  */
 export function CookieNotice() {
   const [visible, setVisible] = React.useState(false);
@@ -50,7 +53,7 @@ export function CookieNotice() {
       role="region"
       aria-label="Cookie notice"
       data-section="dark"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border-strong-inverse bg-brand-navy text-text-inverse"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-border-strong-inverse bg-brand-navy text-text-inverse"
     >
       <div className="mx-auto flex w-full max-w-shell flex-col gap-3 px-5 py-4 md:flex-row md:items-center md:justify-between md:gap-6 md:px-8">
         <p className="max-w-prose text-body-sm text-text-secondary-inverse">

@@ -116,8 +116,12 @@ export function MobileNav() {
         Menu
       </button>
 
-      {/* z-50: the open menu is modal, so it sits above the cookie bar (z-40),
-          which otherwise drew over the panel's own WhatsApp action. */}
+      {/* The open menu is modal, so it must sit above the cookie bar. Its z-50
+          only counts INSIDE the header, which is sticky z-40 and so its own
+          stacking context: on the page the menu is at the header's z-40. Until
+          Sprint 14 the cookie bar was z-40 as well and, later in the DOM, drew
+          over the open menu's last links and its WhatsApp action. The bar is
+          z-30 now, below the header (cookie-notice.tsx). */}
       {open ? (
         <div
           className="fixed inset-0 z-50 lg:hidden"
