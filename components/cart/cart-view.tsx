@@ -4,6 +4,7 @@ import * as React from 'react';
 import { createOrder, type OrderResult } from '@/app/(site)/cart/actions';
 import { clearCart, readCart, setQuantity, type CartLine } from '@/lib/cart';
 import { ROUTES, VAT_LABEL, VAT_RATE } from '@/lib/constants';
+import { formatKes } from '@/lib/format';
 
 /**
  * THE CART AND CHECKOUT.
@@ -26,10 +27,6 @@ export interface CatalogueItem {
   price_kes: number | null;
   recurring_fee_kes: number | null;
   recurring_fee_period: string | null;
-}
-
-function formatKes(n: number): string {
-  return `KES ${n.toLocaleString('en-KE')}`;
 }
 
 export function CartView({ catalogue }: { catalogue: CatalogueItem[] }) {

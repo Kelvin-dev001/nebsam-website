@@ -1,6 +1,7 @@
 import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { ROUTES, VAT_LABEL } from '@/lib/constants';
 import type { PublicProduct } from '@/types/content';
+import { formatKes } from '@/lib/format';
 
 /**
  * Section 6 — hardware options. The actual products that deliver the solution.
@@ -18,10 +19,6 @@ import type { PublicProduct } from '@/types/content';
  * making them open three pages to find out is how a considered purchase turns
  * into a bounce.
  */
-
-function formatKes(amount: number): string {
-  return `KES ${amount.toLocaleString('en-KE')}`;
-}
 
 export function SolutionHardware({ products }: { products: PublicProduct[] }) {
   const items = products.flatMap((p) =>
