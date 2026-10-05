@@ -21,6 +21,10 @@ WHAT EACH ENTRY CAN SAY, applied in this order:
            a thin light line drawn over the picture, such as the leader line a generator drew to a
            mock phone screen the box then cuts away. Masking keeps the texture the line crosses
            (palm fronds, cloud) instead of streaking it.
+   fill    a list of boxes, same fractions. Each column is repainted as a straight blend from the
+           pixel just above the box to the pixel just below it. For lettering on smooth paint (a
+           livery name on a bonnet): it is removed, where a blur would leave a smudge. Only where
+           the edge rows above and below are the same surface, so keep each box between edges.
 3. crops   name -> {"ratio": "W:H", "focus": [fx, fy]}. The largest W:H rectangle inside the box,
            centred as near the focus as the edges allow. The focus is a fraction of the BOX.
 4. Longest edge capped at maxEdge (default 2400). Nothing is ever upscaled.
@@ -109,6 +113,28 @@ def heal_regions(img, boxes, reach=6, threshold=9):
     return img
 
 
+def fill_regions(img, boxes, feather=10):
+    px = img.load()
+    w = img.size[0]
+    for box in boxes:
+        x0, y0, x1, y1 = frac_box(box, *img.size)
+        # The repaint runs `feather` px past each side and fades out there, over the clean paint
+        # beside the lettering: a hard side edge shows as a seam wherever the paint has a gradient.
+        for x in range(max(0, x0 - feather), min(w, x1 + feather)):
+            weight = min(1, (x - (x0 - feather)) / feather, ((x1 + feather) - x) / feather)
+            # The edge pixels, averaged across seven columns: with fewer, a highlight on the edge
+            # row (a bonnet crease) streaks straight down the repaint.
+            cols = [c for c in range(x - 3, x + 4) if 0 <= c < w]
+            above = [sum(px[c, y0 - 1][i] for c in cols) / len(cols) for i in range(3)]
+            below = [sum(px[c, y1][i] for c in cols) / len(cols) for i in range(3)]
+            for y in range(y0, y1):
+                t = (y - y0 + 1) / (y1 - y0 + 1)
+                old = px[x, y]
+                new = [above[i] + (below[i] - above[i]) * t for i in range(3)]
+                px[x, y] = tuple(round(old[i] + (new[i] - old[i]) * weight) for i in range(3))
+    return img
+
+
 def load(src):
     img = Image.open(os.path.join(SOURCES, src))
     img = ImageOps.exif_transpose(img)  # honour camera rotation BEFORE the metadata is dropped
@@ -124,6 +150,7 @@ def build(entry):
     img = load(entry['src'])
     img = blur_regions(img, entry.get('blur', []))
     img = heal_regions(img, entry.get('heal', []))
+    img = fill_regions(img, entry.get('fill', []))
     if 'box' in entry:
         img = img.crop(frac_box(entry['box'], *img.size))
     written = []
