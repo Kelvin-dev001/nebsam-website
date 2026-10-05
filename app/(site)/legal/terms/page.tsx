@@ -35,7 +35,7 @@ import { LegalPage, LegalSectionBlock } from '@/components/legal/legal-page';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Terms of use — Nebsam Digital Solutions',
+  title: 'Terms of use — Nebsam Digital Solutions (K) Ltd',
   description:
     'The terms for using the Nebsam website: what the prices shown mean, what a cart is and is not, how orders begin on WhatsApp, and acceptable use.',
   path: ROUTES.terms,

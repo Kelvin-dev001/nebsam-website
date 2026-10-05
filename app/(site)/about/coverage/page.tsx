@@ -43,7 +43,7 @@ import { BRANCHES, COVERAGE_TOWNS, CONTACT, whatsappUrl } from '@/lib/company';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Nebsam coverage across Kenya',
+  title: 'Nebsam branches and coverage across Kenya',
   description:
     'Where Nebsam works: branches in Nairobi, Mombasa and Nakuru, plus towns across Kenya served by agents and technicians, from Lodwar to Malindi.',
   path: ROUTES.coverage,

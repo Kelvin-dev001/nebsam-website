@@ -24,7 +24,7 @@ import { ROUTES } from '@/lib/constants';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Telematics Insights & Fleet Guides',
+  title: 'Telematics Insights and Fleet Guides for Kenya',
   description:
     'Practical guidance on vehicle tracking, fleet telematics, jamming, fuel monitoring and vehicle security in Kenya, from the team that installs it.',
   path: ROUTES.blog,

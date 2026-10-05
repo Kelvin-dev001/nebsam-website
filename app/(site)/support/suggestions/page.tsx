@@ -27,7 +27,7 @@ import { ROUTES } from '@/lib/constants';
 export const dynamic = 'force-dynamic';
 
 export const metadata = buildMetadata({
-  title: 'Send a suggestion to Nebsam',
+  title: 'Send Nebsam a suggestion, anonymously if you wish',
   description:
     'Tell Nebsam what we could do better, or report something that went wrong. You can send it anonymously — we will not store your name or number.',
   path: ROUTES.suggestions,

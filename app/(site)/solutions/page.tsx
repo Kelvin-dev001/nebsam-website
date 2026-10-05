@@ -18,9 +18,9 @@ import { ROUTES } from '@/lib/constants';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Telematics Solutions in Kenya',
+  title: 'Vehicle Tracking and Telematics Solutions in Kenya',
   description:
-    'Vehicle tracking, security, recovery, fuel monitoring, video telematics, speed limiters, cargo security and radio communication, installed and supported across Kenya.',
+    'Vehicle tracking, security, recovery, fuel monitoring, video telematics, speed limiters, cargo security and radios, installed and supported across Kenya.',
   path: ROUTES.solutions,
 });
 
