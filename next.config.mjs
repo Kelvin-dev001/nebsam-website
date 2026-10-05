@@ -59,8 +59,22 @@ const redirects = async () => [
   // Both were linked from the primary nav with no route behind them, so they
   // rendered a soft 404 at HTTP 200. If either was indexed, it was indexed as
   // a blank page.
-  { source: '/team', destination: '/about/team', permanent: true },
-  { source: '/clients', destination: '/about/partners', permanent: true },
+  //
+  // SPRINT 13 REPOINTED BOTH AT /about. Register item V95.
+  //
+  // They pointed at /about/team and /about/partners, neither of which has been
+  // built — so each was a 301 into a 404, which the crawl audit's hop check
+  // found. That is strictly worse than no redirect: it spends whatever
+  // authority the old URL had on a dead end, and `check-redirects.mjs`
+  // deliberately does not follow the hop (correct in Sprint 2, when several
+  // targets were legitimately unbuilt), so nothing was watching.
+  //
+  // /about is the closest page that exists and genuinely answers "who are
+  // these people", which is what both old URLs were for. When the two child
+  // pages are built these can be repointed at them — a 301 changing its
+  // destination costs nothing, whereas a 301 into a 404 costs the link.
+  { source: '/team', destination: '/about', permanent: true },
+  { source: '/clients', destination: '/about', permanent: true },
 
   // ─── Shop consolidation (§2.4) ───────────────────────────────────────────
   // Products and shop are ONE page type. Never let both resolve 200 — that is

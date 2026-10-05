@@ -45,7 +45,7 @@ import {
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'About Nebsam Digital Solutions (K) Ltd',
+  title: 'About Nebsam Digital Solutions (K) Ltd, Kenya',
   description:
     'Who Nebsam Digital Solutions is and where we work: vehicle tracking, telematics and vehicle security across Kenya, from Nairobi, Mombasa and Nakuru.',
   path: ROUTES.about,

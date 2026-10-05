@@ -31,9 +31,9 @@ import { LegalPage, LegalSectionBlock, LegalTable } from '@/components/legal/leg
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Cookie notice — Nebsam Digital Solutions',
+  title: 'Cookie notice — Nebsam Digital Solutions (K) Ltd',
   description:
-    'Every cookie this website sets, what it does, how long it lasts and how to refuse it. Analytics do not run until you accept them.',
+    'Every cookie the Nebsam website sets, what each one does, how long it lasts and how to refuse it. Analytics do not run until you accept them.',
   path: ROUTES.cookies,
 });
 

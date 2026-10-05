@@ -26,7 +26,7 @@ import { SHORT_DESCRIPTION } from '@/lib/company';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Telematics Resources, Guides & Downloads',
+  title: 'Telematics Resources, Guides and Downloads',
   description:
     'Guides, answers and documents on vehicle tracking, fuel monitoring and fleet telematics in Kenya, from the team that installs the equipment.',
   path: ROUTES.resources,

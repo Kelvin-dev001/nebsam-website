@@ -123,8 +123,8 @@ a 301 only preserves equity if the destination is topically the same page.
 
 | From | Proposed to | Status |
 |---|---|---|
-| `/team` | `/about/team` | Proposed — no route exists today; renders a soft 404 at HTTP 200 |
-| `/clients` | `/about/partners` | Proposed — same |
+| `/team` | `/about` | **Repointed in Sprint 13.** It pointed at `/about/team`, which is unbuilt, so the redirect was a 301 into a 404 — found by the crawl audit's hop check. Repoint at `/about/team` when that page exists |
+| `/clients` | `/about` | **Repointed in Sprint 13**, same reason as `/team` |
 
 Both are linked from the live primary navigation (`Navbar.js:58`, `:63`) but have no route in
 `App.js`. If either has been indexed, it is indexed as a blank page. Confirm against Search Console

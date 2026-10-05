@@ -23,7 +23,7 @@ import { CONTACT, whatsappUrl } from '@/lib/company';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Support — Nebsam vehicle tracking',
+  title: 'Support for Nebsam vehicle tracking and security',
   description:
     'Get help with a Nebsam vehicle tracking or security installation: book an installation or send a suggestion. WhatsApp, phone and email, seven days a week.',
   path: ROUTES.support,

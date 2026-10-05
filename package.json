@@ -16,6 +16,7 @@
     "verify:db": "node scripts/verify-db.mjs",
     "verify:roles": "node scripts/verify-roles.mjs",
     "check:sitemap": "node scripts/check-sitemap.mjs",
+    "audit:crawl": "node scripts/crawl-audit.mjs",
     "db:types": "node scripts/gen-types.mjs",
     "db:push": "supabase db push",
     "storage:init": "node scripts/ensure-storage.mjs",

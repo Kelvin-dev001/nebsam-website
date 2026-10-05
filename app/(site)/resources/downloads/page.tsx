@@ -55,7 +55,7 @@ import { SHORT_DESCRIPTION, whatsappUrl } from '@/lib/company';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Downloads — brochures and proposals',
+  title: 'Downloads — telematics brochures and proposals',
   description:
     'Where Nebsam publishes brochures, proposals and specification documents. Specifications also live on the product and solution pages themselves.',
   path: ROUTES.downloads,

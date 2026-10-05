@@ -290,6 +290,23 @@ and 0043 are written and unapplied.
 Definition of clean: `SEO_LLM_STRATEGY.md` §8. Including: **no `[[NEEDS_VERIFICATION]]` token on any
 public page**, and every 301 resolving in one hop with no chains.
 
+**Restarted 5 October 2026 as Sprint 13r** (`sprint/13r-seo-llm-audit`). The original branch, from
+11 September, was never merged. `npm run audit:crawl` against today's build: **12 problems to 2.**
+
+- [x] Full crawl with JavaScript disabled: 67 URLs, all 200
+- [x] Every schema type validated: JSON-LD parses everywhere, required types present, no `Review`,
+      `AggregateRating` or price-less `Offer`
+- [x] No duplicate titles or descriptions
+- [x] Exactly one H1 per page
+- [x] Every page has an inbound internal link, and every indexable page is in the sitemap
+- [x] Sitemap matches published content: 66 URLs, all 200, none noindex
+- [x] `llms.txt` current: it named five category URLs that 404 (V95)
+- [x] Every 301 resolves in one hop: two went to 404s (V95)
+- [ ] **No `[[NEEDS_VERIFICATION]]` token on any public page: 2 remain**, on the privacy notice and
+      the terms (V66–V70, legal adviser)
+- [x] No page indexed that should be noindex
+- [x] Added in the restart: a share image on every indexable page that loads
+
 ---
 
 ## Sprint 14 — Performance & Accessibility

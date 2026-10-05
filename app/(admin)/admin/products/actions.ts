@@ -134,6 +134,9 @@ function revalidateProductSurfaces(slug?: string | null, previousSlug?: string |
   revalidatePath(ROUTES.industries);
   revalidatePath(ROUTES.home);
   revalidatePath('/sitemap.xml');
+  // llms.txt lists every product by name (V95): a rename must not leave the
+  // old name in the file assistants read.
+  revalidatePath('/llms.txt');
   if (slug) revalidatePath(ROUTES.product(slug));
   if (previousSlug && previousSlug !== slug) revalidatePath(ROUTES.product(previousSlug));
 }

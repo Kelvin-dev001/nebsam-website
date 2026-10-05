@@ -18,9 +18,9 @@ import { ROUTES } from '@/lib/constants';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Telematics by Industry in Kenya',
+  title: 'Fleet Telematics and Tracking by Industry in Kenya',
   description:
-    'Vehicle tracking, security and fleet telematics for logistics, PSVs, security companies, construction, agriculture, mining and cross-border transport in Kenya.',
+    'Vehicle tracking, security and fleet telematics for logistics, PSVs, security firms, construction, agriculture, mining and cross-border transport in Kenya.',
   path: ROUTES.industries,
 });
 

@@ -52,7 +52,7 @@ import { ROUTES } from '@/lib/constants';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Nebsam certifications and registrations',
+  title: 'Nebsam certifications, permits and registrations',
   description:
     'The permits and registrations held by Nebsam Digital Solutions, including the KEBS Permit to Use the Standardization Mark for video telematics.',
   path: ROUTES.certifications,

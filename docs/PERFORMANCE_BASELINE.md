@@ -625,3 +625,29 @@ Lighthouse 12, mobile preset, production build on :3207, on mains power, `benchm
 with a photo land within 17 ms of it either way, so the band costs no LCP. It costs 21–43 KB,
 fetched after `load`. The `/solutions/[slug]` route chunk grows from 1.89 to 2.96 kB gzipped:
 each static import adds a small record to it (lib/media/solutions.ts). First load: 111 kB.
+
+## 19. Sprint 13r — SEO / LLM audit, paired against develop, 5 October 2026
+
+**No regression from this sprint.** One page, `/legal/cookies`, misses the 2.5 s budget by about
+45 ms, and it misses by the same amount on `develop` (V99, for Sprint 14).
+
+Lighthouse 12, mobile preset, production builds, on mains power. The first paired pass (both
+servers at once) was stopped by the system for low memory after 15 of 18 reports, so it was re-run
+at Kelvin's request with **one server at a time**, the builds alternating run by run and the order
+flipped each round, so both saw the same conditions: 1.3–2.8 GB free throughout (logged per run),
+`benchmarkIndex` 2,413–3,289. Four rounds:
+
+| Route | 13r median | `develop` median | 13r runs | `develop` runs |
+|---|---|---|---|---|
+| `/legal/cookies` | 2,506 ms | 2,545 ms | 2,498 · 2,546 · 2,506 · 2,130 | 2,516 · 2,557 · 2,538 · 2,545 |
+| `/` | 2,376 ms | 2,396 ms | 2,367 · 2,391 · 2,350 · 2,376 | 2,401 · 2,375 · 2,396 · 2,359 |
+| `/solutions` | 2,230 ms | 2,242 ms | 2,198 · 2,249 · 2,205 · 2,230 | 2,224 · 2,248 · 2,242 · 2,236 |
+
+Performance 96–99; Accessibility, Best Practices and SEO 100 on every run; CLS 0.
+
+**`/legal/cookies`.** Every run picks the same LCP element, a paragraph of server HTML ("It does not
+cover the vehicle tracking platform…"). It needs no download, and its LCP is almost all render
+delay: about 2.05–2.09 s, and once 1.67 s. First paint is about 915 ms and both font files arrive
+within about 100 ms on both builds, and the two builds deliver the page identically (the same
+stylesheet, the same preloaded fonts). So this is a pre-existing near-miss on the longest text page,
+and it goes to Sprint 14 with V94 (the late font swap).
