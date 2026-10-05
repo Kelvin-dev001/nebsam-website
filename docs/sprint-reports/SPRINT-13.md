@@ -24,9 +24,10 @@ carried across instead: the auditor by cherry-pick, the fixes re-applied by hand
 | No page indexed that should be noindex | ✅ |
 | *Added:* a share image on every indexable page | ✅ every one loads; two article covers are under 1200×630 (notes) |
 
-**Ten of eleven.** The one left is legal text, and no code closes it. **Performance is not closed
-either:** `/legal/cookies` sits on the 2.5 s line, and the check that would say whether this sprint
-caused it was stopped for low memory (V99, PERFORMANCE section).
+**Ten of eleven.** The one left is legal text, and no code closes it. **Performance: no regression.**
+Paired against `develop`, 13r is level or slightly faster on every page measured. `/legal/cookies`
+misses the 2.5 s budget by about 45 ms on both builds, so the miss predates this sprint (V99, for
+Sprint 14).
 
 ## WHAT THE RESTART FOUND
 
@@ -107,33 +108,29 @@ unnoticed for two sprints because nothing checked.
 
 ## PERFORMANCE
 
-**Not closed: one page sits on the 2.5 s line, and the check could not finish.**
+**No regression from this sprint.** One page, `/legal/cookies`, misses the 2.5 s budget by about
+45 ms, and it misses by the same amount on `develop` (V99, for Sprint 14).
 
-Lighthouse 12, mobile preset, production builds, on mains power. First a single-build pass (3 runs
-per route), then a paired pass against `develop` built in a worktree, alternating run by run. The
-system stopped the paired pass for low memory after 15 of 18 reports (1.2 GB free of 15.6 GB, held
-mostly by other programs), so its numbers carry that load.
+Lighthouse 12, mobile preset, production builds, on mains power. The first paired pass (both
+servers at once) was stopped by the system for low memory after 15 of 18 reports, so it was re-run
+at Kelvin's request with **one server at a time**, the builds alternating run by run and the order
+flipped each round, so both saw the same conditions: 1.3–2.8 GB free throughout (logged per run),
+`benchmarkIndex` 2,413–3,289. Four rounds:
 
-| Route | 13r, single pass | 13r, paired | `develop`, paired |
-|---|---|---|---|
-| `/` | 2,401 ms | 2,354 · 2,390 · 2,391 | 2,114 · 2,386 |
-| `/solutions` | 2,241 ms | 2,238 · 2,244 | 2,237 · 2,241 |
-| `/legal/cookies` | **2,542 ms** | **2,501 · 2,530 · 2,542** | 2,115 · **2,535** · 2,008 |
+| Route | 13r median | `develop` median | 13r runs | `develop` runs |
+|---|---|---|---|---|
+| `/legal/cookies` | 2,506 ms | 2,545 ms | 2,498 · 2,546 · 2,506 · 2,130 | 2,516 · 2,557 · 2,538 · 2,545 |
+| `/` | 2,376 ms | 2,396 ms | 2,367 · 2,391 · 2,350 · 2,376 | 2,401 · 2,375 · 2,396 · 2,359 |
+| `/solutions` | 2,230 ms | 2,242 ms | 2,198 · 2,249 · 2,205 · 2,230 | 2,224 · 2,248 · 2,242 · 2,236 |
 
-Accessibility, Best Practices and SEO 100 on every run; CLS 0; Performance 97–99.
+Performance 96–99; Accessibility, Best Practices and SEO 100 on every run; CLS 0.
 
-**`/legal/cookies` is bimodal on both builds.** Every run picks the same LCP element: a paragraph of
-server HTML ("It does not cover the vehicle tracking platform…"). It needs no download, and its LCP
-is all render delay, either about 1.6 s or about 2.1 s. First paint is about 915 ms on both, and
-both font files arrive within about 100 ms. The two builds deliver the page identically (the same
-stylesheet, the same preloaded fonts; 13r's HTML is 480 bytes smaller, from the removed nav links),
-and `develop` hit the slow mode too (2,535). So nothing this sprint changed explains it, and nothing
-here clears it either. This page has no earlier measurement to compare with.
-
-**What closes it:** the paired pass re-run on a machine with memory to spare (about ten minutes;
-the `develop` worktree build is kept for it). If `/legal/cookies` still lands at about 2.5 s on
-both builds, it is a pre-existing near-miss and belongs with V94 (the late font swap) in Sprint 14.
-If only 13r does, it is this sprint's to fix.
+**`/legal/cookies`.** Every run picks the same LCP element, a paragraph of server HTML ("It does not
+cover the vehicle tracking platform…"). It needs no download, and its LCP is almost all render
+delay: about 2.05–2.09 s, and once 1.67 s. First paint is about 915 ms and both font files arrive
+within about 100 ms on both builds, and the two builds deliver the page identically (the same
+stylesheet, the same preloaded fonts). So this is a pre-existing near-miss on the longest text page,
+and it goes to Sprint 14 with V94 (the late font swap).
 
 ## NEEDS_VERIFICATION
 
@@ -142,7 +139,8 @@ If only 13r does, it is this sprint's to fix.
 - **V97:** `WebPage` schema is specified in ROUTE_MAP and emitted nowhere, even where a comment
   says it is. For your decision.
 - **V98:** the token returns 401.
-- **V99:** `/legal/cookies` LCP sits on the 2.5 s line; it needs a clean re-measurement.
+- **V99:** `/legal/cookies` misses the LCP budget by about 45 ms on both builds. It predates this
+  sprint and goes to Sprint 14.
 
 ## KNOWN ISSUES
 
@@ -159,8 +157,7 @@ If only 13r does, it is this sprint's to fix.
 3. **V66–V70:** the legal text on the privacy notice and terms. This is all that stands between this
    sprint and a clean gate.
 4. **V10 and V25:** Search Console. Which properties, and the indexed-URL cross-check.
-5. **The `/legal/cookies` re-measurement:** run it when the machine has memory free? Until then
-   the sprint is not closed on performance.
-6. **Merge this sprint into `develop`?** Only after item 5, under the budget rule.
+Answered by Kelvin, 5 Oct 2026: "re-run the speed test then merge sprint 13". Re-run, one server at
+a time: no regression (PERFORMANCE). Merged into `develop`.
 
 **STOPPING HERE FOR REVIEW.**

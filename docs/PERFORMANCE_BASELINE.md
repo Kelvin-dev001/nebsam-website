@@ -626,32 +626,28 @@ with a photo land within 17 ms of it either way, so the band costs no LCP. It co
 fetched after `load`. The `/solutions/[slug]` route chunk grows from 1.89 to 2.96 kB gzipped:
 each static import adds a small record to it (lib/media/solutions.ts). First load: 111 kB.
 
-## 19. Sprint 13r — SEO / LLM audit, 5 October 2026
+## 19. Sprint 13r — SEO / LLM audit, paired against develop, 5 October 2026
 
-**Not closed: one page sits on the 2.5 s line, and the check could not finish.**
+**No regression from this sprint.** One page, `/legal/cookies`, misses the 2.5 s budget by about
+45 ms, and it misses by the same amount on `develop` (V99, for Sprint 14).
 
-Lighthouse 12, mobile preset, production builds, on mains power. First a single-build pass (3 runs
-per route), then a paired pass against `develop` built in a worktree, alternating run by run. The
-system stopped the paired pass for low memory after 15 of 18 reports (1.2 GB free of 15.6 GB, held
-mostly by other programs), so its numbers carry that load.
+Lighthouse 12, mobile preset, production builds, on mains power. The first paired pass (both
+servers at once) was stopped by the system for low memory after 15 of 18 reports, so it was re-run
+at Kelvin's request with **one server at a time**, the builds alternating run by run and the order
+flipped each round, so both saw the same conditions: 1.3–2.8 GB free throughout (logged per run),
+`benchmarkIndex` 2,413–3,289. Four rounds:
 
-| Route | 13r, single pass | 13r, paired | `develop`, paired |
-|---|---|---|---|
-| `/` | 2,401 ms | 2,354 · 2,390 · 2,391 | 2,114 · 2,386 |
-| `/solutions` | 2,241 ms | 2,238 · 2,244 | 2,237 · 2,241 |
-| `/legal/cookies` | **2,542 ms** | **2,501 · 2,530 · 2,542** | 2,115 · **2,535** · 2,008 |
+| Route | 13r median | `develop` median | 13r runs | `develop` runs |
+|---|---|---|---|---|
+| `/legal/cookies` | 2,506 ms | 2,545 ms | 2,498 · 2,546 · 2,506 · 2,130 | 2,516 · 2,557 · 2,538 · 2,545 |
+| `/` | 2,376 ms | 2,396 ms | 2,367 · 2,391 · 2,350 · 2,376 | 2,401 · 2,375 · 2,396 · 2,359 |
+| `/solutions` | 2,230 ms | 2,242 ms | 2,198 · 2,249 · 2,205 · 2,230 | 2,224 · 2,248 · 2,242 · 2,236 |
 
-Accessibility, Best Practices and SEO 100 on every run; CLS 0; Performance 97–99.
+Performance 96–99; Accessibility, Best Practices and SEO 100 on every run; CLS 0.
 
-**`/legal/cookies` is bimodal on both builds.** Every run picks the same LCP element: a paragraph of
-server HTML ("It does not cover the vehicle tracking platform…"). It needs no download, and its LCP
-is all render delay, either about 1.6 s or about 2.1 s. First paint is about 915 ms on both, and
-both font files arrive within about 100 ms. The two builds deliver the page identically (the same
-stylesheet, the same preloaded fonts; 13r's HTML is 480 bytes smaller, from the removed nav links),
-and `develop` hit the slow mode too (2,535). So nothing this sprint changed explains it, and nothing
-here clears it either. This page has no earlier measurement to compare with.
-
-**What closes it:** the paired pass re-run on a machine with memory to spare (about ten minutes;
-the `develop` worktree build is kept for it). If `/legal/cookies` still lands at about 2.5 s on
-both builds, it is a pre-existing near-miss and belongs with V94 (the late font swap) in Sprint 14.
-If only 13r does, it is this sprint's to fix.
+**`/legal/cookies`.** Every run picks the same LCP element, a paragraph of server HTML ("It does not
+cover the vehicle tracking platform…"). It needs no download, and its LCP is almost all render
+delay: about 2.05–2.09 s, and once 1.67 s. First paint is about 915 ms and both font files arrive
+within about 100 ms on both builds, and the two builds deliver the page identically (the same
+stylesheet, the same preloaded fonts). So this is a pre-existing near-miss on the longest text page,
+and it goes to Sprint 14 with V94 (the late font swap).
