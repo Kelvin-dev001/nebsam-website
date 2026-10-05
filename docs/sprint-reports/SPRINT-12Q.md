@@ -98,7 +98,9 @@ V90 is part-closed: recovery and cargo are still open. No new items.
 
 ## DECISIONS NEEDED
 
-1. Recovery and cargo: regenerate both scenes (the briefs are above), or leave them without a photo?
-2. Merge this sprint into `develop`?
+Answered by Kelvin, 5 Oct 2026: "merge sprint12q leave recovery and cargo without images I will
+provide later".
+- Recovery and cargo: **no photo for now**. Kelvin will supply images later.
+- Merge into `develop`: **yes**.
 
 **STOPPING HERE FOR REVIEW.**
