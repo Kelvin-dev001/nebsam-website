@@ -23,3 +23,13 @@ export interface Photo {
   src: StaticImageData;
   alt: string;
 }
+
+/**
+ * A photograph that is art-directed: a 4:5 crop for phones and a 3:2 crop from
+ * 640px. The page bands on solution, industry and About pages (PhotoBand).
+ */
+export interface BandPhoto {
+  wide: StaticImageData;
+  portrait: StaticImageData;
+  alt: string;
+}

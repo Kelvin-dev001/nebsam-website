@@ -1,4 +1,4 @@
-import type { StaticImageData } from 'next/image';
+import type { BandPhoto } from '@/lib/media/types';
 import radioPortrait from '@/assets/photos/solutions/radio-communication-portrait.jpg';
 import radioWide from '@/assets/photos/solutions/radio-communication-wide.jpg';
 import trackingPortrait from '@/assets/photos/solutions/vehicle-tracking-portrait.jpg';
@@ -13,13 +13,6 @@ import trackingWide from '@/assets/photos/solutions/vehicle-tracking-wide.jpg';
  * barrel. Rules and the review of each photo: lib/media/types.ts and
  * assets/photos/manifest.json (ADR-0009).
  */
-export interface BandPhoto {
-  /** 3:2, from 640px. */
-  wide: StaticImageData;
-  /** 4:5, phones. */
-  portrait: StaticImageData;
-  alt: string;
-}
 
 /**
  * Two of nine. The other seven images Kelvin supplied were left out on
