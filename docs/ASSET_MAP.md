@@ -45,9 +45,17 @@ screen is blurred, because it showed a fleet map that could read as the Nebsam p
 **Hybrid Pro Plus Car Alarm** uses the box labelled "Hybrid Pro Car Alarm System", mapped by
 elimination and by its icons (V93).
 
-**Supplied, reviewed and held for Sprint 12p:** 9 industry scenes (the other 7 sectors, plus a
-second NGO and a second security scene), 3 article covers (anti-jamming, geofencing,
-immobilisation) and both other hero options. The Nairobi reception composite is for About.
+**Sprint 12p (5 Oct 2026):** all **13 industries** have a 4:5 and a 3:2 crop (the band on each
+industry page and the thumbnail on /industries); the car-hire scene's mock "Fleet Online / Geofence"
+panel is cut away. **7 article covers**, each also cut to its 40:21 share image in
+`public/og/articles/`. Anti-jamming: the laptop's mock app is blurred. Geofencing: the dashboard,
+the phone and the realistic plates are cut away. Immobilisation: the phone is cut away and the
+panel blurred. Telematics: the unused coastal-highway hero replaces the watermarked cover. The
+**site share image** is `public/og/site.jpg`, the hero with the logo plaque (V45). **About**: the
+Nairobi reception interior; the half with a visible face is not used.
+
+**Held, unused:** the second NGO scene, the second security scene, hero option 1, and the Nairobi
+exterior composite.
 
 **Supplied and NOT used** (Kelvin, 4 Oct 2026, "leave them out"): seven solution images. AI
 technicians in Nebsam-branded uniforms (fuel monitoring, vehicle security); an AI workshop technician
