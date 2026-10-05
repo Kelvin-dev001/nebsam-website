@@ -516,6 +516,116 @@
       }
     },
     {
+      "id": "solution-fuel-monitoring",
+      "src": "Solutions/Fuel monitoring/Technician Installing Truck Fuel Sensor.png",
+      "out": "solutions/fuel-monitoring",
+      "origin": "ai-generated",
+      "review": "Left out in 12n, reused at Kelvin's instruction (5 Oct 2026, V90). A technician fitting a fuel level sensor to a truck's tank. The source prints 'nebsam Digital Solutions' on his back, which would present an AI figure as Nebsam staff (brief 3.6, PART 18), so the box cuts the frame just right of the lettering: what is left carries no Nebsam branding. The tracker on the chassis is labelled 'FMB', a real device family's name, so that label is blurred. The laptop is cut away with the left of the frame.",
+      "blur": [
+        {
+          "box": [0.835, 0.212, 0.878, 0.25],
+          "radius": 4
+        }
+      ],
+      "box": [0.465, 0.0, 1.0, 1.0],
+      "crops": {
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.45]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.5, 0.5]
+        }
+      }
+    },
+    {
+      "id": "solution-vehicle-security",
+      "src": "Solutions/Vehicle security/Technician Wiring a Car Dashboard.png",
+      "out": "solutions/vehicle-security",
+      "origin": "ai-generated",
+      "review": "Left out in 12n, reused at Kelvin's instruction (5 Oct 2026, V90). A technician wiring behind a car's dashboard. As with fuel monitoring, the shirt reads 'nebsam Digital Solutions', so the box cuts the frame right of the lettering and the AI figure carries no Nebsam branding. The workshop has no signage. The hand holding a key fob is cut away with the left of the frame. Vehicle makers' badges stay: they name the car, not a relationship.",
+      "box": [0.395, 0.0, 1.0, 1.0],
+      "crops": {
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.4]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.45, 0.5]
+        }
+      }
+    },
+    {
+      "id": "solution-vehicle-key-programming",
+      "src": "Solutions/Key programming/ChatGPT Image Oct 4, 2026, 10_48_19 AM.png",
+      "out": "solutions/vehicle-key-programming",
+      "origin": "ai-generated",
+      "review": "Left out in 12n, reused at Kelvin's instruction (5 Oct 2026, V90). A technician with a key-programming tablet and a remote key beside an open car door. No Nebsam branding and no signage. The source's left third is a blank blue fade made for text, and text never sits on a photo here, so the box cuts it away. The tablet shows a generic programming checklist, not the Nebsam platform.",
+      "box": [0.37, 0.0, 1.0, 1.0],
+      "crops": {
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.52]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.62, 0.5]
+        }
+      }
+    },
+    {
+      "id": "solution-speed-governors",
+      "src": "Solutions/Speed limiters/Kenyan Highway Traffic Checkpoint.png",
+      "out": "solutions/speed-governors",
+      "origin": "ai-generated",
+      "review": "Left out in 12n, reused at Kelvin's instruction (5 Oct 2026, V90). A PSV minibus on a highway. The box cuts away the traffic police officer waving it down and the roadside government sign, which would imply police ties. The 'Mombasa Express' livery, which may be a real operator's name, is filled out of the bonnet paint (two boxes, so the stripes and the bonnet edge survive). Blurred: the realistic plate (KDG 742X), and a windscreen sticker reading 'Speed governor certified', which would read as a certification nobody has documented; it stays a sticker, unreadable. The route boards (Mombasa, Nairobi) and the PSV sign stay.",
+      "blur": [
+        {
+          "box": [0.645, 0.78, 0.797, 0.856],
+          "radius": 10
+        },
+        {
+          "box": [0.826, 0.406, 0.912, 0.464],
+          "radius": 4
+        }
+      ],
+      "fill": [
+        [0.64, 0.517, 0.77, 0.572],
+        [0.765, 0.522, 0.843, 0.587]
+      ],
+      "box": [0.36, 0.0, 1.0, 1.0],
+      "crops": {
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.56]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.6, 0.5]
+        }
+      }
+    },
+    {
+      "id": "solution-ai-video-telematics",
+      "src": "Solutions/AI video telematics/ai video telematics.png",
+      "out": "solutions/ai-video-telematics",
+      "origin": "ai-generated",
+      "review": "Left out in 12n, reused at Kelvin's instruction (5 Oct 2026, V90). The source is a diptych: a truck on a highway at dusk, and an invented control room whose screens would read as the Nebsam platform, staffed by AI figures who would read as Nebsam staff (brief 3.6). Only the truck half is used. The box also cuts away the arc of icons over it. The ring marking the cab camera stays, with the start of its signal line: a symbol, like the map pin over the van on vehicle tracking. No plate, no livery. The portrait crop is only 508 px wide, because the source is 941 px tall.",
+      "box": [0.0, 0.325, 0.55, 1.0],
+      "crops": {
+        "wide": {
+          "ratio": "3:2",
+          "focus": [0.5, 0.0]
+        },
+        "portrait": {
+          "ratio": "4:5",
+          "focus": [0.56, 0.5]
+        }
+      }
+    },
+    {
       "id": "industry-agriculture",
       "src": "Industries/agriculture/agriculture.png",
       "out": "industries/agriculture",
