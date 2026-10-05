@@ -1,6 +1,19 @@
 import { z } from 'zod';
 
 /**
+ * JITLESS, because the CSP is enforced (Sprint 14).
+ *
+ * Zod 4 probes `new Function('')` once to decide whether it may compile fast
+ * parsers. The site's policy has no 'unsafe-eval', so the probe is refused and
+ * Chrome raises a `securitypolicyviolation` on every form page, though Zod
+ * catches the throw and falls back. Turning the compiler off skips the probe:
+ * the four enquiry schemas are small, and validation is unchanged. Set here,
+ * before any schema is built, because this is the module the client forms
+ * load.
+ */
+z.config({ jitless: true });
+
+/**
  * ENQUIRY FORMS — the shared shape.
  *
  * Four public forms write to one `submissions` table: contact, quote,
