@@ -105,6 +105,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const paragraphs = (post.body ?? '').split(/\n{2,}/).filter((p) => p.trim() !== '');
   const cover = ARTICLE_COVERS[slug];
+  // The paragraph the cover follows: the second, or the last if there is one.
+  const coverAfter = Math.min(1, paragraphs.length - 1);
 
   /**
    * The solution this article sends the reader to, if it has one and if that
@@ -205,14 +207,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <Fragment key={i}>
                 <p className="mt-4 text-body text-text-secondary">{para}</p>
                 {/*
-                  The cover, after the lede and the first paragraph rather than
-                  under the title: there it would sit in a phone's first screen,
-                  and a photo that arrives after load there becomes the LCP
-                  element (ADR-0009). Here it is below the fold, so AfterLoad
-                  can hold it back. The answer the article opens with comes
-                  first either way.
+                  The cover, after the lede and the SECOND paragraph rather than
+                  under the title. Measured (12p): after the first paragraph, a
+                  short intro left the cover's top in a phone's first screen,
+                  and arriving after load it became the LCP element, which on a
+                  real slow connection means a late LCP. Two paragraphs down it
+                  is below the fold, so AfterLoad can hold it back. The answer
+                  the article opens with comes first either way.
                 */}
-                {i === 0 && cover ? (
+                {i === coverAfter && cover ? (
                   <ZoomImage
                     afterLoad
                     src={cover.src}

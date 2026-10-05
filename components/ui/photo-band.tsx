@@ -17,7 +17,7 @@ import type { BandPhoto } from '@/lib/media/types';
  * 56rem because the sources are only ~900-1,500px wide. Callers render it only
  * when the page has a photo; there is no placeholder band.
  */
-export function PhotoBand({ photo }: { photo: BandPhoto }) {
+export function PhotoBand({ photo, padTop = false }: { photo: BandPhoto; padTop?: boolean }) {
   const common = { alt: photo.alt, sizes: '(min-width: 1024px) 56rem, 100vw' };
   const {
     props: { srcSet: wideSrcSet },
@@ -27,7 +27,12 @@ export function PhotoBand({ photo }: { photo: BandPhoto }) {
   } = getImageProps({ ...common, src: photo.portrait });
 
   return (
-    <div className="bg-surface pb-section md:pb-section-lg" data-section="light">
+    // Normally it continues the light section above it, so only the bottom is
+    // padded; `padTop` when it follows a section of another ground.
+    <div
+      className={`bg-surface pb-section md:pb-section-lg ${padTop ? 'pt-section md:pt-section-lg' : ''}`.trim()}
+      data-section="light"
+    >
       <Shell>
         <div className="zoom-frame zoom-whole photo-reveal aspect-[4/5] max-w-[56rem] rounded-panel sm:aspect-[3/2]">
           <AfterLoad fallback={null}>

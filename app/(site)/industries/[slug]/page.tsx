@@ -178,14 +178,6 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
           </Shell>
         </Section>
       ) : null}
-
-      {/* The sector's photo (ADR-0009), one section below the title band so it
-          is below the fold on a phone and loads after the page. Only with an
-          intro above it: without one it would land in the first screen. */}
-      {paragraphs.length > 0 && INDUSTRY_PHOTOS[slug] ? (
-        <PhotoBand photo={INDUSTRY_PHOTOS[slug]} />
-      ) : null}
-
       {solutions.data.length > 0 ? (
         <Section tone="paper">
           <Shell>
@@ -219,6 +211,16 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
           </Shell>
         </Section>
       ) : null}
+
+      {/*
+        The sector's photo (ADR-0009), after "What applies to this sector".
+        Measured (12p): right after the intro, a short intro left 125-153px of
+        it in a 412x823 phone screen (mining, agriculture, car hire), and a
+        photo that arrives after load there can become the LCP element. Here
+        it is well below the fold on every phone, so AfterLoad can hold it
+        back. White, between the paper Solutions list and the hardware.
+      */}
+      {INDUSTRY_PHOTOS[slug] ? <PhotoBand photo={INDUSTRY_PHOTOS[slug]} padTop /> : null}
 
       {products.data.length > 0 ? (
         <Section tone="light">
