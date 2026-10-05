@@ -178,6 +178,7 @@ ground at 0.6, computed to the WCAG formula; the same script reproduces every fu
 | `text-inverse` `#FFFFFF` | `brand-navy` | **7.07** | 0.46 | PASS |
 | `text-secondary-inverse` `#C3CEEA` | `brand-navy` | **4.86** | 0.58 | PASS |
 | `state-warn` `#E8A33D` | `brand-navy` | **3.71** | 0.69 | **FAIL: active step only** |
+| `brand-signal` `#3D8BFF` (links) | `brand-navy` | **2.78** | 0.87 | **FAIL**: so step links are `text-inverse`, underlined (Sprint 14; found by axe, missing from this table until then) |
 | `text-primary` `#0F1620` | `surface-raised` | **4.61** | 0.60 | pass, at the floor |
 | `text-secondary` `#4C5A75` | `surface-raised` | **2.65** | 0.86 | **FAIL** |
 
