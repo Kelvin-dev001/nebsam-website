@@ -625,3 +625,33 @@ Lighthouse 12, mobile preset, production build on :3207, on mains power, `benchm
 with a photo land within 17 ms of it either way, so the band costs no LCP. It costs 21–43 KB,
 fetched after `load`. The `/solutions/[slug]` route chunk grows from 1.89 to 2.96 kB gzipped:
 each static import adds a small record to it (lib/media/solutions.ts). First load: 111 kB.
+
+## 19. Sprint 13r — SEO / LLM audit, 5 October 2026
+
+**Not closed: one page sits on the 2.5 s line, and the check could not finish.**
+
+Lighthouse 12, mobile preset, production builds, on mains power. First a single-build pass (3 runs
+per route), then a paired pass against `develop` built in a worktree, alternating run by run. The
+system stopped the paired pass for low memory after 15 of 18 reports (1.2 GB free of 15.6 GB, held
+mostly by other programs), so its numbers carry that load.
+
+| Route | 13r, single pass | 13r, paired | `develop`, paired |
+|---|---|---|---|
+| `/` | 2,401 ms | 2,354 · 2,390 · 2,391 | 2,114 · 2,386 |
+| `/solutions` | 2,241 ms | 2,238 · 2,244 | 2,237 · 2,241 |
+| `/legal/cookies` | **2,542 ms** | **2,501 · 2,530 · 2,542** | 2,115 · **2,535** · 2,008 |
+
+Accessibility, Best Practices and SEO 100 on every run; CLS 0; Performance 97–99.
+
+**`/legal/cookies` is bimodal on both builds.** Every run picks the same LCP element: a paragraph of
+server HTML ("It does not cover the vehicle tracking platform…"). It needs no download, and its LCP
+is all render delay, either about 1.6 s or about 2.1 s. First paint is about 915 ms on both, and
+both font files arrive within about 100 ms. The two builds deliver the page identically (the same
+stylesheet, the same preloaded fonts; 13r's HTML is 480 bytes smaller, from the removed nav links),
+and `develop` hit the slow mode too (2,535). So nothing this sprint changed explains it, and nothing
+here clears it either. This page has no earlier measurement to compare with.
+
+**What closes it:** the paired pass re-run on a machine with memory to spare (about ten minutes;
+the `develop` worktree build is kept for it). If `/legal/cookies` still lands at about 2.5 s on
+both builds, it is a pre-existing near-miss and belongs with V94 (the late font swap) in Sprint 14.
+If only 13r does, it is this sprint's to fix.

@@ -293,6 +293,7 @@ npx supabase db push                # apply migrations    (from Sprint 3)
 MOTION_PLAYGROUND=1 npm run build   # a production build WITH the /dev/motion playground  (Sprint 12b)
 
 npm run verify:roles                # the Sprint 12 gate — 38 RLS checks, per role (47 before ADR-0007)
+npm run audit:crawl -- http://localhost:3207   # the Sprint 13 gate — the SEO/LLM crawl, JS off
 npm run db:apply -- --status        # which migrations are applied, which are pending
 npm run db:apply -- 0045_name.sql   # apply ONE migration by name
 npm run db:apply -- --pending       # apply every pending migration, in order (safe since V80)
@@ -307,13 +308,21 @@ database.
 
 **`npm run db:apply` and `npm run db:types` need `SUPABASE_ACCESS_TOKEN`**, a personal access token
 that is local-development only. It was renewed on 28 September 2026 (V61 resolved), and 0041–0044
-were applied that day, one at a time by name.
+were applied that day, one at a time by name. **Since 5 October 2026 it returns 401 again (V98)**:
+0050 is written and waits on a new one, which goes in `.env.local` only, never in Vercel.
 
 **The migration ledger is complete (V80, reconciled 28 September 2026).** 0001–0040 had been pasted
 into the dashboard SQL editor before `apply-migration.mjs` existed, so its `schema_migrations` table
 had never heard of them and `--pending` would have re-run all forty. They were recorded after
 read-only checks of their effects; `--status` now reads 44 applied, 0 pending. **Anything applied
-outside this script must be recorded in the ledger the same day**, or the trap comes back.
+outside this script must be recorded in the ledger the same day**, or the trap comes back. One case
+is still open: the catalogue metadata written by data update on 11 September (V96). 0050 records
+it; applying it changes nothing in the data, and it puts the history right.
+
+**`npm run audit:crawl` needs a running production build** and takes its base URL. It crawls with
+JavaScript off (`fetch` runs none), so every assertion is against the HTML a crawler receives. Move
+`.next/cache/fetch-cache` aside before the build it audits (V54b): only that directory serves stale
+database reads.
 
 **`npm run verify:roles` creates four throwaway auth accounts, runs the matrix and deletes them.**
 It asserts against the POLICIES, not the screens — the admin runs under the service-role key and
