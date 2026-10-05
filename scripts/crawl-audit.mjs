@@ -65,7 +65,11 @@ function note(group, message) {
 
 // ── extraction ─────────────────────────────────────────────────────────────
 
-const strip = (html) => html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+const strip = (html) =>
+  html
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 function decode(text) {
   return text
@@ -455,7 +459,10 @@ async function checkRedirectHops() {
       const onward = (second.headers.get('location') ?? '').replace(base, '');
       fail('redirects', `CHAIN: ${from} -> ${target} -> ${onward} — must resolve in one hop`);
     } else if (second.status !== 200) {
-      fail('redirects', `${from} -> ${target} which returns ${second.status} — a 301 into a dead end`);
+      fail(
+        'redirects',
+        `${from} -> ${target} which returns ${second.status} — a 301 into a dead end`,
+      );
     }
   }
 }
@@ -559,7 +566,9 @@ if (asJson) {
   );
 } else {
   console.log(`\n  Crawl audit — ${base}`);
-  console.log(`  ${pages.size} URLs reached · ${ok} returned 200 · ${sitemap.length} in the sitemap\n`);
+  console.log(
+    `  ${pages.size} URLs reached · ${ok} returned 200 · ${sitemap.length} in the sitemap\n`,
+  );
 
   const byGroup = new Map();
   for (const p of problems) {
