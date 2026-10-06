@@ -346,6 +346,21 @@ unticked items below open (docs/LAUNCH_RUNBOOK.md §6).
 
 ---
 
+## Sprint 16 — UI polish (post-launch)
+
+**Delivers** The five items Kelvin picked on 6 Oct 2026, on condition "dont do anything you'd say no
+to": no marquee, no looping or auto-moving motion, no video, 3D, Lottie, parallax or animation
+library, no glass on content cards, no card grid for a compared list.
+**Gate** Human review. Report: `docs/sprint-reports/SPRINT-16.md`.
+
+- [x] Page transitions: a 240ms CSS crossfade, reduced motion opted out (ANIMATION_SYSTEM Level 5)
+- [x] "Find your setup" on Home: four choices, each to its solutions, industry and WhatsApp
+- [x] A sticky buy bar on product pages, phones only, once the buy box has scrolled away
+- [x] "On this page" on solution and legal pages, server-rendered, no JavaScript
+- [x] The client logo row: built and empty until a client confirms in writing (V12)
+
+---
+
 ## Post-launch scope — recorded, not dropped
 
 | Item | Blocked by |

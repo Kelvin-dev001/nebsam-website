@@ -267,6 +267,7 @@
     --dur-micro: 160ms;
     --dur-reveal: 420ms;
     --dur-data: 900ms;
+    --dur-transition: 240ms; /* Level 5 page transition — mirrors DURATION.transition */
     /* Level 4 pinned stage: inactive-step dim. A dimmed step is still content,
        so it must clear 4.5:1 — true on brand-navy only. See lib/motion.ts STAGE
        and docs/DESIGN_SYSTEM.md §3.5. */
@@ -350,5 +351,33 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================================
+   PAGE TRANSITIONS — Level 5 (Sprint 16)
+   A short crossfade between pages, by the browser's cross-document View
+   Transitions: no JavaScript, and nothing to download. The public site links
+   with plain <a>, so every navigation is a document load, and both pages opt
+   in through this one rule.
+   - OPT-IN, not opt-out: only under `no-preference`. The backstop above cannot
+     reach ::view-transition pseudo-elements, so reduced motion must never
+     start one.
+   - It never delays content: the old page's snapshot shows only until the new
+     page can paint. A browser without support simply navigates (Chrome and
+     Android Chrome have it; Safari 18.2+).
+   - Nothing is given a view-transition-name. The header looks still anyway:
+     the crossfade blends two identical headers into the same pixels. And a
+     name would make the header a backdrop root, so the phone menu's glass
+     sheet, which lives inside it, would stop blurring the page behind it.
+   ========================================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(root) {
+    animation-duration: var(--dur-transition);
+    animation-timing-function: var(--ease-out-quart);
   }
 }

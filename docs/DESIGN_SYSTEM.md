@@ -204,6 +204,17 @@ is behind. Ratios are for the foreground on navy `#0A0E36` at the stated opacity
 The fourth row is why the header is near-solid below 1024px, where the outlined menu button shows,
 and why the cookie notice (outlined Decline button) stays solid.
 
+**The product buy bar** (`.glass-bar`, phones only, Sprint 16) is the same 96% with no blur, and a
+`border-strong-inverse` top edge. Composited over white, its ground is `#14183E`:
+
+| Foreground | Glass | Ratio | Needs | Verdict |
+|---|---|---|---|---|
+| `text-inverse` `#FFFFFF` product name | navy 96% | **17.12** | 4.5 | PASS |
+| `text-secondary-inverse` `#C3CEEA` price | navy 96% | **10.87** | 4.5 | PASS |
+| focus ring and primary hairline `brand-signal` `#3D8BFF` | navy 96% | **5.16** | 3 | PASS |
+| `border-strong-inverse` `#5A6B94` top edge | navy 96% | **3.23** | 3 | PASS |
+| primary fill `#1857C4` | navy 96% | 2.61 | — | the fill alone is not the boundary; the `#3D8BFF` hairline is, as on every dark ground |
+
 Cards: the light card is white, so every light-ground ratio in §3.1 applies unchanged (`text-secondary`
 6.94, `brand-signal-ink` 6.56). The dark card is `brand-navy-raised` `#121741`:
 
@@ -335,10 +346,15 @@ fill and a 1px inset top highlight, never an outer shadow.
 | `ProductHero` / `ProductPhoto` | `components/product/product-{hero,photo}.tsx` | 12o. The product title band. With a photo: photo left (2x loupe, "Hover to magnify" for hover-capable pointers only), name, summary and buy box right; on phones text and buy box first, then the photo, capped at 18rem and loaded after the page. Without a photo: the original summary and buy box |
 | `PhotoBand` | `components/ui/photo-band.tsx` | 12p. The page photo band: 4:5 / 3:2, contained to 56rem, after load, `padTop` when it follows a section of another ground. Used by `SolutionPhoto`, industry pages (after "What applies to this sector") and About (after the first section). Always below the fold on a 412×823 phone, measured on every page that has one |
 | `SolutionPhoto` | `components/solution/solution-photo.tsx` | 12o. The solution band after "What it is" (not under the title: below the fold on phones). 4:5 / 3:2, contained to 56rem, after load. Two of nine (V90) |
+| `SetupChooser` | `components/home/setup-chooser.tsx` | Sprint 16. "Find your setup": four `Card`s (private car, matatu or PSV, trucks and a fleet, cargo and containers), each a discrete choice the reader acts on, not a list to compare. An 88px photo thumbnail after load (alt empty: the heading names it), the solutions and the industry as links, and a WhatsApp message written for that reader. Server Component |
+| `StickyBuyBar` | `components/product/sticky-buy-bar.tsx` | Sprint 16, phones only (`md:hidden`). Slides up once the buy box (`#buy-box`) has gone above the screen, with the name, the price and the buy box's own action: "Add to cart" (then "View cart", announced), or "Price on WhatsApp". `.glass-bar` (§3.6). Closed means `visibility: hidden`, out of the tab order. Keeps a focused element clear of itself (WCAG 2.4.11), steps aside for the cookie bar, and moves the floating WhatsApp button |
+| `OnThisPage` | `components/layout/on-this-page.tsx` | Sprint 16. Jump links, server-rendered, no JavaScript. `inline`: one row under a solution page's hero. `aside`: a closed `<details>` on phones and a sticky column from `lg` on the legal pages. Shown only with two or more sections. No current-section highlight: it cost ~150ms LCP (PERFORMANCE_BASELINE §21) |
+| `ProofBand` logo row | `components/home/proof-band.tsx` | Sprint 16. A static row of client logos, only paths under `/clients/` and only rows with `permission_confirmed`. Nothing renders until one client has said yes in writing (CLIENT_PERMISSIONS.md). No marquee, no cards |
 | Home previews | `components/home/{solutions,shop,industries,resources}-preview.tsx` | 12n. Solutions: one held photo beside a ruled list (grid areas put the heading first on phones). Shop: four products, photo on white, no card chrome. Industries: a scroll-snap row below `lg`, six across from `lg`. Resources: one lead article and two rows. All composed differently on purpose (brief 6.6) |
 
 **`Card` exists since ADR-0008 (29 September 2026), and only where a surface genuinely needs it:**
-branch cards (brief 9.5), the product buy box, and download cards once there are documents. Brief
+branch cards (brief 9.5), the product buy box, download cards once there are documents, and since
+Sprint 16 the four "Find your setup" choices on Home (four different readers, each picking one). Brief
 6.6 still prohibits uniform rounded-card grids, so the catalogue, blog, hardware lists, spec tables
 and FAQs stay ruled lists. A card is for a discrete thing the reader acts on, not for a list meant
 to be compared.

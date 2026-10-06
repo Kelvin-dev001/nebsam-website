@@ -4,11 +4,14 @@ import { Eyebrow, Section, Shell } from '@/components/layout/section';
 import { JsonLd } from '@/components/seo/json-ld';
 import { ProductHero } from '@/components/product/product-hero';
 import { ProductSpecs } from '@/components/product/product-specs';
+import { priceRequestUrl } from '@/components/product/product-price';
+import { StickyBuyBar } from '@/components/product/sticky-buy-bar';
 import { getProductBySlug, getProducts } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, jsonLdGraph, productSchema } from '@/lib/seo/schema';
 import { SITE_URL } from '@/lib/company';
-import { ROUTES } from '@/lib/constants';
+import { ROUTES, VAT_LABEL } from '@/lib/constants';
+import { formatKes } from '@/lib/format';
 import { PRODUCT_PHOTOS } from '@/lib/media/products';
 import { productFeatures } from '@/types/content';
 
@@ -130,6 +133,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <JsonLd json={graph} />
 
       <ProductHero product={product} name={name} photo={photo} trail={trail} />
+
+      {/* Phones only: the buy box's action, kept in reach once the box has
+          scrolled away (Sprint 16). The same action, the same message. */}
+      <StickyBuyBar
+        name={name}
+        price={
+          typeof product.price_kes === 'number'
+            ? `${formatKes(product.price_kes)} ${VAT_LABEL}`
+            : 'Price on request'
+        }
+        action={
+          typeof product.price_kes === 'number' && product.id
+            ? { kind: 'cart', productId: product.id }
+            : { kind: 'whatsapp', href: priceRequestUrl(name) }
+        }
+      />
 
       {product.body ? (
         <Section tone="light">

@@ -23,7 +23,7 @@ export function SolutionFaqs({ faqs }: { faqs: PublicFaq[] }) {
   if (faqs.length === 0) return null;
 
   return (
-    <Section tone="light">
+    <Section tone="light" id="questions">
       <Shell>
         <div className="max-w-prose">
           <Eyebrow>Questions</Eyebrow>

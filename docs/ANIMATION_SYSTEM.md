@@ -37,7 +37,7 @@ transitions are linear while the button hover is `inOutQuad`.
 | 2 — Reveal | **420ms**, stagger **70ms**, cap **6**, travel **20px** | `outQuart` | `Reveal` on hero and "Complies." blocks; the home set piece's steps in stacked flow |
 | 3 — Data | **900ms** | `linear` | Readout status colour, GSM/GPS bar state — since T4 in the home set piece's peak frame (beat 5), no longer in the hero. **Asymmetric since T4:** into `state-warn` at `micro` (the alarm snaps), back to `state-ok` at `data` (relief settles) |
 | 4 — Cinematic | progress mapped 1:1 to scroll; step changes **420ms**; inactive steps at **0.6** opacity | `outQuart` for step changes | The pinned stage, **ADR-0006** — one per page, Tier A pages only. Built in Sprint 12b T3; first used on Home, "One vehicle, instrumented" (T4, `components/home/one-vehicle.tsx`) |
-| 5 — Transition | not used in Sprint 1 | `outQuart` | reserved — must never delay content paint |
+| 5 — Transition | **240ms** (`DURATION.transition`, `--dur-transition`) | `outQuart` | Since Sprint 16: a crossfade between pages, by cross-document View Transitions in CSS. Opt-in under `no-preference` only. Never delays content paint |
 
 ### Level 1 — Micro, 160ms
 `transform`, `opacity`, `color`, `border-color`, `background-color` only. Never `width`, `height`,
@@ -194,9 +194,46 @@ elements and screenshots the frame in the same instant, before the bar has repai
 grades the step against the bar's own text. Replayed with a 300 ms settle, the frame is plain navy.
 The step's real contrast is the §3.5 table in `DESIGN_SYSTEM.md`.
 
-### Level 5
-Reserved, not used. It must never delay content paint — a transition that holds the next page back to
-look smooth has traded the LCP budget for a flourish.
+### Level 5 — Transition, 240ms (Sprint 16)
+
+**A 240ms crossfade from one page to the next**, in `app/globals.css`. It uses
+`@view-transition { navigation: auto }`, which makes the browser snapshot the old page and fade it
+into the new one. There is no JavaScript and no library, and no route pays a request for it.
+
+- **Opt-in, not opt-out.** The rule sits inside `@media (prefers-reduced-motion: no-preference)`.
+  The global reduced-motion backstop cannot reach `::view-transition-*` pseudo-elements, so under
+  reduced motion a transition must never start at all. Verified both ways in real Chrome (below).
+- **It never delays content paint.** The old page's snapshot stays only until the new page can
+  paint. The new page renders exactly as it would without the rule. A browser without support just
+  navigates: Chrome and Android Chrome have it, as does Safari 18.2+.
+- **Nothing is given a `view-transition-name`.** The header already looks still, because two
+  identical headers crossfade into the same pixels. A name would also make the header a backdrop
+  root, and the phone menu's glass sheet, which lives inside it, would stop blurring the page
+  behind it. Tried and reverted.
+- **Same-origin navigations only**, which is all the rule can apply to. Leaving for WhatsApp, a call
+  or an outside site is untouched.
+
+**How it was verified.** Playwright's headless shell does not composite view transitions, so a
+`pagereveal` check there reports nothing either way. It was run in real Chrome
+(`channel: 'chrome'`) with the duration stretched to 3s so the animations could be read off
+`document.getAnimations()`. Under `no-preference`, the root group animated on every navigation.
+Under `reduce`, no animation started.
+
+The rule from before still holds: a transition that holds the next page back to look smooth has
+traded the LCP budget for a flourish. **Lighthouse cannot measure this one**: it times a cold load,
+which has no old page to fade from. The cost that can be measured is CSS only, and none of it is
+JavaScript (PERFORMANCE_BASELINE §21).
+
+### Sprint 16's other motion, all Level 1
+
+- **The product buy bar** slides up from below the screen at `micro` with `outQuart` (an arrival),
+  and back. Closed, it is also `visibility: hidden`. The visibility change waits for the slide on
+  the way out, not on the way in. Under reduced motion the backstop makes both instant.
+- **Nothing else moves.** The "Find your setup" thumbnails use the existing `whole` hover ease. The
+  logo row and "On this page" are static.
+
+**Out of scope on purpose, as Kelvin asked:** marquees, auto-moving or looping rows, auto carousels,
+video, 3D, Lottie, parallax and animation libraries.
 
 ---
 

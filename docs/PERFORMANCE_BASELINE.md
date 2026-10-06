@@ -708,3 +708,59 @@ first byte 10 ms from the cache, LCP 2,345 ms.
 
 **INP** is a field metric and there is no traffic yet; Total Blocking Time, its lab proxy, is 27–92 ms
 everywhere.
+
+## 21. Sprint 16 — the UI polish items, against Sprint 14, 6 October 2026
+
+Lighthouse 12, mobile preset, production build, one server at a time, 3 runs per page. Free memory
+was 1.0–2.3 GB, logged per run. Only the templates Sprint 16 touched were measured. Products and
+solutions ran on the final build; the legal pages were re-run after the highlighter was cut (below).
+
+| Page | LCP median | Sprint 14 | CLS | TBT | Perf | A11y / BP / SEO |
+|---|---|---|---|---|---|---|
+| `/` (chooser, logo row absent) | 2,335 ms | 2,424 | 0 | 21 | 98 | 100 / 100 / 100 |
+| `/products/hybrid-pro-tracker` (WhatsApp bar) | 2,217 | 2,237 | 0 | 21 | 99 | 100 / 100 / 100 |
+| `/products/baofeng-uv-5r` (cart bar) | 2,293 | 2,304 | 0 | 19 | 98 | 100 / 100 / 100 |
+| `/solutions/vehicle-tracking` (inline list) | 2,343 | 2,391 | 0 | 20 | 98 | 100 / 100 / 100 |
+| `/legal/cookies` (sticky list) | 2,375 (1,968–2,388) | 2,394 | 0 | 68–87 | 98–99 | 100 / 100 / 100 |
+| `/legal/privacy-policy` | 2,410–2,448 | 2,402 | 0 | 65–185 | 95–97 | 100 / 100 / 100 |
+| `/legal/terms` | 2,386 | 2,355 | 0 | 39–230 | 93–98 | 100 / 100 / 100 |
+
+Legal rows are the clean runs: four each for cookies and the privacy notice, three for the terms.
+**Two runs are left out**, with `benchmarkIndex` 1,519 and 1,838 when every other run read 2,197–3,460.
+The machine's CPU was starved then. Those runs gave Performance 93 and 87, and one LCP of 2,711 ms.
+Run again straight after on the same build, the same pages gave 97–99. The worst clean run is the
+terms at Performance 93 (TBT 230, `benchmarkIndex` 2,197), still inside the budget.
+
+**The current-section highlight was measured out.** "On this page" first shipped with a small
+client effect that set `aria-current` on the section being read. On the legal pages that was one
+more script request on the critical path:
+- `/legal/cookies` went 2,394 → **2,507 ms**, over the 2.5 s budget;
+- `/legal/privacy-policy` went 2,402 → **2,506 ms**, over it too.
+
+The links, the sticky column and the phone `<details>` all work without it, so it was cut. The
+component now ships no JavaScript, and the pages are back at their Sprint 14 figures. Lighthouse
+puts about 150 ms of simulated LCP on any extra request in that position (§20). That is the
+standing reason not to add a client island to a page that has none.
+
+**Initial JS** (`next build`, first load, gzipped):
+
+| Route | Sprint 15 | Sprint 16 | |
+|---|---|---|---|
+| `/` | 118 kB | 119 kB | the chooser is server-rendered. The route grew 9.61 → 10.9 kB, which fits the solution photo registry (`lib/media/solutions`) it now imports: Next puts every image a page imports into its client chunk (ADR-0009) |
+| `/products/[slug]` | 113 kB | 113 kB | the buy bar's client code fits inside the existing chunk (route 4.78 → 5.45 kB) |
+| `/solutions/[slug]` | 111 kB | 111 kB | the inline list is server-rendered |
+| `/legal/*` | 103 kB | 103 kB | route 178 B: no client code at all |
+
+All are inside the 180 kB budget. The page transition is CSS only, in the one global stylesheet,
+and costs no request.
+
+**Images.** The chooser adds four 256px-wide thumbnails after load: 8, 6, 7 and 6 KB, so **27 KB**
+together, none of it on the LCP path. The largest image on any measured page is still the hero
+(24 KB as Lighthouse fetched it; 56 KB is the site-wide largest, §20). Fully scrolled page weight
+was not re-measured: these four thumbnails are the only new images, on Home's 711 KB of 1.5 MB.
+**Two web-font files**, unchanged.
+
+**What Lighthouse cannot see.** The page transition only runs between two pages, and Lighthouse
+times a cold load. It was verified in real Chrome instead (ANIMATION_SYSTEM Level 5). The buy bar
+opens only after scrolling past the buy box, so it is never part of a cold load. Its observer and
+focus handler are idle until then.

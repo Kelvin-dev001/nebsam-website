@@ -33,14 +33,17 @@ function phonesOf(value: PublicBranch['phones']): BranchPhone[] {
 export function Coverage({
   branches,
   coverage,
+  id,
 }: {
   branches: PublicBranch[];
   coverage: PublicCoverageLocation[];
+  /** An anchor, where a page's "On this page" list links to this section. */
+  id?: string;
 }) {
   if (branches.length === 0) return null;
 
   return (
-    <Section tone="light">
+    <Section tone="light" id={id}>
       <Shell>
         <div className="max-w-prose">
           <Eyebrow>Coverage</Eyebrow>

@@ -69,7 +69,8 @@ export function ProductHero({
               ) : (
                 <span />
               )}
-              <Card tone="dark" className={photo ? 'max-w-[34rem]' : ''}>
+              {/* id: the sticky buy bar opens once this has scrolled away. */}
+              <Card id="buy-box" tone="dark" className={photo ? 'max-w-[34rem]' : ''}>
                 <ProductPrice product={product} />
               </Card>
             </div>

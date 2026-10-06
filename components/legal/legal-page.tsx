@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Section, Shell } from '@/components/layout/section';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { OnThisPage, type TocItem } from '@/components/layout/on-this-page';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema, jsonLdGraph } from '@/lib/seo/schema';
 import { ROUTES } from '@/lib/constants';
@@ -87,12 +88,14 @@ export function LegalPage({
       </Section>
 
       <Section tone="paper">
-        <Shell>
+        <Shell className="lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-x-12">
           {/*
             The scope statement, above everything. See the header on why this is
-            structural rather than a note somebody remembers to add.
+            structural rather than a note somebody remembers to add. In the DOM
+            it stays first; from lg the contents list (Sprint 16) holds the left
+            column from the top, beside it.
           */}
-          <div className="max-w-prose rounded-panel border border-border-strong bg-surface p-5">
+          <div className="max-w-prose rounded-panel border border-border-strong bg-surface p-5 lg:col-start-2">
             <h2 className="font-mono text-label uppercase tracking-[0.08em] text-text-secondary">
               What this covers
             </h2>
@@ -102,7 +105,7 @@ export function LegalPage({
           {reviewStatus ? (
             <div
               role="note"
-              className="mt-6 max-w-prose rounded-panel border border-state-warn-ink/40 bg-surface p-5"
+              className="mt-6 max-w-prose rounded-panel border border-state-warn-ink/40 bg-surface p-5 lg:col-start-2"
             >
               <h2 className="font-mono text-label uppercase tracking-[0.08em] text-state-warn-ink">
                 Status of this document
@@ -111,10 +114,28 @@ export function LegalPage({
             </div>
           ) : null}
 
-          <div className="mt-12 flex max-w-prose flex-col gap-10">{children}</div>
+          {/* "On this page" (Sprint 16): built from the sections themselves, so a
+              heading and its entry cannot drift apart. */}
+          <div className="mt-8 lg:col-start-1 lg:row-[1/span_3] lg:mt-0">
+            <OnThisPage items={contentsOf(children)} variant="aside" />
+          </div>
+
+          <div className="mt-12 flex max-w-prose flex-col gap-10 lg:col-start-2">{children}</div>
         </Shell>
       </Section>
     </main>
+  );
+}
+
+/** The sections a policy is made of, for its "On this page" list. */
+function contentsOf(children: React.ReactNode): TocItem[] {
+  return React.Children.toArray(children).flatMap((child) =>
+    React.isValidElement<{ id?: string; heading?: string }>(child) &&
+    child.type === LegalSectionBlock &&
+    child.props.id &&
+    child.props.heading
+      ? [{ id: child.props.id, label: child.props.heading }]
+      : [],
   );
 }
 
