@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { ROUTES, CONSENT_COOKIE, CONSENT_VERSION } from '@/lib/constants';
 import { DATA_PROTECTION_CONTACT } from '@/lib/company';
@@ -57,9 +56,9 @@ export default function CookieNoticePage() {
             It does not cover the vehicle tracking platform you sign in to as a customer, which is a
             separate system with its own login. It does not cover WhatsApp, which has its own
             policies — see{' '}
-            <Link href={ROUTES.privacy} className="underline underline-offset-4">
+            <a href={ROUTES.privacy} className="underline underline-offset-4">
               our privacy notice
-            </Link>
+            </a>
             .
           </p>
         </>
@@ -201,9 +200,9 @@ export default function CookieNoticePage() {
         <p>
           What we do with the information you send us — and what we do with vehicle tracking data —
           is in the{' '}
-          <Link href={ROUTES.privacy} className="underline underline-offset-4">
+          <a href={ROUTES.privacy} className="underline underline-offset-4">
             privacy notice
-          </Link>
+          </a>
           .
         </p>
       </LegalSectionBlock>

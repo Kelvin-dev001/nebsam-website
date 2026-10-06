@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { ROUTES } from '@/lib/constants';
 import { COMPANY, DATA_PROTECTION_CONTACT, BRANCHES } from '@/lib/company';
@@ -120,36 +119,36 @@ export default function PrivacyPolicyPage() {
           rows={[
             [
               <>
-                <Link href={ROUTES.contact} className="underline underline-offset-4">
+                <a href={ROUTES.contact} className="underline underline-offset-4">
                   Contact form
-                </Link>
+                </a>
               </>,
               'Your name, phone number, optionally an email address, optionally a preferred branch, and your message',
               'Replying to you',
             ],
             [
               <>
-                <Link href={ROUTES.quote} className="underline underline-offset-4">
+                <a href={ROUTES.quote} className="underline underline-offset-4">
                   Quote request
-                </Link>
+                </a>
               </>,
               'Your name, phone number, optionally email, optionally your organisation, what you need, roughly how many vehicles, and your town',
               'Preparing a quote and saying who would carry out the work',
             ],
             [
               <>
-                <Link href={ROUTES.bookInstallation} className="underline underline-offset-4">
+                <a href={ROUTES.bookInstallation} className="underline underline-offset-4">
                   Installation booking
-                </Link>
+                </a>
               </>,
               'Your name, phone number, optionally email, what is being installed, optionally the vehicle, the town, and a preferred time',
               'Arranging the appointment. It is a request, not a confirmed booking, until we confirm it',
             ],
             [
               <>
-                <Link href={ROUTES.suggestions} className="underline underline-offset-4">
+                <a href={ROUTES.suggestions} className="underline underline-offset-4">
                   Suggestions
-                </Link>
+                </a>
               </>,
               <>
                 Your suggestion. Name, phone and email are <strong>optional</strong>, and if you
@@ -160,9 +159,9 @@ export default function PrivacyPolicyPage() {
             ],
             [
               <>
-                <Link href={ROUTES.cart} className="underline underline-offset-4">
+                <a href={ROUTES.cart} className="underline underline-offset-4">
                   Placing an order
-                </Link>
+                </a>
               </>,
               'Your name, phone number, optionally your town, and what you ordered at the price shown',
               'Fulfilling the order, and having a record of it if the WhatsApp conversation is lost',
@@ -279,9 +278,9 @@ export default function PrivacyPolicyPage() {
         </p>
         <p>
           Cookies and analytics are covered separately in the{' '}
-          <Link href={ROUTES.cookies} className="underline underline-offset-4">
+          <a href={ROUTES.cookies} className="underline underline-offset-4">
             cookie notice
-          </Link>
+          </a>
           .
         </p>
       </LegalSectionBlock>
