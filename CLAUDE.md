@@ -171,6 +171,10 @@ be described as real customer data.
 is complete and static. **Shared motion CSS goes into the one global stylesheet** by an `@import` at
 the top of `app/globals.css` (`pinned-sequence.css`, `micro-interactions.css`) — **never a CSS
 module**: on Home a module became a second render-blocking stylesheet (V77).
+**Page transitions (Level 5, Sprint 16)** are a 240ms CSS `@view-transition` crossfade, opted in only
+under `prefers-reduced-motion: no-preference`. Never give anything a `view-transition-name`: on the
+header it would break the menu sheet's blur. **Never** marquees, looping or auto-moving rows, auto
+carousels, video, 3D, Lottie, parallax or an animation library (Kelvin, Sprint 16).
 
 **Photographs (ADR-0009).** Made by `scripts/images/prepare-photos.py` from
 `assets/photos/manifest.json` (source, origin, crops, blur, review) and committed under
@@ -193,7 +197,11 @@ list meant to be compared (catalogue, blog, specs, FAQs) — that is the prohibi
 the sticky header (85% navy + blur from 1024px, 96% below) and the menu sheet (from 640px), **opacity
 set by contrast over a WHITE backdrop**, never by eye: an outlined control needs 96%, which is why the
 cookie notice stays solid. Surface CSS is `components/ui/surfaces.css`, @imported like the motion CSS.
-The header height is `--header-h`; anything sticky or anchored offsets by it.
+The header height is `--header-h`; anything sticky or anchored offsets by it. The product page's
+phone buy bar (Sprint 16) is `.glass-bar`, 96% with no blur. Anything fixed at the bottom must keep
+a focused element visible (WCAG 2.4.11), and `scroll-padding` alone does not do that in Chrome.
+**A page with no client island gets none for an enhancement**: one extra script on the legal pages
+cost ~150ms LCP and broke the budget, so "On this page" ships no JavaScript.
 
 ## 7. SEO / LLM checklist per page type
 

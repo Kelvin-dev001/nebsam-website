@@ -72,8 +72,13 @@ jacket) and cargo (customs officers and gate, a UASC container, a mock status pa
 problem is the scene, not a corner of it (V90). Also the supplied telematics cover (Gemini
 watermark, invented livery, control room).
 
+**Sprint 16 (6 Oct 2026): the homepage "Find your setup" chooser reuses four photos already in
+use**, as 88px thumbnails after load with empty alt (the link text names each choice): the vehicle
+security and speed governor solution bands, the AI video telematics band for trucks, and the
+cross-border transport industry crop for cargo. No new file.
+
 **Still to come from Kelvin** (promised 4 Oct 2026 "tomorrow"): client logos (with V12 permission),
-all six certificate scans, platform screenshots.
+all six certificate scans, platform screenshots, and the recovery and cargo solution photos.
 
 ## Brand asset — analysed Sprint 0
 
@@ -176,6 +181,11 @@ operations task that blocks the certifications page — **V27–V30**.
 `armytex.png` · `buscar.jpg` · `ismax-security.png` · `kensalt.jpeg` · `muthukinjo.jpeg` ·
 `ngongveg.png` — permission status tracked in `docs/CLIENT_PERMISSIONS.md` (V12). Note that four of
 these six do **not** appear on the fuel proposal's client list; confirm those relationships.
+
+Since Sprint 14 they sit in `source-assets/legacy-public/clients/`, out of `public/`, so none is
+downloadable from the site (the inventory below still shows their old `public/` paths). Since
+Sprint 16 the homepage shows a static logo row once a client has confirmed in writing, and nothing
+before. The steps are in `docs/CLIENT_PERMISSIONS.md`, "How a logo goes live".
 
 ## What already exists and is reusable
 **Products:** `2-wire-tracker` · `magnetic-tracker` · `obd-tracker` · `fingerprint-tracker` ·
