@@ -344,9 +344,11 @@ are not production builds and the budget numbers will lie. **Never measure a `MO
 build either**: development-only pages are `page.dev.tsx`, built only in `next dev` or a flagged
 build, and a built dev route changes how public routes are chunked (PERFORMANCE_BASELINE §11).
 
-**Vercel previews.** `vercel.json` on `develop` and the branches cut from it builds them as Next.js
-(V76); `main` does not carry it and keeps serving the CRA site until the Sprint 15 cutover. Previews
-have no environment variables and sit behind Vercel Authentication.
+**Production is live (since 5 October 2026).** `main` is production and equals `develop` since 6
+October; **deploy = `git push origin develop:main`**, then the checks in `docs/LAUNCH_RUNBOOK.md` §4
+against `https://nebsamdigital.com`. `vercel.json` makes every build Next.js (V76). Previews have no
+environment variables and sit behind Vercel Authentication, so **never promote a preview** to
+production: it would serve a site with no content. Rollback: Vercel Instant Rollback (runbook §3).
 
 **ESLint + Prettier + `tsc --noEmit` must pass before any commit.** Line endings are LF in every
 working copy (`.gitattributes`), whatever a machine's `core.autocrlf` says: a CRLF checkout made
@@ -363,14 +365,14 @@ never hand-written · no magic strings — routes, event names and statuses live
 
 A dependency is added only with a one-line justification in the sprint report.
 
-Branches: `main` (production, currently serving the live CRA site) ← `develop` (integration) ←
+Branches: `main` (production, nebsamdigital.com) ← `develop` (integration) ←
 `sprint/NN-name` (work). Conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`, `perf:`,
 `chore:`). Small, single-purpose commits — never a 60-file "sprint 4" commit. Never commit secrets,
 raw media over ~2 MB, or generated output. Never force-push a shared branch. PR per sprint with the
 sprint report as the description.
 
-**Vercel production stays pinned to `main` until Sprint 15**, so the live site keeps serving while
-the rebuild proceeds on `develop`.
+**Vercel production builds from `main`.** Nothing reaches `main` except a verified `develop`, and
+only with Kelvin's go-ahead: it is the live site.
 
 ## 13. Definition of Done — every sprint
 

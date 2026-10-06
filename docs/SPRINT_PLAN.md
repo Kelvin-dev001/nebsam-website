@@ -331,11 +331,15 @@ public page**, and every 301 resolving in one hop with no chains.
 **Delivers** Cross-device QA, forms, emails, the 301 map live, backups, monitoring, deploy.
 **Gate** Human sign-off.
 
-- [ ] **`develop` merged to `main`; Vercel production switched**
-- [ ] Every old URL verified live against production, not preview
-- [ ] Sitemap submitted to Search Console
-- [ ] Backups and monitoring confirmed
-- [ ] Secrets audit
+- [x] **`develop` merged to `main`; Vercel production switched.** Production was already serving a
+      `develop` build (12o) since 5 Oct 2026. On 6 Oct, `main` was fast-forwarded to `develop`
+      (`b5ade7a`) and Vercel built production from it
+- [x] Every old URL verified live against production, not preview: the 13 redirects and 4 direct
+      routes against `https://nebsamdigital.com`. Whether the map is COMPLETE is V25 (Search Console)
+- [ ] Sitemap submitted to Search Console: needs Kelvin's property access (V10)
+- [ ] Backups and monitoring confirmed: V104
+- [x] Secrets audit: repository, full history and the built output are clean; three Vercel
+      variables to change (the launch report)
 - [ ] **No unresolved `[[NEEDS_VERIFICATION]]` on any public page** — brief PART 2.2 forbids launch
       otherwise
 
