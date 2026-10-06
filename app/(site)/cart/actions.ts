@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { serviceClient } from '@/lib/supabase/server';
 import { whatsappUrl } from '@/lib/company';
 import { ROUTES, VAT_RATE, VAT_LABEL } from '@/lib/constants';
+import { formatKes } from '@/lib/format';
 
 /**
  * ORDER CREATION.
@@ -72,10 +73,6 @@ function generateOrderNumber(): string {
   crypto.getRandomValues(bytes);
   const suffix = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join('');
   return `NBS-${yy}${mm}${dd}-${suffix}`;
-}
-
-function formatKes(amount: number): string {
-  return `KES ${amount.toLocaleString('en-KE')}`;
 }
 
 export async function createOrder(formData: FormData): Promise<OrderResult> {

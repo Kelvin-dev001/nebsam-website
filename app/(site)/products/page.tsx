@@ -6,6 +6,7 @@ import { getProducts } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, jsonLdGraph } from '@/lib/seo/schema';
 import { ROUTES, VAT_LABEL } from '@/lib/constants';
+import { formatKes } from '@/lib/format';
 
 /**
  * PRODUCTS INDEX, grouped by family.
@@ -44,10 +45,6 @@ export const metadata = buildMetadata({
     'Vehicle trackers, car alarms, PoC radios, dashcams and telematics hardware supplied and fitted across Kenya from Nairobi, Mombasa and Nakuru.',
   path: ROUTES.products,
 });
-
-function formatKes(amount: number): string {
-  return `KES ${amount.toLocaleString('en-KE')}`;
-}
 
 export default async function ProductsIndexPage() {
   const { data: rows } = await getProducts();

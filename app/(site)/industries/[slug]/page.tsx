@@ -15,6 +15,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, jsonLdGraph } from '@/lib/seo/schema';
 import { BRANCHES, whatsappUrl } from '@/lib/company';
 import { ROUTES, VAT_LABEL } from '@/lib/constants';
+import { formatKes } from '@/lib/format';
 
 /**
  * INDUSTRY PAGE — the sector entry point.
@@ -97,10 +98,6 @@ export async function generateMetadata({
     description: industry.seo_description ?? industry.summary ?? '',
     path: ROUTES.industry(slug),
   });
-}
-
-function formatKes(amount: number): string {
-  return `KES ${amount.toLocaleString('en-KE')}`;
 }
 
 export default async function IndustryPage({ params }: { params: Promise<{ slug: string }> }) {

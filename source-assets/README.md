@@ -47,3 +47,32 @@ of type by 2 px and stops 26 px above the first stroke of the signature.
    render even if someone sets an image path on it.
 2. The named official and signature must be **cropped out**, for the same forgery reason as KEBS.
 3. The replacement scan goes in this folder; only the cleared derivative goes in `public/`.
+
+---
+
+## legacy-public/
+
+**Sprint 14 (6 Oct 2026): 107 files moved out of `public/`**, about 22 MB: everything the old CRA
+site served that the new site does not use. Paths are kept, so `public/sr-400.jpg` is now
+`legacy-public/sr-400.jpg`, and the move is a git rename: history follows each file.
+
+They left `public/` because anything there is served to anyone who knows the URL, and none of
+these is a cleared or converted file:
+- **The old product photos** (`sr-*`, `xlr-*`, trackers, cameras, alarms). Kelvin, 4 Oct 2026:
+  never use them.
+- **Client logos** (`clients/`), with no permission recorded per client (V12).
+- **Premises photos** (`images/reception.jpeg`, `showroom.jpeg`, `service-bay.jpeg` and
+  others). These show the Mombasa branch. The one in use, the entrance, ships from
+  `assets/photos/branches/` through the photo pipeline.
+- **Hero backgrounds, banners, an organogram and old share images**, at up to 1.9 MB each,
+  unconverted.
+- **`africa-mappp.svg`**, whose Kenya outline is copied into `lib/geo.ts`, and `africa-map.svg`.
+
+The audit that chose them read every file in `public/` against the code (app, components, lib,
+scripts, the photo manifest) **and** against the database: the migrations and every image column
+of the published views. Only one legacy-looking file is referenced: the KEBS crop, which stays (see
+`certificates/` above).
+
+**To use one again**, do not move it back. Make a reviewed derivative through
+`scripts/images/prepare-photos.py` (ADR-0009), so it ships resized, stripped of metadata and through
+next/image.

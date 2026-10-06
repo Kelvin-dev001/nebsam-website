@@ -2,6 +2,7 @@ import { Section, Shell } from '@/components/layout/section';
 import { serviceClient } from '@/lib/supabase/server';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { VAT_LABEL } from '@/lib/constants';
+import { formatKes } from '@/lib/format';
 
 /**
  * ORDER LOOKUP.
@@ -57,10 +58,6 @@ const STATUS_TEXT: Record<string, string> = {
   closed: 'Closed.',
   cancelled: 'Cancelled.',
 };
-
-function formatKes(n: number): string {
-  return `KES ${n.toLocaleString('en-KE')}`;
-}
 
 export default async function OrderPage({ params }: { params: Promise<{ orderNumber: string }> }) {
   const { orderNumber } = await params;

@@ -72,14 +72,61 @@ reader.
 - Headings and landmarks inspected in the accessibility tree, not just visually
 
 ### Critical paths — screen-reader tested, not merely axe-tested
-1. Navigation, including the mega menu
+1. Navigation (the header has no mega menu: top-level links on desktop, a modal menu on phones)
 2. Quote form
 3. Cart → WhatsApp order
-4. Certificate verification
+4. ~~Certificate verification~~ (removed with the feature, ADR-0007, 28 Sep 2026)
 5. Contact and installation booking
 
 Tested with **NVDA on Windows** and **VoiceOver on iOS** — iOS because the audience is mobile-first
 and iOS VoiceOver behaves differently enough from desktop readers to matter.
+
+### Screen-reader script (Sprint 14, for a person: V101)
+
+Everything automatable was run in Sprint 14 on the production build: axe (WCAG 2.0/2.1/2.2 A and AA)
+on every page at 360 and 1440px, keyboard on every path, forced colours, and reflow at 320/640px.
+This script is the part only a person with NVDA (Windows, Chrome or Firefox) and VoiceOver (iPhone,
+Safari) can do. On the iPhone, swipe right to move and double-tap to activate. Use the rotor for
+headings. In NVDA, use Tab, the arrow keys and H.
+
+**1. Navigation.**
+- Load any page. The first thing reached is **"Skip to content, link"**. Activate it: the next item
+  is the first thing in the page content, not the header.
+- On the phone: **"Menu, button, collapsed"**. Activate it.
+  - It should announce a dialog named **"Site navigation"**, with focus on the menu panel itself.
+  - Next come **Close** and the sections. Solutions, Resources and About are headed groups with their
+    links listed under them; nothing needs expanding.
+  - Moving past the last item wraps to the first. It must never reach the page behind.
+  - **Escape** (NVDA), or **Close** (iPhone), returns to the Menu button, now **collapsed**.
+- Pass when every link name says where it goes, and nothing behind the menu is reachable while it
+  is open.
+
+**2. Quote form** (`/quote`).
+- Every field announces its label, **"(required)"** where it is, and its type. The phone field
+  should be a telephone keypad on the iPhone.
+- Submit with a required field empty. The browser says which field, and focus or the cursor lands
+  on it.
+- **Do not submit a complete form**: it writes a real enquiry that staff will act on. If a success
+  message must be heard, agree a test with the team first. The status region should then read the
+  result out without focus moving.
+
+**3. Cart → WhatsApp order.**
+- On a product with a published price (a radio, e.g. `/products/baofeng-uv-5r`), activate
+  **"Add to cart"**. It should announce **"Added — view cart"** without moving focus.
+- On `/cart`, check the reading order:
+  1. The product link.
+  2. **"Quantity"**, a number field from 1 to 99. Changing it must update the total read out
+     after it.
+  3. **"Remove"**.
+  4. **"Send order on WhatsApp"**.
+- **Stop there.** Sending creates a real order in the database and opens WhatsApp.
+
+**5. Contact and installation booking** (`/contact`, `/support/book-installation`).
+- As for the quote form. On booking, **"Preferred day or time"** is a plain text field, deliberately
+  not a date picker. Its hint, "this is a request, not a booking", should be read with the field.
+
+Record for each path: the screen reader and browser with versions, pass or fail, and the exact words
+heard where something failed.
 
 ### Viewports
 360 px (the real floor for the audience), 768, 1024, 1440, 1920+.

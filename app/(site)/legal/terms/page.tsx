@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { ROUTES, VAT_LABEL, VAT_RATE } from '@/lib/constants';
 import { COMPANY, CONTACT } from '@/lib/company';
@@ -162,9 +161,9 @@ export default function TermsPage() {
         </ul>
         <p>
           We log form submissions in the way described in the{' '}
-          <Link href={ROUTES.privacy} className="underline underline-offset-4">
+          <a href={ROUTES.privacy} className="underline underline-offset-4">
             privacy notice
-          </Link>
+          </a>
           , and we may block access that looks like misuse.
         </p>
       </LegalSectionBlock>
@@ -207,13 +206,13 @@ export default function TermsPage() {
             {CONTACT.whatsapp.display}
           </a>
           , or use the{' '}
-          <Link href={ROUTES.contact} className="underline underline-offset-4">
+          <a href={ROUTES.contact} className="underline underline-offset-4">
             contact form
-          </Link>
+          </a>
           . For anything about your personal data, the{' '}
-          <Link href={ROUTES.privacy} className="underline underline-offset-4">
+          <a href={ROUTES.privacy} className="underline underline-offset-4">
             privacy notice
-          </Link>{' '}
+          </a>{' '}
           names the person to write to.
         </p>
       </LegalSectionBlock>

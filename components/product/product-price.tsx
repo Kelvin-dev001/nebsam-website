@@ -3,6 +3,7 @@ import { AddToCart } from '@/components/cart/add-to-cart';
 import { whatsappUrl } from '@/lib/company';
 import { VAT_LABEL } from '@/lib/constants';
 import type { PublicProduct } from '@/types/content';
+import { formatKes } from '@/lib/format';
 
 /**
  * PRICE AND RECURRING COST.
@@ -26,10 +27,6 @@ import type { PublicProduct } from '@/types/content';
  * product with no price shows "Request price", no add-to-cart, and emits no
  * Offer schema. All three follow from the same null, so they cannot drift apart.
  */
-
-function formatKes(amount: number): string {
-  return `KES ${amount.toLocaleString('en-KE')}`;
-}
 
 export function ProductPrice({ product }: { product: PublicProduct }) {
   const hasPrice = typeof product.price_kes === 'number';

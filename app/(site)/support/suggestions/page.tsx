@@ -24,7 +24,14 @@ import { ROUTES } from '@/lib/constants';
  * Anonymous means we cannot reply. Saying so up front is better than a person
  * choosing anonymity, waiting for an answer, and concluding they were ignored.
  */
-export const dynamic = 'force-dynamic';
+/*
+ * STATIC since Sprint 14 (was `force-dynamic`, with no reason recorded). The
+ * form posts to a server action, which runs per request on a static page as
+ * it always has on /contact. Rendering this page per request bought nothing
+ * and cost two things: Next streamed its metadata into <body>, so the meta
+ * description was missing from <head> for any client that is not a known bot
+ * (Lighthouse SEO 92), and every visit waited on a fresh render.
+ */
 
 export const metadata = buildMetadata({
   title: 'Send Nebsam a suggestion, anonymously if you wish',

@@ -91,39 +91,69 @@ const redirects = async () => [
 /**
  * Security headers (brief PART 16).
  *
- * CSP ships REPORT-ONLY in Sprint 2 and is enforced before Sprint 15, so we
- * find out what it breaks without breaking it. 'unsafe-inline' is present for
- * styles because Tailwind and next/font emit inline style, and for scripts
- * because Next's bootstrap is inline — both are removed when the policy is
- * enforced and nonces are wired in.
+ * CSP shipped REPORT-ONLY from Sprint 2, so we could find out what it would
+ * break without breaking it. ENFORCED SINCE SPRINT 14.
  *
- * `upgrade-insecure-requests` is deliberately ABSENT while the policy is
- * report-only. Browsers ignore that directive in a report-only policy and log
- * a console error saying so on every page ("…is ignored when delivered in a
- * report-only policy"), which broke the zero-console-errors rule site-wide
- * from Sprint 2 to Sprint 12b. Add it back in the same change that enforces
- * the policy, where it takes effect. Until then HSTS, below, already keeps
- * every request on HTTPS.
+ * ── 'unsafe-inline' stays, and why ─────────────────────────────────────────
+ *
+ * The plan was to drop it for nonces at enforcement. In the App Router a nonce
+ * must be minted per request, which makes every page dynamic: no static HTML,
+ * no ISR, no CDN cache. That is an architecture change with a cost to LCP on
+ * every route, so it is a decision for Kelvin (register V100), not a side
+ * effect of enforcing. What enforcement already buys: no script, frame, image,
+ * font or connection from an origin not listed here, no plugins, no <base>
+ * rewrite, no form posting off-site, no framing.
+ *
+ * ── What each addition is for (checked in Sprint 14, not guessed) ──────────
+ *
+ * - img-src SUPABASE: the admin media library's thumbnails are <img> elements
+ *   on a same-origin route that 307-redirects to a signed storage URL, and CSP
+ *   checks the redirect target. Report-only never broke it, so nothing showed.
+ * - Google Analytics 4, from Google's own CSP guidance: the loader script from
+ *   *.googletagmanager.com, collection to *.google-analytics.com and
+ *   *.analytics.google.com, and the image beacons. It loads only after
+ *   consent, and only when NEXT_PUBLIC_GA4_MEASUREMENT_ID is set.
+ * - 'unsafe-eval' in `next dev` ONLY: React Refresh evaluates code. A
+ *   production build never carries it.
+ * - upgrade-insecure-requests: back now that it takes effect. Browsers ignore
+ *   it in a report-only policy and logged an error saying so on every page,
+ *   which is why it was absent until now.
+ *
+ * Not needed, checked: the browser Supabase client is imported by nothing;
+ * Turnstile is verified server-side and has no widget yet (V78); the WhatsApp
+ * order opens a window rather than submitting a form, and downloads are links,
+ * so `form-action 'self'` blocks no redirect. frame-src keeps google.com for a
+ * maps embed, though none exists today.
  */
+const SUPABASE_ORIGIN = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').origin;
+  } catch {
+    return '';
+  }
+})();
+const IS_DEV = process.env.NODE_ENV === 'development';
+
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+  `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ''} https://*.googletagmanager.com`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://www.google.com",
+  `img-src 'self' data: blob: https://www.google.com https://*.google-analytics.com https://*.googletagmanager.com${SUPABASE_ORIGIN ? ` ${SUPABASE_ORIGIN}` : ''}`,
   "font-src 'self'",
-  "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com",
+  "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
   "frame-src 'self' https://www.google.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
+  'upgrade-insecure-requests',
 ].join('; ');
 
 const headers = async () => [
   {
     source: '/:path*',
     headers: [
-      { key: 'Content-Security-Policy-Report-Only', value: csp },
+      { key: 'Content-Security-Policy', value: csp },
       { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
       { key: 'X-Content-Type-Options', value: 'nosniff' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

@@ -1,13 +1,13 @@
-import { z } from 'zod';
-
 /**
  * ENQUIRY FORMS — the shared shape.
  *
  * Four public forms write to one `submissions` table: contact, quote,
  * suggestions and installation booking. They differ in their fields and in
- * almost nothing else, so the schemas, the field specs and the result type live
- * here, in a module with NO `server-only` import, and both the client form and
- * the server action read from it.
+ * almost nothing else, so the field specs, the minimum lengths and the result
+ * type live here, in a module with NO `server-only` import and NO Zod, and both
+ * the client form and the server action read from it. The Zod schemas are in
+ * schemas.ts, server-only (Sprint 14): the browser needs labels and lengths,
+ * not a validator, and Zod was 20-odd KB on every form page.
  *
  * That is what stops the two halves disagreeing. A field rendered by the client
  * that the server does not validate is an unvalidated field; a field the server
@@ -16,87 +16,14 @@ import { z } from 'zod';
  */
 
 /**
- * Minimum lengths, read by the schemas below AND by the fields' `minLength`, so
+ * Minimum lengths, read by the schemas (schemas.ts) AND by the fields' `minLength`, so
  * the browser refuses what the server would, before anything is sent (V81).
  */
-const MIN = { name: 2, phone: 9, message: 10, interest: 3, product: 2, town: 2 } as const;
+export const MIN = { name: 2, phone: 9, message: 10, interest: 3, product: 2, town: 2 } as const;
 
-/** Kenyan mobile numbers, loosely. */
-const phone = z
-  .string()
-  .min(MIN.phone, 'A phone number is needed so we can reply.')
-  .max(20)
-  .regex(/^[0-9+\s()-]+$/, 'Use digits, spaces and + only.');
-
-const name = z.string().min(MIN.name, 'Please give a name we can use.').max(120);
-const optionalEmail = z
-  .string()
-  .max(160)
-  .email('That does not look like an email address.')
-  .optional()
-  .or(z.literal(''));
-const message = z.string().min(MIN.message, 'Please tell us a little more.').max(4000);
-
-/**
- * The honeypot, on every form.
- *
- * Named `company` because that is a field a form filler expects to see and will
- * happily complete. It is checked on the SERVER — a browser-side check stops
- * nothing that posts directly, which is the only adversary that matters.
- */
-const honeypot = z.string().max(200).optional().nullable();
-
-export const SUBMISSION_SCHEMAS = {
-  contact: z.object({
-    name,
-    phone,
-    email: optionalEmail,
-    branch: z.string().max(40).optional().or(z.literal('')),
-    message,
-    company: honeypot,
-  }),
-  quote: z.object({
-    name,
-    phone,
-    email: optionalEmail,
-    organisation: z.string().max(160).optional().or(z.literal('')),
-    // Free text on purpose. A dropdown of products would go stale the moment
-    // the catalogue changes, and a fleet manager describing "14 lorries and two
-    // pickups" tells sales more than any select could.
-    interest: z.string().min(MIN.interest, 'Tell us what you are looking for.').max(400),
-    vehicles: z.string().max(80).optional().or(z.literal('')),
-    town: z.string().max(80).optional().or(z.literal('')),
-    message: message.optional().or(z.literal('')),
-    company: honeypot,
-  }),
-  installation: z.object({
-    name,
-    phone,
-    email: optionalEmail,
-    vehicle: z.string().max(160).optional().or(z.literal('')),
-    product: z.string().min(MIN.product, 'What is being installed?').max(200),
-    town: z.string().min(MIN.town, 'Where should we meet you?').max(80),
-    preferred: z.string().max(120).optional().or(z.literal('')),
-    message: message.optional().or(z.literal('')),
-    company: honeypot,
-  }),
-  /**
-   * Suggestions are the one form where the contact details are OPTIONAL, and
-   * that is the whole point of it. An anonymous route only means something if it
-   * is genuinely anonymous, so nothing here is required except the suggestion,
-   * and the action stores no contact fields at all when anonymity is chosen.
-   */
-  suggestion: z.object({
-    name: z.string().max(120).optional().or(z.literal('')),
-    phone: z.string().max(20).optional().or(z.literal('')),
-    email: optionalEmail,
-    anonymous: z.string().optional().nullable(),
-    message,
-    company: honeypot,
-  }),
-} as const;
-
-export type SubmissionKind = keyof typeof SUBMISSION_SCHEMAS;
+/** The four forms. Kept in step with the schemas by `satisfies` in schemas.ts. */
+export const SUBMISSION_KINDS = ['contact', 'quote', 'installation', 'suggestion'] as const;
+export type SubmissionKind = (typeof SUBMISSION_KINDS)[number];
 
 export interface FieldSpec {
   name: string;

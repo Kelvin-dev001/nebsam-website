@@ -25,7 +25,14 @@ import { ROUTES, VAT_LABEL } from '@/lib/constants';
  * the business gets held to. It says what is true — that VAT and recurring fees
  * are stated in writing — and stops.
  */
-export const dynamic = 'force-dynamic';
+/*
+ * STATIC since Sprint 14 (was `force-dynamic`, with no reason recorded). The
+ * form posts to a server action, which runs per request on a static page as
+ * it always has on /contact. Rendering this page per request bought nothing
+ * and cost two things: Next streamed its metadata into <body>, so the meta
+ * description was missing from <head> for any client that is not a known bot
+ * (Lighthouse SEO 92), and every visit waited on a fresh render.
+ */
 
 export const metadata = buildMetadata({
   title: 'Request a vehicle tracking quote in Kenya',

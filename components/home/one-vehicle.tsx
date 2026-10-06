@@ -29,9 +29,12 @@ function Step({ step, index }: { step: SetPieceStep; index: number }) {
         {step.heading}
       </h3>
       <p className="mt-3 max-w-prose text-body text-text-secondary-inverse">{step.body}</p>
+      {/* White, not signal blue: a dimmed step is still content, and
+          #3D8BFF at the stage's 0.6 is 2.78:1 on navy, where white is 7.07.
+          The underline carries the link (DESIGN_SYSTEM.md §3.5, Sprint 14). */}
       <a
         href={step.link.href}
-        className="mt-4 inline-flex min-h-[44px] items-center text-body-sm text-brand-signal underline decoration-1 underline-offset-4 hover:decoration-2"
+        className="mt-4 inline-flex min-h-[44px] items-center text-body-sm text-text-inverse underline decoration-1 underline-offset-4 hover:decoration-2"
       >
         {step.link.text}
       </a>
