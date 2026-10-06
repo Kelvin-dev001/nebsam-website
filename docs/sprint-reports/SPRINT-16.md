@@ -204,4 +204,8 @@ None opened. No new token anywhere.
    Before it, the Vercel Production variables are re-checked, because the live forms still have
    no rate-limit secret.
 
+**Answered by Kelvin, 6 Oct 2026: "1.OKAY 2.yes 3.yes".** The chooser's wording and groupings are
+approved as built, the sprint is merged into `develop`, and it is deployed to production (deploy
+log in `docs/LAUNCH_RUNBOOK.md`).
+
 **STOPPING HERE FOR REVIEW.**
