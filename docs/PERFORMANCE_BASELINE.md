@@ -651,3 +651,60 @@ delay: about 2.05–2.09 s, and once 1.67 s. First paint is about 915 ms and bot
 within about 100 ms on both builds, and the two builds deliver the page identically (the same
 stylesheet, the same preloaded fonts). So this is a pre-existing near-miss on the longest text page,
 and it goes to Sprint 14 with V94 (the late font swap).
+
+## 20. Sprint 14 — every template against every budget, 6 October 2026
+
+Lighthouse 12, mobile preset, production build, ONE server at a time, 3 runs per template, on mains
+power. Free memory was 1.2–3.0 GB, logged per run: the machine was short of memory throughout,
+which only slows runs, so a pass here is conservative. The form and legal pages were re-measured
+after their fixes, on the final build.
+
+| Template | LCP median | CLS | TBT | Perf | A11y / BP / SEO |
+|---|---|---|---|---|---|
+| `/` | 2,424 ms | 0 | 52 | 97 | 100 / 100 / 100 |
+| `/solutions` | 2,246 | 0 | 74 | 98 | 100 / 100 / 100 |
+| `/solutions/vehicle-tracking` | 2,391 | 0 | 40 | 98 | 100 / 100 / 100 |
+| `/products` | 2,406 | 0 | 39 | 97 | 100 / 100 / 100 |
+| `/products/baofeng-uv-5r` (priced) | 2,304 | 0 | 29 | 98 | 100 / 100 / 100 |
+| `/products/hybrid-pro-tracker` (photo) | 2,237 | 0 | 36 | 99 | 100 / 100 / 100 |
+| `/industries` | 2,425 | 0 | 47 | 98 | 100 / 100 / 100 |
+| `/industries/mining` | 2,247 | 0 | 41 | 99 | 100 / 100 / 100 |
+| `/resources` | 2,254 | 0 | 81 | 98 | 100 / 100 / 100 |
+| `/resources/blog` | 2,246 | 0 | 38 | 99 | 100 / 100 / 100 |
+| `/resources/blog/what-is-geofencing` | 2,221 | 0 | 27 | 99 | 100 / 100 / 100 |
+| `/resources/downloads` | 2,226 | 0 | 59 | 99 | 100 / 100 / 100 |
+| `/resources/faqs` | 2,264 | 0 | 85 | 97 | 100 / 100 / 100 |
+| `/about` | 2,235 | 0 | 36 | 98 | 100 / 100 / 100 |
+| `/about/certifications` | 2,326 | 0 | 40 | 98 | 100 / 100 / 100 |
+| `/about/coverage` | 2,380 | 0 | 32 | 98 | 100 / 100 / 100 |
+| `/support` | 2,241 | 0 | 68 | 98 | 100 / 100 / 100 |
+| `/contact` | **2,239** (was 2,531) | 0 | 38 | 99 | 100 / 100 / 100 |
+| `/quote` | **2,383** (was 2,541) | 0 | 63 | 97 | 100 / 100 / **100** (was 92) |
+| `/support/book-installation` | **2,399** (was 2,542) | 0 | 85 | 97 | 100 / 100 / **100** (was 92) |
+| `/support/suggestions` | **2,389** (was 2,623) | 0 | 78 | 97 | 100 / 100 / **100** (was 92) |
+| `/legal/cookies` | **2,394** (was 2,506) | 0 | 76 | 97 | 100 / 100 / 100 |
+| `/legal/privacy-policy` | 2,402 | 0 | 92 | 97 | 100 / 100 / 100 |
+| `/legal/terms` | 2,355 | 0 | 41 | 98 | 100 / 100 / 100 |
+| `/cart` | 2,507 (one run) | 0.031 | 38 | 97 | 100 / 100 / 69 (noindex, intended) |
+| 404 | not measurable: Lighthouse refuses a 404 document | | | | |
+
+**Page weight, fully scrolled** (Playwright at 412px, every lazy and after-load photo fetched):
+Home 711 KB of 1.5 MB; the heaviest content page 316 KB of 1.0 MB; the 404 page 192 KB. **Largest
+delivered image 56 KB** (budget 250). **Two web-font files on every page** (budget 3).
+**Initial JS:** the heaviest route is `/contact` at 115 kB (budget 180); the form pages fell from
+132–139 kB to 108–115.
+
+**Three fixes moved the four over-budget templates.**
+1. **The legal pages used `next/link`.** Its prefetching doubled the main-thread work of a
+   comparable page. They now use plain anchors (V99).
+2. **Zod shipped to the browser on every form page:** one 81 KB chunk, about 20 KB compressed, only
+   to read labels. The schemas are `server-only` now.
+3. **Three form pages were `force-dynamic` with no reason recorded.** Per-request rendering also
+   streamed their metadata into `<body>`, which is why Lighthouse found no description (SEO 92).
+
+**`/cart`** is the one template rendered per request, on purpose: it prices against the live
+catalogue. Locally its first byte waits on Supabase. Its one clean run is 7 ms over, and the other
+runs failed with NO_FCP while Supabase was unreachable from this connection. It is V102.
+
+**INP** is a field metric and there is no traffic yet; Total Blocking Time, its lab proxy, is 27–92 ms
+everywhere.

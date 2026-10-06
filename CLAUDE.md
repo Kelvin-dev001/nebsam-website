@@ -235,6 +235,14 @@ cinematic 8 MB site is a failure however good it looks on a MacBook on office fi
 throttled mobile profile; record the numbers in every sprint report. Details:
 `docs/PERFORMANCE_BUDGETS.md`.
 
+**Three things that each cost an LCP budget in Sprint 14** (PERFORMANCE_BASELINE §20):
+- **No `next/link` on the public site.** Plain `<a>`: `next/link` prefetches every linked page as it
+  scrolls into view, which doubled the main-thread work on the legal pages.
+- **No Zod in the browser.** Schemas live in `server-only` modules (`lib/submissions/schemas.ts`); a
+  client form imports field specs, never the validator. Zod was about 20 KB on every form page.
+- **No `force-dynamic` without a written reason.** A form page is static: its server action runs
+  per request anyway. Per-request rendering also streams the metadata into `<body>`.
+
 ## 9. Accessibility bar — WCAG 2.2 AA
 
 Semantic HTML first, ARIA only where semantics fall short · visible focus ring on every interactive
@@ -259,10 +267,13 @@ site must not undermine that posture.
 - Bot protection (honeypot + Turnstile) that never blocks keyboard-only users. **No Turnstile widget
   is rendered yet (V78): do not set the Turnstile keys until one is, or every enquiry is rejected.**
 - Uploads: extension **and** MIME allowlist, size cap, private bucket, short-lived signed URLs.
-- Security headers: CSP (report-only, then enforced), HSTS, `X-Content-Type-Options`,
+- Security headers: CSP (**enforced since Sprint 14**; `'unsafe-inline'` kept, V100), HSTS, `X-Content-Type-Options`,
   `Referrer-Policy`, `frame-ancestors`.
 - **No PII in logs, analytics, URLs or error messages. No customer data in seed files.**
 - GA4 does not fire before cookie consent.
+- **Anything the browser loads from another origin must be in the CSP** (`next.config.mjs`), and a
+  redirect target counts: the admin thumbnails redirect to Supabase storage. A new origin is added
+  in the same change that introduces it, or it is blocked in production.
 - `audit_log` written for every admin create/update/delete.
 
 **Certificate verification was removed (ADR-0007, 28 September 2026)** at Kelvin's decision; brief
