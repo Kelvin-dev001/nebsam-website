@@ -16,8 +16,8 @@ import { ROUTES } from '@/lib/constants';
  * reached it.
  *
  * ── Glass, because content passes behind it (ADR-0008) ─────────────────────
- * Navy at 96% with a blur (surfaces.css `.glass-bar`): the opacity an outlined
- * control needs over a WHITE backdrop, the same as the cookie bar.
+ * Navy at 96% and no blur (surfaces.css `.glass-bar`): the opacity an outlined
+ * control needs over a WHITE backdrop, the same as the header below 1024px.
  *
  * ── Accessibility ───────────────────────────────────────────────────────────
  * - Hidden by `visibility`, so a closed bar is out of the tab order and the
