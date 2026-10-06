@@ -40,7 +40,7 @@ export function ProseSections({
           who arrived from a search result reads before deciding to stay. */}
       {what_it_is?.length ? (
         <>
-          <Section tone="light">
+          <Section tone="light" id="what-it-is">
             <Shell>
               <div className="max-w-prose">
                 <Eyebrow>What it is</Eyebrow>
@@ -66,7 +66,7 @@ export function ProseSections({
       {/* 2 — The problem, on paper. Deliberately the quiet ground: this section
           is describing a loss, and it should not look like a feature. */}
       {problem?.length ? (
-        <Section tone="paper">
+        <Section tone="paper" id="problem">
           <Shell>
             <div className="max-w-prose">
               <Eyebrow>The problem it solves</Eyebrow>
@@ -86,7 +86,7 @@ export function ProseSections({
       {/* 3 — Who it is for. A definition list, so a reader can find themselves
           by scanning the left column rather than reading every line. */}
       {who_its_for?.length ? (
-        <Section tone="light">
+        <Section tone="light" id="who-its-for">
           <Shell>
             <div className="max-w-prose">
               <Eyebrow>Who it is for</Eyebrow>
@@ -113,7 +113,7 @@ export function ProseSections({
           prohibits 01/02/03 markers where the content is NOT a sequence; here
           the order is the meaning. */}
       {how_it_works?.length ? (
-        <Section tone="dark">
+        <Section tone="dark" id="how-it-works">
           <Shell>
             <div className="max-w-prose">
               <Eyebrow>How it works</Eyebrow>
@@ -143,7 +143,7 @@ export function ProseSections({
           content skill is explicit, and a flat list is how a capability page
           stops telling anyone anything. */}
       {what_you_get?.length ? (
-        <Section tone="light">
+        <Section tone="light" id="what-you-get">
           <Shell>
             <div className="max-w-prose">
               <Eyebrow>What you get</Eyebrow>
@@ -177,7 +177,7 @@ export function ProseSections({
 
       {/* 7 — Installation and support. */}
       {installation_support?.length ? (
-        <Section tone="paper">
+        <Section tone="paper" id="installation">
           <Shell>
             <div className="max-w-prose">
               <Eyebrow>Installation and support</Eyebrow>

@@ -27,7 +27,7 @@ export function SolutionHardware({ products }: { products: PublicProduct[] }) {
   if (items.length === 0) return null;
 
   return (
-    <Section tone="paper">
+    <Section tone="paper" id="hardware">
       <Shell>
         <div className="max-w-prose">
           <Eyebrow>Hardware</Eyebrow>

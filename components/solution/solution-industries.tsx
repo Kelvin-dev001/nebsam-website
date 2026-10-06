@@ -21,7 +21,7 @@ export function SolutionIndustries({ industries }: { industries: PublicIndustry[
   if (items.length === 0) return null;
 
   return (
-    <Section tone="light" className="py-12 md:py-16">
+    <Section tone="light" className="py-12 md:py-16" id="who-uses-it">
       <Shell>
         <div className="max-w-prose">
           <Eyebrow>Who uses it</Eyebrow>

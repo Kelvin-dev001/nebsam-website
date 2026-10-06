@@ -9,6 +9,7 @@ import { SolutionFaqs } from '@/components/solution/solution-faqs';
 import { SolutionHardware } from '@/components/solution/solution-hardware';
 import { SolutionIndustries } from '@/components/solution/solution-industries';
 import { Coverage } from '@/components/home/coverage';
+import { OnThisPage, type TocItem } from '@/components/layout/on-this-page';
 import {
   getBranches,
   getCoverageLocations,
@@ -156,6 +157,23 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
   ]);
 
   const sections = solutionSections(solution.sections);
+
+  // "On this page" (Sprint 16): an entry only for a section that will render,
+  // by the same test its component uses, so no link points at nothing.
+  const contents: TocItem[] = [
+    ...(sections.what_it_is?.length ? [{ id: 'what-it-is', label: 'What it is' }] : []),
+    ...(sections.problem?.length ? [{ id: 'problem', label: 'The problem it solves' }] : []),
+    ...(sections.who_its_for?.length ? [{ id: 'who-its-for', label: 'Who it is for' }] : []),
+    ...(sections.how_it_works?.length ? [{ id: 'how-it-works', label: 'How it works' }] : []),
+    ...(sections.what_you_get?.length ? [{ id: 'what-you-get', label: 'What you get' }] : []),
+    ...(sections.installation_support?.length
+      ? [{ id: 'installation', label: 'Installation and support' }]
+      : []),
+    ...(hardware.data.length ? [{ id: 'hardware', label: 'Hardware' }] : []),
+    ...(faqs.data.length ? [{ id: 'questions', label: 'Questions' }] : []),
+    ...(branches.data.length ? [{ id: 'coverage', label: 'Coverage' }] : []),
+    ...(industries.data.length ? [{ id: 'who-uses-it', label: 'Who uses it' }] : []),
+  ];
   const faqPairs = faqs.data.flatMap((f) =>
     f.question && f.answer ? [{ question: f.question, answer: f.answer }] : [],
   );
@@ -227,6 +245,8 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
             </ButtonLink>
           </div>
 
+          <OnThisPage items={contents} variant="inline" />
+
           {/* Brief 13.3 requires a visible "last updated" on solution pages. */}
           {solution.last_reviewed_at ? (
             <p className="mt-8 font-mono text-label uppercase tracking-[0.08em] text-text-secondary-inverse">
@@ -250,7 +270,7 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
 
       <SolutionFaqs faqs={faqs.data} />
 
-      <Coverage branches={branches.data} coverage={coverage.data} />
+      <Coverage branches={branches.data} coverage={coverage.data} id="coverage" />
 
       {/* 10 — Related. Closes the loop so industry pages are not orphans. */}
       <SolutionIndustries industries={industries.data} />
