@@ -32,6 +32,12 @@ export const DURATION = {
   reveal: 420,
   /** Level 3 — Data: telemetry ticks, signal pulses, counters */
   data: 900,
+  /**
+   * Level 5 — Transition: the crossfade between pages (Sprint 16), inside
+   * PART 17's 200–350ms. CSS-only, so this is the reference value; the CSS
+   * reads `--dur-transition` in app/globals.css.
+   */
+  transition: 240,
 } as const;
 
 /** Level 2 stagger, capped at 6 siblings — beyond that the last arrives late
