@@ -7,14 +7,13 @@
 
 | Criterion | State |
 |---|---|
-| Every budget in `PERFORMANCE_BUDGETS.md` §2 green on **every** template | ✅ on 24 of 26. **`/cart`** is 7 ms over in its one clean run and was otherwise unmeasurable while Supabase was unreachable (V102). The **404** page cannot be run in Lighthouse; its weight (192 KB) is in budget |
+| Every budget in `PERFORMANCE_BUDGETS.md` §2 green on **every** template | ✅ **25 of 25 measurable templates.** `/cart` is ISR since Kelvin's decision (V102): 2,345 ms. Its SEO 69 is the deliberate `noindex`. The **404** page cannot be run in Lighthouse; its weight (192 KB) is in budget |
 | The legacy `public/` fully audited; nothing unconverted promoted | ✅ 107 unused files moved out of `public/` |
 | NVDA + iOS VoiceOver on the critical paths | ❌ **needs a person** (V101). Scripted |
 | Keyboard-only end-to-end; 200% zoom and 400% reflow; forced colours | ✅ |
 | CSP enforced | ✅ (`'unsafe-inline'` kept: V100) |
 
-**Three of five, and nearly a fourth.** The cart needs a measurement this connection could not
-make, or a decision (V102). The screen readers need a person.
+**Four of five.** The fifth, the screen readers, needs a person.
 
 ## WHAT CHANGED
 
@@ -56,9 +55,8 @@ dynamic (V100).
 
 - **Screen readers not run (V101).** This machine has no NVDA and no iPhone. The script for a person
   is in `ACCESSIBILITY_PLAN.md`, checked against the real menu and forms.
-- **The cart not changed (V102).** Its per-request rendering is a recorded correctness decision. The
-  alternative is safe (admin edits already invalidate the catalogue, and totals are recomputed on the
-  server), but it is Kelvin's call.
+- **The cart is ISR (V102)**, at Kelvin's decision after the report. Every product save invalidates
+  it, and `createOrder` reprices from the database. First byte 10 ms, LCP 2,345 ms.
 - **Measured under memory pressure** (1.2–3.0 GB free, logged per run), on mains power. That only
   slows runs, so the passes are conservative.
 - **V62 (re-encoding uploads) stays recorded**, not built: it is a memory decision inside a server
@@ -123,7 +121,7 @@ None. None: axe-core and Lighthouse ran from the local npx cache and are not in 
 ## PERFORMANCE
 
 See PERFORMANCE_BASELINE §20 for every template. Summary:
-- **LCP:** 2,221–2,425 ms on 24 templates; `/cart` 2,507 in one run (V102).
+- **LCP:** 2,221–2,425 ms on every measured template, `/cart` included (2,345 ms as ISR).
 - **CLS:** 0 everywhere except `/cart` (0.031).
 - **Blocking time:** 27–92 ms.
 - **Lighthouse:** Performance 92–99. Accessibility and Best Practices 100. SEO 100 everywhere
@@ -138,7 +136,7 @@ See PERFORMANCE_BASELINE §20 for every template. Summary:
 - **Opened:**
   - V100: keep `'unsafe-inline'`, or switch to nonces?
   - V101: screen readers.
-  - V102: the cart.
+  - V102: the cart (closed the same day: ISR).
 
 ## KNOWN ISSUES
 
@@ -149,9 +147,10 @@ See PERFORMANCE_BASELINE §20 for every template. Summary:
 
 ## DECISIONS NEEDED
 
-1. **V102, the cart.** Make it ISR, or measure it on a deployment with environment variables?
-2. **V100, CSP nonces.** Keep `'unsafe-inline'`, or go dynamic and measure the cost first?
-3. **V101.** Who runs NVDA and iPhone VoiceOver, with the script?
-4. **Merge this sprint into `develop`?**
+Answered by Kelvin, 6 Oct 2026: "merge sprint 14 and make the cart ISR". Both done.
+
+Still open:
+1. **V100, CSP nonces.** Keep `'unsafe-inline'`, or go dynamic and measure the cost first?
+2. **V101.** Who runs NVDA and iPhone VoiceOver, with the script?
 
 **STOPPING HERE FOR REVIEW.**

@@ -314,9 +314,9 @@ public page**, and every 301 resolving in one hop with no chains.
 **Delivers** Budgets met, keyboard and screen-reader pass, image optimisation, bundle analysis.
 **Gate** All budgets green.
 
-- [ ] Every budget in `PERFORMANCE_BUDGETS.md` §2 green on **every** template: **24 of 26** (6 Oct
-      2026). `/cart` is 7 ms over in its one clean run (V102); the 404 page cannot be run in Lighthouse
-      and is in budget on weight
+- [x] Every budget in `PERFORMANCE_BUDGETS.md` §2 green on **every** template (6 Oct 2026): 25 of 25
+      measurable, `/cart` included once ISR (V102). The 404 page cannot be run in Lighthouse and is in
+      budget on weight
 - [x] The 28 MB legacy `public/` fully audited; nothing unconverted promoted: 107 files moved to
       `source-assets/legacy-public/`, and `public/` holds 22, all in use
 - [ ] NVDA + iOS VoiceOver on the critical paths: **needs a person** (V101; scripted in

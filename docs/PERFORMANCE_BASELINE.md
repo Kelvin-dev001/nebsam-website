@@ -685,7 +685,7 @@ after their fixes, on the final build.
 | `/legal/cookies` | **2,394** (was 2,506) | 0 | 76 | 97 | 100 / 100 / 100 |
 | `/legal/privacy-policy` | 2,402 | 0 | 92 | 97 | 100 / 100 / 100 |
 | `/legal/terms` | 2,355 | 0 | 41 | 98 | 100 / 100 / 100 |
-| `/cart` | 2,507 (one run) | 0.031 | 38 | 97 | 100 / 100 / 69 (noindex, intended) |
+| `/cart` (ISR since V102) | **2,345** (was 2,507, one run) | 0.031 | 47 | 97 | 100 / 100 / 69 (noindex, intended) |
 | 404 | not measurable: Lighthouse refuses a 404 document | | | | |
 
 **Page weight, fully scrolled** (Playwright at 412px, every lazy and after-load photo fetched):
@@ -702,9 +702,9 @@ delivered image 56 KB** (budget 250). **Two web-font files on every page** (budg
 3. **Three form pages were `force-dynamic` with no reason recorded.** Per-request rendering also
    streamed their metadata into `<body>`, which is why Lighthouse found no description (SEO 92).
 
-**`/cart`** is the one template rendered per request, on purpose: it prices against the live
-catalogue. Locally its first byte waits on Supabase. Its one clean run is 7 ms over, and the other
-runs failed with NO_FCP while Supabase was unreachable from this connection. It is V102.
+**`/cart`** was the one template rendered per request, so its first byte waited on Supabase: one
+clean run at 2,507 ms, and NO_FCP while Supabase was unreachable. ISR since Kelvin's decision (V102):
+first byte 10 ms from the cache, LCP 2,345 ms.
 
 **INP** is a field metric and there is no traffic yet; Total Blocking Time, its lab proxy, is 27–92 ms
 everywhere.
