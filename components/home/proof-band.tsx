@@ -1,5 +1,7 @@
+import Image from 'next/image';
 import { Section, Shell } from '@/components/layout/section';
 import { BRANCHES, COVERAGE_TOWNS } from '@/lib/company';
+import type { PublicClientLogo } from '@/types/content';
 
 /**
  * PROOF BAND — homepage section 2 (brief 9.1).
@@ -7,8 +9,11 @@ import { BRANCHES, COVERAGE_TOWNS } from '@/lib/company';
  * The brief asks for "registrations, branches, client logos (real only)".
  * Today none of those three arrives intact:
  *
- *   - Client logos are blocked by V12. Six exist in `public/clients/` and not
- *     one has written permission, so none may be shown.
+ *   - Client logos are blocked by V12: none has written permission yet. The
+ *     six old files left `public/` in Sprint 14 (source-assets/legacy-public).
+ *     The logo row below (Sprint 16) is built and shows nothing until a client
+ *     row has `permission_confirmed` (public_client_logos, 0009); see
+ *     docs/CLIENT_PERMISSIONS.md for how one is added.
  *   - Of six regulatory instruments exactly ONE is currently valid. CAK lapsed
  *     30 Jun 2025, both ODPC registrations lapsed 27 May 2026, and the PSRA
  *     annual renewal is unconfirmed.
@@ -32,7 +37,19 @@ const APPROVED_FIGURES = [
   { value: '70+', label: 'Corporate clients' },
 ] as const;
 
-export function ProofBand() {
+/**
+ * A logo is shown only from `public/clients/`, where a cleared file is put by
+ * hand (docs/CLIENT_PERMISSIONS.md). Anything else in `logo_path`, such as a
+ * storage URL, is skipped rather than risked: it would be unoptimised, and
+ * blocked by the CSP if it lived on another origin.
+ */
+const LOGO_DIR = '/clients/';
+
+export function ProofBand({ logos = [] }: { logos?: PublicClientLogo[] }) {
+  const shownLogos = logos.filter(
+    (l): l is PublicClientLogo & { name: string; logo_path: string } =>
+      Boolean(l.name && l.logo_path?.startsWith(LOGO_DIR) && !l.logo_path.includes('..')),
+  );
   const facts = [
     ...APPROVED_FIGURES.map((f) => ({ value: f.value, label: f.label })),
     {
@@ -61,6 +78,35 @@ export function ProofBand() {
             </div>
           ))}
         </dl>
+
+        {/*
+          THE LOGO ROW, only with written permission (V12). A static row of
+          marks, not a moving strip: a marquee would loop in the reader's
+          peripheral vision, which brief PART 17 forbids, and WCAG 2.2.2 would
+          require a pause control. Not cards either: the band is an instrument
+          panel. Absent, not placeholdered, while nobody has said yes.
+        */}
+        {shownLogos.length > 0 ? (
+          <div className="mt-10 border-t border-border-hairline pt-8">
+            <h3 className="font-mono text-label uppercase tracking-[0.08em] text-text-secondary">
+              Some of the corporate clients we work with
+            </h3>
+            <ul className="mt-6 grid grid-cols-3 items-center gap-x-8 gap-y-6 sm:grid-cols-4 lg:grid-cols-6">
+              {shownLogos.map((logo) => (
+                <li key={logo.id ?? logo.name} className="relative h-12">
+                  <Image
+                    src={logo.logo_path}
+                    alt={logo.name}
+                    fill
+                    sizes="(min-width: 1024px) 10rem, (min-width: 640px) 22vw, 30vw"
+                    className="object-contain"
+                    unoptimized={logo.logo_path.endsWith('.svg')}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </Shell>
     </Section>
   );

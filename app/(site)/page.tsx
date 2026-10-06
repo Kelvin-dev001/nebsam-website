@@ -9,10 +9,12 @@ import { SolutionsPreview } from '@/components/home/solutions-preview';
 import { ShopPreview } from '@/components/home/shop-preview';
 import { IndustriesPreview } from '@/components/home/industries-preview';
 import { ResourcesPreview } from '@/components/home/resources-preview';
+import { SetupChooser } from '@/components/home/setup-chooser';
 import {
   getBlogPosts,
   getBranches,
   getCertifications,
+  getClientLogos,
   getCoverageLocations,
   getIndustries,
   getProductCategories,
@@ -69,6 +71,13 @@ import { ROUTES } from '@/lib/constants';
  *
  * TONE RHYTHM since 12n: dark → paper → dark → paper → light → dark → light →
  * dark → light → paper → dark. No two neighbours share a ground.
+ *
+ * SPRINT 16: "Find your setup" (SetupChooser, light) between the proof band
+ * and the pinned set piece: the task-first entry for a visitor who knows what
+ * they drive and not what they need. TWELVE sections, the brief's cap, so the
+ * client logo wall lives INSIDE the proof band next to "70+ corporate
+ * clients", not as a thirteenth. Rhythm: dark → paper → light → dark → paper →
+ * light → dark → light → dark → light → paper → dark.
  */
 
 /**
@@ -103,22 +112,34 @@ export default async function HomePage() {
   // views, and awaiting them in sequence would add two round trips to the
   // server render for no reason — on a page whose LCP budget is 2.5s on a
   // throttled mobile connection.
-  const [certifications, branches, coverage, solutions, featured, categories, industries, posts] =
-    await Promise.all([
-      getCertifications(),
-      getBranches(),
-      getCoverageLocations(),
-      getSolutions(),
-      getProducts({ featuredOnly: true }),
-      getProductCategories(),
-      getIndustries(),
-      getBlogPosts({ limit: 3 }),
-    ]);
+  const [
+    certifications,
+    branches,
+    coverage,
+    solutions,
+    featured,
+    categories,
+    industries,
+    posts,
+    logos,
+  ] = await Promise.all([
+    getCertifications(),
+    getBranches(),
+    getCoverageLocations(),
+    getSolutions(),
+    getProducts({ featuredOnly: true }),
+    getProductCategories(),
+    getIndustries(),
+    getBlogPosts({ limit: 3 }),
+    // Permission-confirmed only (public_client_logos); empty until V12.
+    getClientLogos(),
+  ]);
 
   return (
     <main id="main">
       <Hero />
-      <ProofBand />
+      <ProofBand logos={logos.data} />
+      <SetupChooser industries={industries.data} />
       <OneVehicle />
       <KebsResult certifications={certifications.data} />
       <SolutionsPreview solutions={solutions.data} />
