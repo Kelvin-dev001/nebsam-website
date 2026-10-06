@@ -1,8 +1,10 @@
 'use server';
 
+import { after } from 'next/server';
 import { z } from 'zod';
+import { notifyStaff } from '@/lib/email';
 import { serviceClient } from '@/lib/supabase/server';
-import { whatsappUrl } from '@/lib/company';
+import { SITE_URL, whatsappUrl } from '@/lib/company';
 import { ROUTES, VAT_RATE, VAT_LABEL } from '@/lib/constants';
 import { formatKes } from '@/lib/format';
 
@@ -196,6 +198,18 @@ export async function createOrder(formData: FormData): Promise<OrderResult> {
     `Name: ${input.customerName}`,
     ...(input.customerTown ? [`Town: ${input.customerTown}`] : []),
   ].join('\n');
+
+  // The order is stored. Tell sales, once the response has gone (lib/email.ts):
+  // the order number only. The customer may never press send in WhatsApp, and
+  // this is what stops a persisted order going unseen.
+  after(() =>
+    notifyStaff(
+      'sales',
+      `New order on the website: ${orderNumber}`,
+      `A new order (${orderNumber}) is waiting in the admin:\n${SITE_URL}/admin/orders\n\n` +
+        'The details are in the admin, not in this email.',
+    ),
+  );
 
   return {
     ok: true,

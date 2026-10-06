@@ -1,5 +1,8 @@
 'use server';
 
+import { after } from 'next/server';
+import { SITE_URL } from '@/lib/company';
+import { notifyStaff } from '@/lib/email';
 import { serviceClient } from '@/lib/supabase/server';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 import { z } from 'zod';
@@ -176,5 +179,24 @@ export async function submitEnquiry(
     };
   }
 
+  // Tell staff, once the response has gone (lib/email.ts): the kind and the
+  // reference only, never what the person wrote. Quotes and bookings are sales.
+  const what = NOTIFY_WORDING[kind];
+  after(() =>
+    notifyStaff(
+      kind === 'quote' || kind === 'installation' ? 'sales' : 'info',
+      `New ${what} on the website: ${ref}`,
+      `A new ${what} (${ref}) is waiting in the admin inbox:\n${SITE_URL}/admin/inbox\n\n` +
+        'The details are in the inbox, not in this email.',
+    ),
+  );
+
   return { ok: true, reference: ref, kind };
 }
+
+const NOTIFY_WORDING: Record<SubmissionKind, string> = {
+  contact: 'contact message',
+  quote: 'quote request',
+  installation: 'installation booking',
+  suggestion: 'suggestion',
+};
