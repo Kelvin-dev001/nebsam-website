@@ -32,6 +32,13 @@ export function CookieNotice() {
   const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
+    // Nothing to ask about until GA4 is configured. Analytics is the only thing
+    // on the site that needs consent (/legal/cookies: the consent cookie and the
+    // staff sign-in cookie are necessary). Asking a visitor to accept analytics
+    // that will never load is a question with no meaning, and on a phone the bar
+    // covers the bottom of the screen until it is answered. It appears by itself
+    // the day NEXT_PUBLIC_GA4_MEASUREMENT_ID is set (Sprint 15).
+    if (!process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID) return;
     if (consentAnswered()) {
       if (hasConsent()) loadGa4();
       return;
