@@ -11,14 +11,28 @@ import { ROUTES } from '@/lib/constants';
  * indexing it would also put a URL in results that shows an empty cart to
  * everyone who clicks it.
  *
- * Dynamic, because the catalogue it prices against must be current — a cart
- * quoting a price from a build last week is exactly the surprise that turns
- * into a dispute at handover.
+ * The catalogue it prices against must be current: a cart quoting a price
+ * from a build last week is exactly the surprise that turns into a dispute at
+ * handover. Until Sprint 14 that was met by rendering per request
+ * (`force-dynamic`). It is ISR now (Kelvin, 6 Oct 2026, V102), and still
+ * current, for two reasons:
+ *
+ *   1. The catalogue is read through the `public_products` cache tag, and the
+ *      product admin invalidates that tag, and this path, on every save
+ *      (revalidateProductSurfaces). An edit reaches the cart on the next visit,
+ *      not in an hour.
+ *   2. The price that counts is never this page's. `createOrder` reprices
+ *      every line from the database at the moment of ordering, and the
+ *      WhatsApp message carries those prices. At worst this page shows a
+ *      superseded price for a moment; it cannot charge one.
+ *
+ * Per-request rendering made every visit wait on a round trip to the database
+ * before the first byte, which put the cart's LCP on the 2.5 s line.
  *
  * The catalogue is passed from the server so the browser never holds prices.
  * Storage keeps product IDs and quantities only; see lib/cart.ts.
  */
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export const metadata = {
   ...buildMetadata({

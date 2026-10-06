@@ -137,6 +137,8 @@ function revalidateProductSurfaces(slug?: string | null, previousSlug?: string |
   // llms.txt lists every product by name (V95): a rename must not leave the
   // old name in the file assistants read.
   revalidatePath('/llms.txt');
+  // The cart is ISR since Sprint 14 (V102) and prices against this catalogue.
+  revalidatePath(ROUTES.cart);
   if (slug) revalidatePath(ROUTES.product(slug));
   if (previousSlug && previousSlug !== slug) revalidatePath(ROUTES.product(previousSlug));
 }
