@@ -71,6 +71,17 @@
   background-color: var(--brand-navy);
 }
 
+/* The product page's sticky buy bar (phones only, Sprint 16). 96% navy: the
+   opacity an outlined control needs over a WHITE backdrop (§3.6), so its text
+   and button read the same whatever scrolls behind. NO blur, on purpose: the
+   bar only exists below 768px, and below 1024px the header carries none
+   either. A fixed blurred layer is recomputed on every scrolled frame, and a
+   mid-range Android pays for it in jank. */
+.glass-bar {
+  background-color: rgb(var(--brand-navy-rgb) / 0.96);
+  border-top: 1px solid var(--border-strong-inverse);
+}
+
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   @media (min-width: 1024px) {
     .glass-header {

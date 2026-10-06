@@ -28,6 +28,11 @@ import { formatKes } from '@/lib/format';
  * Offer schema. All three follow from the same null, so they cannot drift apart.
  */
 
+/** The WhatsApp message for an unpriced product: the buy box and the sticky bar send the same. */
+export function priceRequestUrl(name: string | null): string {
+  return whatsappUrl(`Hello Nebsam, please send me a price for the ${name}.`);
+}
+
 export function ProductPrice({ product }: { product: PublicProduct }) {
   const hasPrice = typeof product.price_kes === 'number';
   // The sentence below ends with its own full stop, and staff write notes that
@@ -86,7 +91,7 @@ export function ProductPrice({ product }: { product: PublicProduct }) {
           <AddToCart productId={product.id} />
         ) : (
           <ButtonLink
-            href={whatsappUrl(`Hello Nebsam, please send me a price for the ${product.name}.`)}
+            href={priceRequestUrl(product.name)}
             variant="primary"
             size="lg"
             className="w-full sm:w-auto"

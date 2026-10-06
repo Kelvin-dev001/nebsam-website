@@ -57,6 +57,65 @@ html[data-consent='open'] .fab-lift {
   }
 }
 
+/* ── The sticky buy bar (product pages, phones; Sprint 16) ──────────────────
+   It slides up from below the screen and back. Closed, it is also
+   visibility:hidden, so it leaves the tab order; the visibility change waits
+   for the slide on the way out and not on the way in. Under reduced motion the
+   global backstop makes both instant. */
+.buy-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 30;
+  padding-bottom: env(safe-area-inset-bottom);
+  transform: translateY(100%);
+  visibility: hidden;
+  transition:
+    transform var(--dur-micro) var(--ease-out-quart),
+    visibility 0s linear var(--dur-micro);
+}
+
+.buy-bar[data-open='true'] {
+  transform: none;
+  visibility: visible;
+  transition:
+    transform var(--dur-micro) var(--ease-out-quart),
+    visibility 0s;
+}
+
+/* The cookie bar takes the bottom of the screen while it is open; two bars
+   stacked there would cover too much of a phone. */
+html[data-consent='open'] .buy-bar {
+  transform: translateY(100%);
+  visibility: hidden;
+}
+
+@media (max-width: 767px) {
+  /* WCAG 2.4.11: a focused element must not end up under the bar. */
+  html[data-buy-bar] {
+    scroll-padding-bottom: 6rem;
+  }
+
+  /* ...including the footer's last row, which at the very bottom of the page
+     has no room left to scroll clear (Terms and Privacy did not, measured).
+     A page with a bar keeps a bar's height of navy under its footer. It is
+     there from the first paint, because the bar is server-rendered (hidden),
+     so it never shifts anything. */
+  body:has(.buy-bar) footer {
+    padding-bottom: 5.5rem;
+  }
+
+  /* The bar's own action is WhatsApp: the floating button would repeat it. */
+  html[data-buy-bar='whatsapp'] .fab-lift {
+    visibility: hidden;
+  }
+
+  /* The bar's action is the cart: keep WhatsApp, lifted clear of the bar. */
+  html[data-buy-bar='cart'] .fab-lift {
+    transform: translateY(-76px);
+  }
+}
+
 /* ── Entrances (items 2, 3, 4) ───────────────────────────────────────────────
    For elements that are INSERTED — a panel opening, a confirmation replacing
    a form. @starting-style gives the first frame a starting value, so the
