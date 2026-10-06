@@ -4,12 +4,8 @@ import { serviceClient } from '@/lib/supabase/server';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 import { z } from 'zod';
 import { clientIp, recordAttempt } from './rate-limit';
-import {
-  SUBMISSION_FIELDS,
-  SUBMISSION_SCHEMAS,
-  type SubmissionKind,
-  type SubmissionResult,
-} from './types';
+import { SUBMISSION_SCHEMAS } from './schemas';
+import { SUBMISSION_FIELDS, type SubmissionKind, type SubmissionResult } from './types';
 
 /**
  * THE ENQUIRY INBOX — one action for all four public forms.
