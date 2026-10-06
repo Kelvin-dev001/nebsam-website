@@ -54,6 +54,11 @@ Then by hand, or with the Playwright scripts kept for this:
   filled honeypot before the rate limiter or any insert.
 - A staff member signs in to `/admin` and opens the inbox.
 
+**Run browser checks in real Chrome** (Playwright `channel: 'chrome'`), not Playwright's headless
+shell. Since Sprint 16's page transitions, the headless shell stalls on the second form navigation
+with JavaScript off: it cannot draw a view transition, and the next navigation never completes.
+Real Chrome, and the headless shell under reduced motion, both pass (measured 6 Oct 2026).
+
 ## 5. Monitoring
 
 - **Errors:** Vercel → the deployment → Runtime Logs. Server errors are logged without personal
@@ -87,6 +92,7 @@ Each is in `docs/NEEDS_VERIFICATION.md` with its owner.
 |---|---|---|
 | 5 Oct 2026 | `ff7ee63` (develop, Sprint 12o) | Promoted to production in Vercel, outside this runbook. Found in Sprint 15: report-only CSP, the header linking `/platform` (404), `/team` and `/clients` redirecting to 404s, old product photos and a client logo downloadable, `llms.txt` naming five 404s |
 | 6 Oct 2026 | `b5ade7a` (main = develop, Sprints 12p to 15) | **Enforced CSP** on the live response. `/platform` no longer linked. `/team` and `/clients` → `/about`. Legacy files return 404. `check-redirects`: 13 redirects and 4 direct routes. `check-sitemap`: clean. `audit:crawl`: 67 URLs, all 200; the only problems are the 6 legal tokens. All four forms, with JavaScript on and off, by refusal and honeypot (no rows written, confirmed by `verify:db`). No runtime errors or error-level logs. Lighthouse through the edge: Home 2,092 ms, `/contact` 2,036, `/products` 2,166, Performance 98, A11y/BP/SEO 100 |
+| 6 Oct 2026 | `8276696` (main = develop, Sprint 16) | Live within about 2 minutes of the push. **The five items, live** (20 of 20): the page transition runs in real Chrome and does not under reduced motion; the chooser's 4 cards, 10 internal links all 200, thumbnails loaded; no logo row; the buy bar opens, closes, and "Add to cart" becomes "View cart" on both product types; every "On this page" target exists on 5 pages; 0 console errors, 0 CSP violations. Enforced CSP. `check-redirects`: 13 and 4. `check-sitemap`: 66, clean. `audit:crawl`: 67 URLs, all 200; still only the 6 legal tokens. All four forms with JavaScript on and off, by refusal and honeypot, in real Chrome; `verify:db` clean, no enquiry or order rows. No runtime errors. Lighthouse through the edge: products 1,963 and 1,983 ms, privacy notice 2,125, Performance 99; Home 1,494–2,188 ms over four runs, Performance 99 and 100 in the two clean runs. The other two (83, TBT 587 and 627) were slower in every category at once, the machine-load pattern of PERFORMANCE_BASELINE §14; one of them had a 0.050 font-swap shift |
 
 Docs-only commits wait on `develop` for the next real deploy: pushing them to `main` would rebuild
 the live site for nothing.
