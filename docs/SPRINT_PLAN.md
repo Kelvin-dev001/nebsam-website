@@ -329,7 +329,8 @@ public page**, and every 301 resolving in one hop with no chains.
 ## Sprint 15 — QA & Launch
 
 **Delivers** Cross-device QA, forms, emails, the 301 map live, backups, monitoring, deploy.
-**Gate** Human sign-off.
+**Gate** Human sign-off. **Given: Kelvin accepted the site as launched on 6 Oct 2026**, with the
+unticked items below open (docs/LAUNCH_RUNBOOK.md §6).
 
 - [x] **`develop` merged to `main`; Vercel production switched.** Production was already serving a
       `develop` build (12o) since 5 Oct 2026. On 6 Oct, `main` was fast-forwarded to `develop`

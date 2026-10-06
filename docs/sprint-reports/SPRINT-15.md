@@ -30,7 +30,7 @@ rather than roll back.
 | Backups and monitoring confirmed | ❌ V104 |
 | Secrets audit | ✅ (below) |
 | No `[[NEEDS_VERIFICATION]]` on any public page | ❌ **6 tokens on the privacy notice and the terms, live.** Legal text (V66–V70) |
-| **Human sign-off** | Kelvin |
+| **Human sign-off** | ✅ **Kelvin, 6 Oct 2026: "accept the site as launched and keep reminding me about all pending items"** |
 
 ## WHAT CHANGED
 
@@ -114,8 +114,8 @@ Live, through Vercel's edge: Home 2,092 ms, `/contact` 2,036, `/products` 2,166.
 
 ## DECISIONS NEEDED
 
-1. **Sign-off.** The site is live, so the gate is now: accept it as launched with the open items
-   below, or say what must change first.
+1. **Sign-off: given.** Kelvin accepted the site as launched on 6 Oct 2026, with the items below
+   open; he asked to be reminded about every one of them until it is done.
 2. **Today, in Vercel Production:** add `SUBMISSION_IP_HMAC_SECRET` with a new value (the live forms
    have no rate limiting until then), and remove `SUPABASE_ACCESS_TOKEN` and the two
    `CERT_VERIFY_RATE_LIMIT_*` variables. Then redeploy, so the running functions pick up the secret.
